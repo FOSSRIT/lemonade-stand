@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+     <!ENTITY stroke_color "#666666">
+     <!ENTITY fill_color "#FFFFFF">
+ ]>
+
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg1"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   width="55.00000pt"
+   height="55.00000pt"
+   sodipodi:docbase="/var/www/html/svg_gallery/svg/fruits"
+   sodipodi:docname="lemon (copy).svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <metadata
+     id="metadata3225" />
+  <defs
+     id="defs3223">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 250 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="500 : 250 : 1"
+       inkscape:persp3d-origin="250 : 166.66667 : 1"
+       id="perspective3229" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="&fill_color;"
+     bordercolor="&stroke_color;"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="7.5927273"
+     inkscape:cx="34.375"
+     inkscape:cy="39.643199"
+     inkscape:window-width="910"
+     inkscape:window-height="748"
+     inkscape:window-x="294"
+     inkscape:window-y="0"
+     showgrid="false"
+     inkscape:current-layer="svg1"
+     showguides="true"
+     inkscape:guide-bbox="true" />
+  <g
+     id="g838"
+     transform="matrix(0.1180124,0,0,0.1180124,4.4430606,3.5951267)">
+    <path
+       style="fill:&fill_color;;fill-rule:evenodd;stroke:&stroke_color;;stroke-width:10;stroke-linejoin:round;stroke-dasharray:none"
+       d="M 68.708186,148.12939 C 228.69852,9.5810597 474.45687,146.15839 471.1581,289.65487 C 497.54826,315.22034 467.85933,343.25988 451.36548,350.68211 C 309.51838,525.51691 17.577254,382.02043 34.895796,237.69925 C 12.847026,174.32754 32.421718,155.55162 68.708186,148.12939 z"
+       id="path827"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:&stroke_color;;fill-opacity:0.3;fill-rule:evenodd;stroke-width:1pt"
+       d="M 44.33033,267.99099 C 65.58033,246.74099 68.08033,411.74099 378.08033,350.49099 C 371.83033,344.24099 338.08033,201.74099 458.08033,249.24099 C 504.95533,263.61599 358.70533,239.55349 410.58033,339.24099 C 418.62433,352.33698 416.20533,352.36599 438.08033,357.99099 C 305.58033,500.49099 46.83033,390.49099 44.33033,267.99099 z"
+       id="path828"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:&stroke_color;;fill-opacity:0.1;fill-rule:evenodd;stroke-width:1pt"
+       d="M 68.08033,155.83295 C 124.36962,90.49099 313.68568,43.977604 438.08033,203.33295 C 395.58033,249.58295 275.58033,49.582958 68.08033,155.83295 z"
+       id="path829"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:&stroke_color;;fill-opacity:0.1;fill-rule:evenodd;stroke-width:1pt"
+       d="M 469.33033,295.49099 C 483.64639,312.99099 470.58033,332.99099 460.58033,330.49099 C 381.83033,309.24099 424.33033,287.99099 469.33033,295.49099 z"
+       id="path830"
+       sodipodi:nodetypes="ccc" />
+  </g>
+  <metadata
+     id="metadata3227">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Clipart by Nicu Buculei - pear</dc:title>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Nicu Buculei</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://web.resource.org/cc/PublicDomain" />
+        <dc:format>image/svg+xml</dc:format>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

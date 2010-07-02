@@ -1,0 +1,12 @@
+setup.py
+activity.py
+lemonade.py
+game.py
+game.gif
+NEWS
+activity/activity.svg
+activity/activity.info
+MANIFEST.in
+POTFILES.in
+README
+counting.py
