@@ -1,23 +1,26 @@
 from fortuneengine.GameEngineElement import GameEngineElement
+from random import randint
+from gettext import gettext as _
 
 STARTING_MONEY = 1000
+MAX_MSG = 10
 ITEMS = {
         'cup': {
-            'name':'Cups',
+            'name':_('Cups'),
             'cost':10,
             'decay':0,
             'peritem':1,
             'bulk':25
             },
         'lemon': {
-            'name':'Lemons',
+            'name':_('Lemons'),
             'cost':75,
             'decay':5,
             'peritem':2,
             'bulk':1
             },
         'sugar': {
-            'name':'Sugar',
+            'name':_('Sugar'),
             'cost':5,
             'decay':0,
             'peritem':1,
@@ -30,25 +33,86 @@ class LemonadeMain(GameEngineElement):
         self.__day = 1
         self.__resources = {'money':STARTING_MONEY}
 
+        # Populate resources with item keys
         for item_key in ITEMS.keys():
             self.__resources[item_key] = []
 
         self.__weather = 0
+        self.__msg_queue = []
 
         # run weather
+        self.weather_change()
 
         # run random
+        self.random_event()
 
         # Register with game engine
         #self.add_to_engine()
+
+    def add_msg(self, mesg):
+        self.__msg_queue.append( mesg )
+        if len(self.__msg_queue) > MAX_MSG:
+            self.__msg_queue.pop(0)
+
+    def weather_change(self):
+        """
+        Randomly change the weather, but not more than one unit away
+        """
+        self.__weather += randint(-1, 1)
+
+        # It looks like its going to rain tomorrow
+        if self.__weather <= -1:
+            self.__weather = -1
+            self.add_msg(_("It looks like it is going to rain tomorrow"))
+
+        elif self.__weather == 0:
+            self.add_msg(_("It looks like it will be nice tomorrow"))
+
+        # Tomorrow looks to be very hot
+        elif self.__weather >= 1:
+            self.__weather = 1
+            self.add_msg(_("It looks like it will be very hot tomorrow"))
+
+    def random_event(self):
+        """
+        Attempt to run random events
+        """
+        event = randint(0, 10)
+
+        if event == 0:
+            # TODO: STEAL RANDOM ITEM NOT HARD CODE
+            itemcount = self.count_item('sugar')
+            if itemcount >= 10:
+                self.remove_item('sugar', 10)
+            else:
+                self.remove_item('sugar', itemcount)
+
+            self.add_msg(_('Ants steal some of your supplies!'))
+
+        elif event == 1:
+            self.add_item('lemon', 10)
+
+            self.add_msg(_('A lemon truck crashes in front of your stand!'))
+
+        elif event == 2:
+            self.add_item('cup', 10)
+            self.add_msg(_('It starts raining cups!'))
 
     def process_day( self, items ):
         self.__day += 1
 
         # Process Item Payment
+        for item in items:
+            status = self.buy_item( item, items[item] )
+            if status == -1:
+                self.add_msg(_("You can't afford any units of %s.") % \
+                    ITEMS[item]['name'])
 
+            else:
+                self.add_msg(_("Bought %d units of %s.") % \
+                    (items[item], ITEMS[item]['name']))
         # People Buy
-        
+
         # Handle Change
 
         # Day earnings
@@ -57,20 +121,54 @@ class LemonadeMain(GameEngineElement):
         self.decay_items()
 
         # Weather
+        self.weather_change()
 
         # Random event
+        self.random_event()
 
-    def add_item(self, key, quanity):
-        total = quanity * ITEMS[key]['bulk']
-        cost = ITEMS[key]['cost'] * total
+    def buy_item(self, key, quanity):
+        """
+        Attempts to buy as many (up to max quantity) items from
+        the inventory.
+
+        @param key:       The key of the item being added
+        @param quanity:   The number of units to buy (before bulk)
+        @return:          Returns total bought, -1 if you can't
+                          afford any
+        """
+        the_item = ITEMS[key]
+
+        total = quanity * the_item['bulk']
+        cost = the_item['cost'] * total
 
         if cost < self.__resources['money']:
             self.__resources['money'] -= cost
-            self.__resources[key].append([ITEMS[key]['decay'], total])
-            return True
+            self.add_item(key, total)
+            return total
 
         else:
-            return False
+            bulk_price = the_item['bulk'] * the_item['cost']
+            # Lets try to buy as many as we can
+            can_buy = self.__resources['money'] / bulk_price
+
+            if can_buy != 0:
+                total = can_buy * the_item['bulk']
+                self.__resources['money'] -= can_buy * bulk_price
+                self.add_item(key, total)
+
+                return total
+            else:
+                return -1
+
+    def add_item(self, key, quantity):
+        """
+        Adds item to inventory with correct decay flag
+
+        @param key:     The key of the item being added
+        @param quantity: The total quantity to add
+        """
+        total = quantity
+        self.__resources[key].append([ITEMS[key]['decay'], total])
 
     def remove_item(self, key, quantity):
         """
@@ -115,7 +213,11 @@ class LemonadeMain(GameEngineElement):
                 # Decrement decay and add to new list
                 # ignore it if has expired
                 if item[0] != 1:
-                    new_list.append( [item[0]-1, item[1]] )
+                    # If item is 0, then it doesn't decay
+                    if item[0] == 0:
+                        new_list.append( [item[0], item[1]] )
+                    else:
+                        new_list.append( [item[0]-1, item[1]] )
 
             # Place item back into resource list
             self.__resources[item_key] = new_list
