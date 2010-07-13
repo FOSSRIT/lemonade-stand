@@ -1,37 +1,31 @@
-from fortuneengine.GameEngineElement import GameEngineElement
+# Lemonade stand is Licensed under the Don't Be A Dick License
+# (dbad-license). This license is an extension of the Apache License.
+#
+# You may find a copy of this license at http://dbad-license.org/license
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+# Authors:
+#     Justin Lewis <jlew.blackout@gmail.com>
+#     Nathaniel Case <Qalthos@gmail.com>
+
 from random import randint
 from gettext import gettext as _
 
-STARTING_MONEY = 1000
-MAX_MSG = 10
-ITEMS = {
-        'cup': {
-            'name':_('Cups'),
-            'cost':10,
-            'decay':0,
-            'peritem':1,
-            'bulk':25
-            },
-        'lemon': {
-            'name':_('Lemons'),
-            'cost':75,
-            'decay':5,
-            'peritem':2,
-            'bulk':1
-            },
-        'sugar': {
-            'name':_('Sugar'),
-            'cost':5,
-            'decay':0,
-            'peritem':1,
-            'bulk':100}
-    }
+from constants import STARTING_MONEY, STARTING_PRICE, MAX_MSG, ITEMS
 
-class LemonadeMain(GameEngineElement):
+class LemonadeMain:
     def __init__(self):
-        GameEngineElement.__init__(self, has_draw=False, has_event=True)
         self.__day = 1
-        self.__resources = {'money':STARTING_MONEY}
+        self.__resources = {
+            'money':STARTING_MONEY,
+            'price':STARTING_PRICE
+        }
 
         # Populate resources with item keys
         for item_key in ITEMS.keys():
@@ -46,8 +40,27 @@ class LemonadeMain(GameEngineElement):
         # run random
         self.random_event()
 
-        # Register with game engine
-        #self.add_to_engine()
+    @property
+    def money(self):
+        return self.__resources['money']
+
+    @property
+    def day(self):
+        return self.__day
+
+    def get_resource(self, key):
+           return self.count_item(key)
+
+    @property
+    def resource_list(self):
+        resources = {}
+        for item_key in ITEMS.keys():
+            resources[item_key] = self.count_item(item_key)
+        return resources
+
+    @property
+    def messages(self):
+        return self.__msg_queue
 
     def add_msg(self, mesg):
         self.__msg_queue.append( mesg )
@@ -98,8 +111,9 @@ class LemonadeMain(GameEngineElement):
             self.add_item('cup', 10)
             self.add_msg(_('It starts raining cups!'))
 
-    def process_day( self, items ):
+    def process_day_logic(self, items):
         self.__day += 1
+        start_money = self.__resources['money']
 
         # Process Item Payment
         for item in items:
@@ -111,11 +125,30 @@ class LemonadeMain(GameEngineElement):
             else:
                 self.add_msg(_("Bought %d units of %s.") % \
                     (items[item], ITEMS[item]['name']))
-        # People Buy
 
-        # Handle Change
+        # Calculate how many can be bought
+        inventory_hold = []
+        for item_key in ITEMS.keys():
+            inventory_hold.append(\
+                self.count_item(item_key) / ITEMS[item_key]['peritem'])
 
-        # Day earnings
+        sales = min(inventory_hold)
+
+        # Calculate how many will be bought by weather
+        if sales != 0:
+            if self.__weather == 0:
+                sales = int(sales * .8)
+            elif self.__weather == -1:
+                sales = int(sales * .6)
+
+        # Buy cups of lemonade
+        self.__resources['money'] += sales * self.__resources['price']
+
+        for item_key in ITEMS.keys():
+            self.remove_item( item_key, sales * ITEMS[item_key]['peritem'])
+
+        self.add_msg("Sold %d cups, Daily Profit: %d" % \
+                (sales, start_money - self.__resources['money']))
 
         # Decay items
         self.decay_items()
