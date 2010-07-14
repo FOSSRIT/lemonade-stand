@@ -48,6 +48,10 @@ class LemonadeMain:
     def day(self):
         return self.__day
 
+    @property
+    def weather(self):
+        return self.__weather
+
     def get_resource(self, key):
            return self.count_item(key)
 
@@ -67,6 +71,9 @@ class LemonadeMain:
         if len(self.__msg_queue) > MAX_MSG:
             self.__msg_queue.pop(0)
 
+    def clear_queue(self):
+        self.__msg_queue = []
+
     def weather_change(self):
         """
         Randomly change the weather, but not more than one unit away
@@ -76,15 +83,9 @@ class LemonadeMain:
         # It looks like its going to rain tomorrow
         if self.__weather <= -1:
             self.__weather = -1
-            self.add_msg(_("It looks like it is going to rain tomorrow"))
-
-        elif self.__weather == 0:
-            self.add_msg(_("It looks like it will be nice tomorrow"))
-
         # Tomorrow looks to be very hot
         elif self.__weather >= 1:
             self.__weather = 1
-            self.add_msg(_("It looks like it will be very hot tomorrow"))
 
     def random_event(self):
         """
@@ -112,6 +113,7 @@ class LemonadeMain:
             self.add_msg(_('It starts raining cups!'))
 
     def process_day_logic(self, items):
+        self.clear_queue()
         self.__day += 1
         start_money = self.__resources['money']
 
@@ -148,7 +150,7 @@ class LemonadeMain:
             self.remove_item( item_key, sales * ITEMS[item_key]['peritem'])
 
         self.add_msg("Sold %d cups, Daily Profit: %d" % \
-                (sales, start_money - self.__resources['money']))
+                (sales, self.__resources['money'] - start_money))
 
         # Decay items
         self.decay_items()

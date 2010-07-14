@@ -15,13 +15,13 @@
 #     Nathaniel Case <Qalthos@gmail.com>
 
 from fortuneengine.GameEngineElement import GameEngineElement
-from constants import ITEMS
+from constants import ITEMS, format_money, WEATHER
 from gettext import gettext as _
 from pygame import font, Surface
-from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB ,K_DOWN, K_UP
-
+from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB, K_DOWN, K_UP
 
 class LemonadeGui(GameEngineElement):
+
     def __init__(self):
         GameEngineElement.__init__(self, has_draw=True, has_event=True)
         self.__font = font.SysFont("Arial", 15)
@@ -33,35 +33,58 @@ class LemonadeGui(GameEngineElement):
 
     def draw(self, screen, tick):
         main = self.game_engine.get_object('main')
-
         screen.fill((0, 0, 255))
 
-        text_array = []
+        # Left Corner Data Block
+        myfont = font.SysFont(font.get_default_font(), 18)
 
-        # Corner Data Block
-        myfont = font.SysFont(font.get_default_font(), 16)
-        text_array.append( _("Day: %d") % main.day)
-        text_array.append( _("Weather: %s") % "TODO")
+        rendered_font = []
+        font_width = []
+        font_height = []
 
-        i = 10
-        for text in text_array:
-            ren = myfont.render( text, True, (255,255,255))
-            screen.blit(ren, (10,i))
-            i += ren.get_height()
+        text_arr = [
+            _("Day: %d") % main.day,
+            _("Weather: %s") % WEATHER[str(main.weather)],
+            _("Money: %s") % format_money(main.money),
+            "",
+            _("- Inventory -")]
 
-        # REST TODO
-        text_array = []
-        text_array.append( _("Money: %d") % main.money )
+        # Add Resources
         items = main.resource_list
-        for item_key in items:
-            text_array.append( "%s: %d" % (ITEMS[item_key]['name'], items[item_key]) )
+        for item_key in ITEMS:
+            text_arr.append( "   %s: %d" % \
+                    (ITEMS[item_key]['name'], items[item_key]) )
 
-        for message in main.messages:
-            text_array.append( message )
 
-        text_array.append("")
-        text_array.append("buy")
+        # Add Lemonade Recipe
+        text_arr.append("")
+        text_arr.append(_("- Recipe -"))
 
+        for item_key in ITEMS:
+            text_arr.append( "   %s: %d" % \
+                (ITEMS[item_key]['name'], ITEMS[item_key]['peritem']))
+
+        # Render Text
+        for text in text_arr:
+            the_font = myfont.render(text, True, (255, 255, 255))
+            rendered_font.append(the_font)
+            fw, fh = the_font.get_size()
+            font_width.append(fw)
+            font_height.append(fh)
+
+        block = Surface((max(font_width) + 20, sum(font_height) + 20))
+        block.fill((0, 0, 0))
+        i = 0
+        h = 0
+        for i in range(0, len(rendered_font)):
+            block.blit(rendered_font[i], (10, h + 10))
+            h += font_height[0]
+
+        screen.blit(block, (10, 10))
+
+        # Add Buy Dialog
+        text_array = []
+        text_array.append("- Buy Options  -")
         for i in range(0, len(self.__input_keys)):
             if i == self.__input_mode:
                 t = ">"
@@ -69,17 +92,24 @@ class LemonadeGui(GameEngineElement):
             else:
                 t = " "
 
-            text_array.append("%s %s(%d@$%d): %s" % \
+            text_array.append("%s %s(%d @ %s): %s" % \
                 (t, ITEMS[self.__input_keys[i]]['name'],
                  ITEMS[self.__input_keys[i]]['bulk'],
-                 ITEMS[self.__input_keys[i]]['cost'],
+                 format_money(ITEMS[self.__input_keys[i]]['cost']),
                  self.__input_string[i] ))
+
+
+        # Add day log to text
+        text_array.append("")
+        text_array.append(_("- Day Log -"))
+        for message in main.messages:
+            text_array.append( message )
 
         i = 0
         for text in text_array:
             ren = self.__font.render( text, True, (255,255,255))
 
-            screen.blit(ren, (100,i))
+            screen.blit(ren, (block.get_width() + 20,i))
             i += ren.get_height()
 
     def event_handler(self, event):

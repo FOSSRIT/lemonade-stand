@@ -42,6 +42,12 @@ ITEMS = {
             'bulk':100}
     }
 
+WEATHER = {
+    '-1': "Rainy",
+    '0': "Nice",
+    '1': "Hot"
+}
+
 # TODO: How to Localize data structures
 CURRENCY = {
     'Dollars':100,
@@ -50,3 +56,9 @@ CURRENCY = {
     'Nickels':5,
     'Pennies':1
     }
+
+import locale
+locale.setlocale(locale.LC_ALL, '')
+def format_money(value):
+    return locale.currency( value / 100.0, grouping=True )
+
