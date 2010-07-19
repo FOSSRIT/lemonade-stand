@@ -20,6 +20,7 @@ from gettext import gettext as _
 from pygame import font, Surface, transform, image
 from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB, K_DOWN, K_UP
 
+
 class LemonadeGui(GameEngineElement):
 
     def __init__(self):
@@ -61,8 +62,8 @@ class LemonadeGui(GameEngineElement):
         # Add Resources
         items = main.resource_list
         for item_key in ITEMS:
-            text_arr.append( "   %s: %d" % \
-                    (ITEMS[item_key]['name'], items[item_key]) )
+            text_arr.append("   %s: %d" % \
+                    (ITEMS[item_key]['name'], items[item_key]))
 
 
         # Add Lemonade Recipe
@@ -70,7 +71,7 @@ class LemonadeGui(GameEngineElement):
         text_arr.append(_("- Recipe -"))
 
         for item_key in ITEMS:
-            text_arr.append( "   %s: %d" % \
+            text_arr.append("   %s: %d" % \
                 (ITEMS[item_key]['name'], ITEMS[item_key]['peritem']))
 
         # Render Text
@@ -111,7 +112,7 @@ class LemonadeGui(GameEngineElement):
                  ITEMS[self.__input_keys[0][i]]['bulk'],
                  format_money(\
                     ITEMS[self.__input_keys[0][i]]['cost']),
-                self.__input_string[0][i] ))
+                self.__input_string[0][i]))
             else:
                 text_array.append("%s %s: %s" % \
                 (t, self.__input_keys[self.game_mode][i],
@@ -122,13 +123,13 @@ class LemonadeGui(GameEngineElement):
         text_array.append("")
         text_array.append(_("- Day Log -"))
         for message in main.messages:
-            text_array.append( message )
+            text_array.append(message)
 
         i = 0
         for text in text_array:
-            ren = self.__font.render( text, True, (255,255,255))
+            ren = self.__font.render(text, True, (255, 255, 255))
 
-            screen.blit(ren, (block.get_width() + 20,i))
+            screen.blit(ren, (block.get_width() + 20, i))
             i += ren.get_height()
 
     def event_handler(self, event):
@@ -144,7 +145,7 @@ class LemonadeGui(GameEngineElement):
                     self.__input_string[self.game_mode][i] = "0"
                 main = self.game_engine.get_object('main')
                 if self.game_mode == 0:
-                    main.process_day_logic( item_list )
+                    main.process_day_logic(item_list)
                     self.game_mode = 1
 
                 elif self.game_mode == 1:
@@ -153,36 +154,42 @@ class LemonadeGui(GameEngineElement):
 
 
             elif event.key == K_BACKSPACE:
-                handle = self.__input_string[self.game_mode][self.__input_mode[self.game_mode]]
+                handle = self.__input_string[self.game_mode]\
+                            [self.__input_mode[self.game_mode]]
 
                 if len(handle) == 1:
                     handle = "0"
                 else:
                     handle = handle[0:-1]
 
-                self.__input_string[self.game_mode][self.__input_mode[self.game_mode]] = handle
+                self.__input_string[self.game_mode][self.__input_mode[\
+                                    self.game_mode]] = handle
 
             # Go to the next field
             elif event.key in [K_TAB, K_DOWN]:
                 self.__input_mode[self.game_mode] = \
-                    (self.__input_mode[self.game_mode] + 1) % len( self.__input_keys[self.game_mode] )
+                    (self.__input_mode[self.game_mode] + 1) %\
+                        len(self.__input_keys[self.game_mode])
 
             # Go up to previous field
             elif event.key == K_UP:
                 self.__input_mode[self.game_mode] = \
-                    (self.__input_mode[self.game_mode] - 1) % len( self.__input_keys[self.game_mode] )
+                    (self.__input_mode[self.game_mode] - 1) %\
+                        len(self.__input_keys[self.game_mode])
 
             # Only handle numbers (ascii 48 - 58)
             elif event.key >= 48 and event.key <= 58:
                 key = str(event.unicode)
 
-                handle = self.__input_string[self.game_mode][self.__input_mode[self.game_mode]]
+                handle = self.__input_string[self.game_mode]\
+                    [self.__input_mode[self.game_mode]]
 
                 if handle == "0":
                     handle = key
                 else:
                     handle = "%s%s" % (handle, key)
 
-                self.__input_string[self.game_mode][self.__input_mode[self.game_mode]] = handle
+                self.__input_string[self.game_mode][self.__input_mode[\
+                    self.game_mode]] = handle
 
             self.game_engine.set_dirty()
