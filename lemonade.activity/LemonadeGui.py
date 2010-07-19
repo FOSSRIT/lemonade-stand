@@ -107,7 +107,7 @@ class LemonadeGui(GameEngineElement):
                 t = " "
 
             if self.game_mode == 0:
-                text_array.append("%s %s(%d @ %s): %s" % \
+                text_array.append(_("%s %s(%d @ %s each): %s") % \
                  (t, ITEMS[self.__input_keys[0][i]]['name'],
                  ITEMS[self.__input_keys[0][i]]['bulk'],
                  format_money(\

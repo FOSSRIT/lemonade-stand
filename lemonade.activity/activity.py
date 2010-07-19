@@ -64,7 +64,7 @@ class VteActivity(activity.Activity):
         self._pid = self._vte.fork_command \
             (command='/bin/sh',
              argv=['/bin/sh','-c',
-             'python %s/LemonadeStand.py --width=1200 --height=900' % bundle_path],
+             'python %s/LemonadeStand.py --width=1200 --height=900 --font=36' % bundle_path],
              envv=["PYTHONPATH=%s/library" % bundle_path],
              directory=bundle_path)
     def on_child_exit(self, widget):
