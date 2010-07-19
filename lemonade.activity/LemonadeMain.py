@@ -17,13 +17,17 @@
 from random import randint
 from gettext import gettext as _
 
-from constants import STARTING_MONEY, STARTING_PRICE, MAX_MSG, ITEMS
+from operator import itemgetter
+
+from constants import STARTING_MONEY, STARTING_PRICE, MAX_MSG,\
+                      ITEMS, CURRENCY, format_money
 
 class LemonadeMain:
     def __init__(self):
         self.__day = 1
         self.__resources = {
             'money':STARTING_MONEY,
+            'last_income':0,
             'price':STARTING_PRICE
         }
 
@@ -143,14 +147,23 @@ class LemonadeMain:
             elif self.__weather == -1:
                 sales = int(sales * .6)
 
-        # Buy cups of lemonade
-        self.__resources['money'] += sales * self.__resources['price']
-
+        # Remove items required per cup sold
         for item_key in ITEMS.keys():
             self.remove_item( item_key, sales * ITEMS[item_key]['peritem'])
 
-        self.add_msg("Sold %d cups, Daily Profit: %d" % \
-                (sales, self.__resources['money'] - start_money))
+        self.__resources['last_income'] = sales * self.__resources['price']
+
+        self.add_msg(_("Sold %d cups, at %s each") % \
+                (sales, format_money(self.__resources['price'])))
+
+
+    def process_day_end(self, mini_game_key):
+
+        if self.count_game(mini_game_key, self.__resources['last_income']):
+            # Give them the money if they added
+            self.__resources['money'] += self.__resources['last_income']
+        else:
+            self.add_msg(_("You dropped your money while trying to count it"))
 
         # Decay items
         self.decay_items()
@@ -269,3 +282,29 @@ class LemonadeMain:
         for item in self.__resources[key]:
             count += item[1]
         return count
+
+    def count_game(self, values, target):
+        """
+        Verifies the values of the counting game.
+
+        @param values:      A dictionary (keys must match CURRENCY) and
+                            values are how many of each currency type
+                            are required to make the optimum change
+        @return:            Returns true if they pass the mini-game
+        """
+        currency_values = sorted(CURRENCY.items(), key=itemgetter(1),
+                                 reverse=True)
+
+        x, previous_value = currency_values[0]
+        for key,value in  currency_values:
+            cal_val = (value * values[key])
+            if cal_val > previous_value:
+                return False
+            target -= cal_val
+            previous_value = value
+
+        if target == 0:
+            return True
+
+        else:
+            return False

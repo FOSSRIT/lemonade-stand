@@ -15,9 +15,9 @@
 #     Nathaniel Case <Qalthos@gmail.com>
 
 from fortuneengine.GameEngineElement import GameEngineElement
-from constants import ITEMS, format_money, WEATHER
+from constants import ITEMS, format_money, WEATHER, CURRENCY
 from gettext import gettext as _
-from pygame import font, Surface
+from pygame import font, Surface, transform, image
 from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB, K_DOWN, K_UP
 
 class LemonadeGui(GameEngineElement):
@@ -27,13 +27,22 @@ class LemonadeGui(GameEngineElement):
         self.__font = font.SysFont("Arial", 15)
         self.add_to_engine()
 
-        self.__input_keys = ITEMS.keys()
-        self.__input_mode = 0
-        self.__input_string = ['0'] * len(self.__input_keys)
+        self.game_mode = 0
+
+        self.__input_keys = [ITEMS.keys(), CURRENCY.keys()]
+        self.__input_mode = [0, 0]
+        self.__input_string = []
+        self.__input_string.append(['0'] * len(self.__input_keys[0]))
+        self.__input_string.append(['0'] * len(self.__input_keys[1]))
+
+        bg = image.load("images/game.gif").convert()
+        self.__background = transform.scale(bg, (self.game_engine.width,
+                                                 self.game_engine.height))
 
     def draw(self, screen, tick):
         main = self.game_engine.get_object('main')
         screen.fill((0, 0, 255))
+        screen.blit(self.__background, (0, 0))
 
         # Left Corner Data Block
         myfont = font.SysFont(font.get_default_font(), 18)
@@ -84,19 +93,29 @@ class LemonadeGui(GameEngineElement):
 
         # Add Buy Dialog
         text_array = []
-        text_array.append("- Buy Options  -")
-        for i in range(0, len(self.__input_keys)):
-            if i == self.__input_mode:
+        if self.game_mode == 0:
+            text_array.append(_("- Buy Options  -"))
+        elif self.game_mode == 1:
+            text_array.append(_("- How much did you make -"))
+
+        for i in range(0, len(self.__input_keys[self.game_mode])):
+            if i == self.__input_mode[self.game_mode]:
                 t = ">"
 
             else:
                 t = " "
 
-            text_array.append("%s %s(%d @ %s): %s" % \
-                (t, ITEMS[self.__input_keys[i]]['name'],
-                 ITEMS[self.__input_keys[i]]['bulk'],
-                 format_money(ITEMS[self.__input_keys[i]]['cost']),
-                 self.__input_string[i] ))
+            if self.game_mode == 0:
+                text_array.append("%s %s(%d @ %s): %s" % \
+                 (t, ITEMS[self.__input_keys[0][i]]['name'],
+                 ITEMS[self.__input_keys[0][i]]['bulk'],
+                 format_money(\
+                    ITEMS[self.__input_keys[0][i]]['cost']),
+                self.__input_string[0][i] ))
+            else:
+                text_array.append("%s %s: %s" % \
+                (t, self.__input_keys[self.game_mode][i],
+                self.__input_string[self.game_mode][i]))
 
 
         # Add day log to text
@@ -119,45 +138,51 @@ class LemonadeGui(GameEngineElement):
                 # Process Data
 
                 item_list = {}
-                for i in range(0, len(self.__input_keys)):
-                    item_list[self.__input_keys[i]] = \
-                                int(self.__input_string[i])
-                    self.__input_string[i] = "0"
+                for i in range(0, len(self.__input_keys[self.game_mode])):
+                    item_list[self.__input_keys[self.game_mode][i]] = \
+                                int(self.__input_string[self.game_mode][i])
+                    self.__input_string[self.game_mode][i] = "0"
                 main = self.game_engine.get_object('main')
-                main.process_day_logic( item_list )
+                if self.game_mode == 0:
+                    main.process_day_logic( item_list )
+                    self.game_mode = 1
+
+                elif self.game_mode == 1:
+                    main.process_day_end(item_list)
+                    self.game_mode = 0
 
 
             elif event.key == K_BACKSPACE:
-                handle = self.__input_string[self.__input_mode]
+                handle = self.__input_string[self.game_mode][self.__input_mode[self.game_mode]]
 
                 if len(handle) == 1:
                     handle = "0"
                 else:
                     handle = handle[0:-1]
 
-                self.__input_string[self.__input_mode] = handle
+                self.__input_string[self.game_mode][self.__input_mode[self.game_mode]] = handle
 
             # Go to the next field
             elif event.key in [K_TAB, K_DOWN]:
-                self.__input_mode = \
-                    (self.__input_mode + 1) % len( self.__input_keys )
+                self.__input_mode[self.game_mode] = \
+                    (self.__input_mode[self.game_mode] + 1) % len( self.__input_keys[self.game_mode] )
 
             # Go up to previous field
             elif event.key == K_UP:
-                self.__input_mode = \
-                    (self.__input_mode - 1) % len( self.__input_keys )
+                self.__input_mode[self.game_mode] = \
+                    (self.__input_mode[self.game_mode] - 1) % len( self.__input_keys[self.game_mode] )
 
             # Only handle numbers (ascii 48 - 58)
             elif event.key >= 48 and event.key <= 58:
                 key = str(event.unicode)
 
-                handle = self.__input_string[self.__input_mode]
+                handle = self.__input_string[self.game_mode][self.__input_mode[self.game_mode]]
 
                 if handle == "0":
                     handle = key
                 else:
                     handle = "%s%s" % (handle, key)
 
-                self.__input_string[self.__input_mode] = handle
+                self.__input_string[self.game_mode][self.__input_mode[self.game_mode]] = handle
 
             self.game_engine.set_dirty()
