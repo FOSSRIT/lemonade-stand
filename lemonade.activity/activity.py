@@ -62,11 +62,11 @@ class VteActivity(activity.Activity):
         self._vte.grab_focus()
         bundle_path = activity.get_bundle_path()
         self._pid = self._vte.fork_command \
-                    (command='/bin/sh',
-                     argv=['/bin/sh','-c',
-                           'python %s/LemonadeStand.py' % bundle_path],
-                     envv=["PYTHONPATH=%s/library" % bundle_path],
-                     directory=bundle_path)
+            (command='/bin/sh',
+             argv=['/bin/sh','-c',
+             'python %s/LemonadeStand.py --width=1200 --height=900' % bundle_path],
+             envv=["PYTHONPATH=%s/library" % bundle_path],
+             directory=bundle_path)
     def on_child_exit(self, widget):
         """This method is invoked when the user's script exits."""
         if not DEBUG_TERMINAL:

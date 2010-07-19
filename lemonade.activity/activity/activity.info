@@ -4,4 +4,4 @@ activity_version = 3
 host_version = 1
 service_name = org.laptop.community.lemonade
 icon = activity
-exec = sugar-activity activity.Activity
+exec = sugar-activity activity.VteActivity
