@@ -17,7 +17,7 @@
 from fortuneengine.GameEngineElement import GameEngineElement
 from constants import ITEMS, format_money, WEATHER, CURRENCY
 from gettext import gettext as _
-from pygame import font, Surface, transform, image
+from pygame import Surface, transform, image
 from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB, K_DOWN, K_UP
 
 
@@ -25,7 +25,7 @@ class LemonadeGui(GameEngineElement):
 
     def __init__(self):
         GameEngineElement.__init__(self, has_draw=True, has_event=True)
-        self.__font = font.SysFont("Arial", 15)
+        self.__font = self.game_engine.get_object('font')
         self.add_to_engine()
 
         self.game_mode = 0
@@ -46,7 +46,7 @@ class LemonadeGui(GameEngineElement):
         screen.blit(self.__background, (0, 0))
 
         # Left Corner Data Block
-        myfont = font.SysFont(font.get_default_font(), 18)
+        myfont = self.__font
 
         rendered_font = []
         font_width = []
