@@ -18,7 +18,8 @@ from fortuneengine.GameEngineElement import GameEngineElement
 from constants import ITEMS, format_money, WEATHER, CURRENCY
 from gettext import gettext as _
 from pygame import Surface, transform, image
-from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB, K_DOWN, K_UP
+from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB,\
+                          K_DOWN, K_UP, K_ESCAPE
 
 
 class LemonadeGui(GameEngineElement):
@@ -152,6 +153,8 @@ class LemonadeGui(GameEngineElement):
                     main.process_day_end(item_list)
                     self.game_mode = 0
 
+            elif event.key == K_ESCAPE:
+                self.game_engine.stop_event_loop()
 
             elif event.key == K_BACKSPACE:
                 handle = self.__input_string[self.game_mode]\
