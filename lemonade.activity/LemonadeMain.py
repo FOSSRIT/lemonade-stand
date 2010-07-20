@@ -28,6 +28,7 @@ class LemonadeMain:
         self.__resources = {
             'money':STARTING_MONEY,
             'last_income':0,
+            'last_profit':0,
             'price':STARTING_PRICE
         }
 
@@ -120,6 +121,7 @@ class LemonadeMain:
         self.clear_queue()
         self.__day += 1
         start_money = self.__resources['money']
+        self.add_msg(_("Starting Money: %s" % format_money(start_money)))
 
         # Process Item Payment
         for item in items:
@@ -156,15 +158,29 @@ class LemonadeMain:
         self.add_msg(_("Sold %d cups, at %s each") % \
                 (sales, format_money(self.__resources['price'])))
 
+        profit_to_calculate = (self.__resources['money'] - start_money) + self.__resources['last_income']
+        self.__resources['last_profit'] = profit_to_calculate
+
+        #print profit_to_calculate
+
+        if profit_to_calculate > 0:
+            return True
+
+        else:
+            self.process_day_end(-1)
+            return False
+
 
     def process_day_end(self, mini_game_key):
 
-        if self.count_game(mini_game_key, self.__resources['last_income']):
-            # Give them the money if they added
-            self.__resources['money'] += self.__resources['last_income']
+        if self.__resources['last_profit'] > 0:
+            if self.count_game(mini_game_key, self.__resources['last_profit']):
+                # Give them the money if they added
+                self.__resources['money'] += self.__resources['last_income']
+            else:
+                self.add_msg(_("You dropped your money while trying to count it"))
         else:
-            self.add_msg(_("You dropped your money while trying to count it"))
-
+            self.__resources['money'] += self.__resources['last_income']
         # Decay items
         self.decay_items()
 

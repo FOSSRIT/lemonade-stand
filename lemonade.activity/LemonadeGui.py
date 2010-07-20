@@ -146,8 +146,10 @@ class LemonadeGui(GameEngineElement):
                     self.__input_string[self.game_mode][i] = "0"
                 main = self.game_engine.get_object('main')
                 if self.game_mode == 0:
-                    main.process_day_logic(item_list)
-                    self.game_mode = 1
+
+                    #Will return true if go to profit game
+                    if(main.process_day_logic(item_list)):
+                        self.game_mode = 1
 
                 elif self.game_mode == 1:
                     main.process_day_end(item_list)
