@@ -1,3 +1,14 @@
+RUN INSTRUCTIONS
+
+To run the game, you must have pygame installed.  The game also requires the
+fortune engine installed.  You may find it in the fortune hunter wiki:
+https://fedorahosted.org/fortune_hunter/wiki/FortuneEngine
+
+To start the game by running LemonadeStand.py as a standalone program.
+To start it on an xo, after installing just click the Lemonade Icon which
+will run the activity.py file.
+
+GAME PLAY INSTRUCTIONS
 To begin, click on the Lemonade stand icon on your XO.
 
 The game will start immediately.
