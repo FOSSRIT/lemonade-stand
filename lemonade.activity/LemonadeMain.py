@@ -295,7 +295,8 @@ class LemonadeMain:
         currency_values = sorted(CURRENCY.items(), key=itemgetter(1),
                                  reverse=True)
 
-        x, previous_value = currency_values[0]
+        # Set previous_value to target so it always accepts the first key
+        previous_value = target
         for key,value in  currency_values:
             cal_val = (value * values[key])
             if cal_val > previous_value:
