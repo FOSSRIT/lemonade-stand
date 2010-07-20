@@ -22,14 +22,20 @@ from operator import itemgetter
 from constants import STARTING_MONEY, STARTING_PRICE, MAX_MSG,\
                       ITEMS, CURRENCY, format_money
 
+
 class LemonadeMain:
+    """
+    The main class for the Lemonade Game.
+    This class holds all the logic of the game
+    """
+
     def __init__(self):
         self.__day = 1
         self.__resources = {
-            'money':STARTING_MONEY,
-            'last_income':0,
-            'last_profit':0,
-            'price':STARTING_PRICE
+            'money': STARTING_MONEY,
+            'last_income': 0,
+            'last_profit': 0,
+            'price': STARTING_PRICE
         }
 
         # Populate resources with item keys
@@ -58,7 +64,7 @@ class LemonadeMain:
         return self.__weather
 
     def get_resource(self, key):
-           return self.count_item(key)
+        return self.count_item(key)
 
     @property
     def resource_list(self):
@@ -72,7 +78,7 @@ class LemonadeMain:
         return self.__msg_queue
 
     def add_msg(self, mesg):
-        self.__msg_queue.append( mesg )
+        self.__msg_queue.append(mesg)
         if len(self.__msg_queue) > MAX_MSG:
             self.__msg_queue.pop(0)
 
@@ -125,7 +131,7 @@ class LemonadeMain:
 
         # Process Item Payment
         for item in items:
-            status = self.buy_item( item, items[item] )
+            status = self.buy_item(item, items[item])
             if status == -1:
                 self.add_msg(_("You can't afford any units of %s.") % \
                     ITEMS[item]['name'])
@@ -151,14 +157,15 @@ class LemonadeMain:
 
         # Remove items required per cup sold
         for item_key in ITEMS.keys():
-            self.remove_item( item_key, sales * ITEMS[item_key]['peritem'])
+            self.remove_item(item_key, sales * ITEMS[item_key]['peritem'])
 
         self.__resources['last_income'] = sales * self.__resources['price']
 
         self.add_msg(_("Sold %d cups, at %s each") % \
                 (sales, format_money(self.__resources['price'])))
 
-        profit_to_calculate = (self.__resources['money'] - start_money) + self.__resources['last_income']
+        profit_to_calculate = (self.__resources['money'] - start_money)\
+                              + self.__resources['last_income']
         self.__resources['last_profit'] = profit_to_calculate
 
         #print profit_to_calculate
@@ -170,15 +177,20 @@ class LemonadeMain:
             self.process_day_end(-1)
             return False
 
-
     def process_day_end(self, mini_game_key):
+        """
+        Processes the end of the day
 
+        @param mini_game_key:    A dictionary of keys and values of the
+                                 mini game
+        """
         if self.__resources['last_profit'] > 0:
             if self.count_game(mini_game_key, self.__resources['last_profit']):
                 # Give them the money if they added
                 self.__resources['money'] += self.__resources['last_income']
             else:
-                self.add_msg(_("You dropped your money while trying to count it"))
+                self.add_msg(\
+                    _("You dropped your money while trying to count it"))
         else:
             self.__resources['money'] += self.__resources['last_income']
         # Decay items
@@ -256,7 +268,7 @@ class LemonadeMain:
 
             if item[1] > to_remove:
                 item[1] -= to_remove
-                resource.insert(0,item)
+                resource.insert(0, item)
                 break
             else:
                 to_remove -= item[1]
@@ -279,9 +291,9 @@ class LemonadeMain:
                 if item[0] != 1:
                     # If item is 0, then it doesn't decay
                     if item[0] == 0:
-                        new_list.append( [item[0], item[1]] )
+                        new_list.append([item[0], item[1]])
                     else:
-                        new_list.append( [item[0]-1, item[1]] )
+                        new_list.append([item[0]-1, item[1]])
 
             # Place item back into resource list
             self.__resources[item_key] = new_list
@@ -313,7 +325,7 @@ class LemonadeMain:
 
         # Set previous_value to target so it always accepts the first key
         previous_value = target
-        for key,value in  currency_values:
+        for key, value in  currency_values:
             cal_val = (value * values[key])
             if cal_val > previous_value:
                 return False
