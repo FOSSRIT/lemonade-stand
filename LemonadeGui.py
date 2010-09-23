@@ -73,7 +73,7 @@ class LemonadeGui(GameEngineElement):
 
         for item_key in ITEMS:
             text_arr.append("   %s: %d" % \
-                (ITEMS[item_key]['name'], main.recipe.get(item_key, 0)))
+                (ITEMS[item_key]['name'], main.recipe(item_key)))
 
         # Render Text
         for text in text_arr:

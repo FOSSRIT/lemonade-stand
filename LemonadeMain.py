@@ -74,9 +74,8 @@ class LemonadeMain:
             resources[item_key] = self.count_item(item_key)
         return resources
 
-    @property
-    def recipe(self):
-        return self.__resources['recipe']
+    def recipe(self, ingredient):
+        return self.__resources['recipe'].get(ingredient, 0)
 
     @property
     def messages(self):
@@ -148,8 +147,10 @@ class LemonadeMain:
         # Calculate how many can be bought
         inventory_hold = []
         for item_key in ITEMS.keys():
+            if self.recipe(item_key) == 0:
+                continue
             inventory_hold.append(\
-                self.count_item(item_key) / self.recipe[item_key])
+                self.count_item(item_key) / self.recipe(item_key))
 
         sales = min(inventory_hold)
 
@@ -162,7 +163,7 @@ class LemonadeMain:
 
         # Remove items required per cup sold
         for item_key in ITEMS.keys():
-            self.remove_item(item_key, sales * self.recipe[item_key])
+            self.remove_item(item_key, sales * self.recipe(item_key))
 
         self.__resources['last_income'] = sales * self.__resources['price']
 
