@@ -20,27 +20,31 @@ STARTING_MONEY = 1000
 STARTING_PRICE = 150
 MAX_MSG = 10
 ITEMS = {
-        'cup': {
-            'name':_('Cups'),
-            'cost':10,
-            'decay':0,
-            'peritem':1,
-            'bulk':12
-            },
-        'lemon': {
-            'name':_('Lemons'),
-            'cost':35,
-            'decay':5,
-            'peritem':2,
-            'bulk':1
-            },
-        'sugar': {
-            'name':_('Sugar'),
-            'cost':5,
-            'decay':0,
-            'peritem':3,
-            'bulk':100}
+    'cup': {
+        'name': _('Cups'),
+        'cost': 10,
+        'decay': 0,
+        'bulk': 12
+    },
+    'lemon': {
+        'name': _('Lemons'),
+        'cost': 35,
+        'decay': 5,
+        'bulk': 1
+    },
+    'sugar': {
+        'name': _('Sugar'),
+        'cost': 5,
+        'decay': 0,
+        'bulk': 100
+    },
+    'strawberry': {
+        'name': _('Strawberry'),
+        'cost': 50,
+        'decay': 3,
+        'bulk': 5
     }
+}
 
 WEATHER = {
     '-1': "Rainy",

@@ -75,6 +75,10 @@ class LemonadeMain:
         return resources
 
     @property
+    def recipe(self):
+        return self.__resources['recipe']
+
+    @property
     def messages(self):
         return self.__msg_queue
 
@@ -145,7 +149,7 @@ class LemonadeMain:
         inventory_hold = []
         for item_key in ITEMS.keys():
             inventory_hold.append(\
-                self.count_item(item_key) / ITEMS[item_key]['peritem'])
+                self.count_item(item_key) / self.recipe[item_key])
 
         sales = min(inventory_hold)
 
@@ -158,7 +162,7 @@ class LemonadeMain:
 
         # Remove items required per cup sold
         for item_key in ITEMS.keys():
-            self.remove_item(item_key, sales * ITEMS[item_key]['peritem'])
+            self.remove_item(item_key, sales * self.recipe[item_key])
 
         self.__resources['last_income'] = sales * self.__resources['price']
 
