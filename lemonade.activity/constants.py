@@ -55,7 +55,29 @@ CURRENCY = {
     'Dimes':10,
     'Nickels':5,
     'Pennies':1
+}
+
+RECIPES = {
+    'basic': {
+        'cup': 1,
+        'lemon': 2,
+        'sugar': 3,
+        'cost': 150
+    },
+    'strawberry': {
+        'cup': 1,
+        'lemon': 2,
+        'sugar': 2,
+        'strawberry': 1,
+        'cost': 225
+    },
+    'epic': {
+        'cup': 2,
+        'lemon': 3,
+        'sugar': 5,
+        'cost': 500
     }
+}
 
 import locale
 locale.setlocale(locale.LC_ALL, '')

@@ -20,7 +20,7 @@ from gettext import gettext as _
 from operator import itemgetter
 
 from constants import STARTING_MONEY, STARTING_PRICE, MAX_MSG,\
-                      ITEMS, CURRENCY, format_money
+                      ITEMS, CURRENCY, RECIPES, format_money
 
 
 class LemonadeMain:
@@ -35,7 +35,8 @@ class LemonadeMain:
             'money': STARTING_MONEY,
             'last_income': 0,
             'last_profit': 0,
-            'price': STARTING_PRICE
+            'price': STARTING_PRICE,
+            'recipe': RECIPES['basic']
         }
 
         # Populate resources with item keys
