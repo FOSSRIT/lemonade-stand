@@ -52,6 +52,13 @@ WEATHER = {
     '1': "Hot"
 }
 
+DIFFICULTY = [
+    "Easy",
+    "Normal",
+    "Hard",
+    "Impossible"
+]
+
 # TODO: How to Localize data structures
 CURRENCY = {
     'Dollars':100,

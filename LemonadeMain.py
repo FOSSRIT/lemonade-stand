@@ -20,7 +20,7 @@ from gettext import gettext as _
 from operator import itemgetter
 
 from constants import STARTING_MONEY, STARTING_PRICE, MAX_MSG,\
-                      ITEMS, CURRENCY, RECIPES, format_money
+                      ITEMS, CURRENCY, RECIPES, DIFFICULTY, format_money
 
 
 class LemonadeMain:
@@ -29,8 +29,9 @@ class LemonadeMain:
     This class holds all the logic of the game
     """
 
-    def __init__(self):
+    def __init__(self, difficulty_level=0):
         self.__day = 1
+        self.__difficulty = difficulty_level
         self.__resources = {
             'money': STARTING_MONEY,
             'last_income': 0,
@@ -170,6 +171,12 @@ class LemonadeMain:
         self.add_msg(_("Sold %d cups, at %s each") % \
                 (sales, format_money(self.__resources['price'])))
 
+        # Show profit and expenses if the difficuly is less than impossible
+        if self.__difficulty < DIFFICULTY.index("Impossible"):
+            self.add_msg("You spent %s on supplies and made %s in sales" % \
+                   (format_money(self.__resources['money'] - start_money), \
+                    format_money(self.__resources['last_income'])))
+
         profit_to_calculate = (self.__resources['money'] - start_money)\
                               + self.__resources['last_income']
         self.__resources['last_profit'] = profit_to_calculate
@@ -180,6 +187,11 @@ class LemonadeMain:
             return True
 
         else:
+            # Show the net porfit if difficulty is less than normal
+            if self.__difficulty < DIFFICULTY.index("Hard"):
+                self.add_msg("That comes to %s in profit" % \
+                    (format_money(self.__resources['last_profit'])))
+
             self.process_day_end(-1)
             return False
 
