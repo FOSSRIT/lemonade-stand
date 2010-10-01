@@ -312,6 +312,8 @@ class LemonadeMain:
                         new_list.append([item[0], item[1]])
                     else:
                         new_list.append([item[0]-1, item[1]])
+                elif item[1] != 0:
+                    self.add_msg("%d %ss have gone bad" % (item[1], item_key))
 
             # Place item back into resource list
             self.__resources[item_key] = new_list
