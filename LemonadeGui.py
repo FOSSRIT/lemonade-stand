@@ -44,7 +44,7 @@ class LemonadeGui(GameEngineElement):
     def draw(self, screen, tick):
         main = self.game_engine.get_object('main')
         screen.fill((0, 0, 255))
-        #screen.blit(self.__background, (0, 0))
+        screen.blit(self.__background, (0, 0))
 
         # Left Corner Data Block
         myfont = self.__font
