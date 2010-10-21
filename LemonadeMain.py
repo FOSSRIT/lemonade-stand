@@ -19,7 +19,7 @@ from gettext import gettext as _
 
 from operator import itemgetter
 
-from constants import STARTING_MONEY, STARTING_PRICE, MAX_MSG,\
+from constants import STARTING_MONEY, STARTING_PRICE, MAX_MSG, EVENTS,\
                       ITEMS, CURRENCY, RECIPES, DIFFICULTY, format_money
 
 
@@ -107,26 +107,24 @@ class LemonadeMain:
         """
         Attempt to run random events
         """
-        event = randint(0, 10)
+        event_num = randint(0, 10)
 
-        if event == 0:
-            # TODO: STEAL RANDOM ITEM NOT HARD CODE
-            itemcount = self.count_item('sugar')
-            if itemcount >= 10:
-                self.remove_item('sugar', 10)
+        if event_num < len(EVENTS):
+            event_keys = sorted(EVENTS.keys())
+            event = EVENTS[event_keys[event_num]]
+
+            itemcount = self.count_item(event['item'])
+            
+            if event['change'] < 0:
+                remove = abs(event['change'])
+                if itemcount > remove:
+                    self.remove_item(event['item'], remove)
+                else:
+                    self.remove_item(event['item'], itemcount)
             else:
-                self.remove_item('sugar', itemcount)
+                self.add_item(event['item'], event['change'])
 
-            self.add_msg(_('Ants steal some of your supplies!'))
-
-        elif event == 1:
-            self.add_item('lemon', 10)
-
-            self.add_msg(_('A lemon truck crashes in front of your stand!'))
-
-        elif event == 2:
-            self.add_item('cup', 10)
-            self.add_msg(_('It starts raining cups!'))
+            self.add_msg(event['text'])
 
     def process_day_logic(self, items):
         self.clear_queue()

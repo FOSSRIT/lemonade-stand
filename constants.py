@@ -52,6 +52,21 @@ WEATHER = {
     '1': "Hot"
 }
 
+EVENTS = {
+    'truck': {'text': _("A lemon truck crashes in front of your stand!"),
+              'item': 'lemon',
+              'change': 10
+    },
+    'rain': {'text': _("It starts raining cups!"),
+             'item': 'cup',
+             'change': 10
+    },
+    'ants': {'text': _("Ants steal some of your supplies!"),
+             'item': 'sugar',
+             'change': -10
+    }
+}
+
 DIFFICULTY = [
     "Easy",
     "Normal",
