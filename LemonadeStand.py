@@ -17,7 +17,7 @@ parser.add_option("", "--height", dest="height", help="window height",
 parser.add_option("-f", "--font", dest="font", help="font size",
                   metavar="SIZE", default=20, type="int")
 
-parser.add_option("", "--difficulty", dest="difficulty", help="difficulty level",
+parser.add_option("-d", "--difficulty", dest="difficulty", help="difficulty level",
                   metavar="DIFFICULTY", default=0, type="int")
 
 (opts, args) = parser.parse_args()
