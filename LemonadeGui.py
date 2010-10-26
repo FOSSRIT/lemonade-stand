@@ -37,12 +37,14 @@ class LemonadeGui(GameEngineElement):
         self.__input_string.append(['0'] * len(self.__input_keys[0]))
         self.__input_string.append(['0'] * len(self.__input_keys[1]))
 
-        bg = image.load("images/game.gif").convert()
+    def change_background(self, weather):
+        bg = image.load("images/field_%s.gif" % WEATHER[weather]).convert()
         self.__background = transform.scale(bg, (self.game_engine.width,
                                                  self.game_engine.height))
 
     def draw(self, screen, tick):
         main = self.game_engine.get_object('main')
+        self.change_background(main.weather)
         screen.fill((0, 0, 255))
         screen.blit(self.__background, (0, 0))
 
@@ -55,7 +57,7 @@ class LemonadeGui(GameEngineElement):
 
         text_arr = [
             _("Day: %d") % main.day,
-            _("Weather: %s") % WEATHER[str(main.weather)],
+            _("Weather: %s") % WEATHER[main.weather],
             _("Money: %s") % format_money(main.money),
             "",
             _("- Inventory -")]

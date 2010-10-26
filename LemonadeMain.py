@@ -44,7 +44,7 @@ class LemonadeMain:
         for item_key in ITEMS.keys():
             self.__resources[item_key] = []
 
-        self.__weather = 0
+        self.__weather = 1
         self.__msg_queue = []
 
         # run weather
@@ -97,11 +97,11 @@ class LemonadeMain:
         self.__weather += randint(-1, 1)
 
         # It looks like its going to rain tomorrow
-        if self.__weather <= -1:
-            self.__weather = -1
+        if self.__weather <= 0:
+            self.__weather = 0
         # Tomorrow looks to be very hot
-        elif self.__weather >= 1:
-            self.__weather = 1
+        elif self.__weather >= 2:
+            self.__weather = 2
 
     def random_event(self):
         """
