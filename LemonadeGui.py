@@ -128,11 +128,12 @@ class LemonadeGui(GameEngineElement):
         for message in main.messages:
             text_array.append(message)
 
-        i = 0
+        # Take the middle of the screen and add a 
+        i = self.game_engine.height / 2 + 20
         for text in text_array:
             ren = self.__font.render(text, True, (255, 255, 255))
 
-            screen.blit(ren, (block.get_width() + 20, i))
+            screen.blit(ren, (10, i))
             i += ren.get_height()
 
     def event_handler(self, event):
