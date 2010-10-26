@@ -110,8 +110,7 @@ class LemonadeMain:
         event_num = randint(0, 10)
 
         if event_num < len(EVENTS):
-            event_keys = sorted(EVENTS.keys())
-            event = EVENTS[event_keys[event_num]]
+            event = EVENTS[event_num]
 
             itemcount = self.count_item(event['item'])
             

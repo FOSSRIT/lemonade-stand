@@ -46,26 +46,22 @@ ITEMS = {
     }
 }
 
-WEATHER = {
-    '-1': "Rainy",
-    '0': "Nice",
-    '1': "Hot"
-}
+WEATHER = ["cloudy", "nice", "hot"]
 
-EVENTS = {
-    'truck': {'text': _("A lemon truck crashes in front of your stand!"),
-              'item': 'lemon',
-              'change': 10
+EVENTS = [
+    {'text': _("A lemon truck crashes in front of your stand!"),
+     'item': 'lemon',
+     'change': 10
     },
-    'rain': {'text': _("It starts raining cups!"),
-             'item': 'cup',
-             'change': 10
+    {'text': _("It starts raining cups!"),
+     'item': 'cup',
+     'change': 10
     },
-    'ants': {'text': _("Ants steal some of your supplies!"),
-             'item': 'sugar',
-             'change': -10
+    {'text': _("Ants steal some of your supplies!"),
+     'item': 'sugar',
+     'change': -10
     }
-}
+]
 
 DIFFICULTY = [
     "Easy",
