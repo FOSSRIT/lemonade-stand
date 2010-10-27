@@ -44,59 +44,7 @@ class LemonadeGui(GameEngineElement):
         self.__background = transform.scale(bg, (self.game_engine.width,
                                                  self.game_engine.height))
 
-    def draw(self, screen, tick):
-        main = self.game_engine.get_object('main')
-        self.change_background(main.weather)
-        screen.fill((0, 0, 255))
-        screen.blit(self.__background, (0, 0))
-
-        # Left Corner Data Block
-        myfont = self.__font
-
-        rendered_font = []
-        font_width = []
-        font_height = []
-
-        text_arr = [
-            _("Day: %d") % main.day,
-            _("Weather: %s") % WEATHER[main.weather],
-            _("Money: %s") % format_money(main.money),
-            "",
-            _("- Inventory -")]
-
-        # Add Resources
-        items = main.resource_list
-        for item_key in ITEMS:
-            text_arr.append("   %s: %d" % \
-                    (ITEMS[item_key]['name'], items[item_key]))
-
-
-        # Add Lemonade Recipe
-        text_arr.append("")
-        text_arr.append(_("- Recipe -"))
-
-        for item_key in ITEMS:
-            text_arr.append("   %s: %d" % \
-                (ITEMS[item_key]['name'], main.recipe(item_key)))
-
-        # Render Text
-        for text in text_arr:
-            the_font = myfont.render(text, True, (255, 255, 255))
-            rendered_font.append(the_font)
-            fw, fh = the_font.get_size()
-            font_width.append(fw)
-            font_height.append(fh)
-
-        block = Surface((max(font_width) + 20, sum(font_height) + 20))
-        block.fill((0, 0, 0))
-        i = 0
-        h = 0
-        for i in range(0, len(rendered_font)):
-            block.blit(rendered_font[i], (10, h + 10))
-            h += font_height[0]
-
-        screen.blit(block, (10, 10))
-
+    def draw_log(self, messages):
         # Add Buy Dialog
         text_array = []
         if self.game_mode == 0:
@@ -127,16 +75,69 @@ class LemonadeGui(GameEngineElement):
         # Add day log to text
         text_array.append("")
         text_array.append(_("- Day Log -"))
-        for message in main.messages:
+        for message in messages:
             text_array.append(message)
+        
+        return self._blit_to_block(text_array, (0, 0, 0), (255, 255, 255))
 
-        # Take the middle of the screen and add a 
-        i = self.game_engine.height / 2 + 20
+    def data_block(self, main):
+        text_arr = [
+            _("Day: %d") % main.day,
+            _("Weather: %s") % WEATHER[main.weather],
+            _("Money: %s") % format_money(main.money),
+            "",
+            _("- Inventory -")]
+
+        # Add Resources
+        items = main.resource_list
+        for item_key in ITEMS:
+            text_arr.append("   %s: %d" % \
+                    (ITEMS[item_key]['name'], items[item_key]))
+
+
+        # Add Lemonade Recipe
+        text_arr.append("")
+        text_arr.append(_("- Recipe -"))
+
+        for item_key in ITEMS:
+            text_arr.append("   %s: %d" % \
+                (ITEMS[item_key]['name'], main.recipe(item_key)))
+
+        return self._blit_to_block(text_arr)
+
+    def draw(self, screen, tick):
+        main = self.game_engine.get_object('main')
+        self.change_background(main.weather)
+        screen.blit(self.__background, (0, 0))
+
+        block = self.data_block(main)
+        screen.blit(block, (10, 10))
+
+        block = self.draw_log(main.messages)
+        screen.blit(block, (10, self.game_engine.height // 2 + 10))
+
+    def _blit_to_block(self, text_array, text_color=(255, 255, 255),
+                       block_color=(0, 0, 0)):
+        rendered_text = []
+        font_width = []
+        font_height = []
+
         for text in text_array:
-            ren = self.__font.render(text, True, (255, 255, 255))
+            ren = self.__font.render(text, True, text_color)
+            rendered_text.append(ren)
+            fw, fh = ren.get_size()
+            font_width.append(fw)
+            font_height.append(fh)
 
-            screen.blit(ren, (10, i))
-            i += ren.get_height()
+        block = Surface((max(font_width) + 20, sum(font_height) + 20))
+        block.fill(block_color)
+
+        h = 10
+        for text in rendered_text:
+            block.blit(text, (10, h))
+            h += font_height[0]
+
+        return block
 
     def event_handler(self, event):
         if event.type == KEYDOWN:
