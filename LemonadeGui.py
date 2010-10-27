@@ -39,6 +39,8 @@ class LemonadeGui(GameEngineElement):
 
     def change_background(self, weather):
         bg = image.load("images/field_%s.gif" % WEATHER[weather]).convert()
+        stand = image.load("images/booth.gif").convert()
+        bg.blit(stand, (720, 450))
         self.__background = transform.scale(bg, (self.game_engine.width,
                                                  self.game_engine.height))
 
