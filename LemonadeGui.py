@@ -83,10 +83,7 @@ class LemonadeGui(GameEngineElement):
     def data_block(self, main):
         text_arr = [
             _("Day: %d") % main.day,
-            _("Weather: %s") % WEATHER[main.weather],
-            _("Money: %s") % format_money(main.money),
-            "",
-            _("- Inventory -")]
+            _("Weather: %s") % WEATHER[main.weather]]
 
         # Add Lemonade Recipe
         text_arr.append("")
