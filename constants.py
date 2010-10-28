@@ -38,12 +38,12 @@ ITEMS = {
         'decay': 0,
         'bulk': 100
     },
-    'strawberry': {
-        'name': _('Strawberry'),
-        'cost': 50,
-        'decay': 3,
-        'bulk': 5
-    }
+#    'strawberry': {
+#        'name': _('Strawberry'),
+#        'cost': 50,
+#        'decay': 3,
+#        'bulk': 5
+#    }
 }
 
 WEATHER = ["cloudy", "nice", "hot"]
