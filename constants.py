@@ -72,11 +72,11 @@ DIFFICULTY = [
 
 # TODO: How to Localize data structures
 CURRENCY = {
-    'Dollars':100,
-    'Quarters':25,
-    'Dimes':10,
-    'Nickels':5,
-    'Pennies':1
+    'Dollars': 100,
+    'Quarters': 25,
+    'Dimes': 10,
+    'Nickels': 5,
+    'Pennies': 1
 }
 
 RECIPES = {

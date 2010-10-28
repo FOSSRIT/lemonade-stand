@@ -102,24 +102,27 @@ class LemonadeGui(GameEngineElement):
         ingredient_block = Surface((self.game_engine.width * 11/24,
                                     self.game_engine.height * 9/36))
         ingredient_block.fill((0, 0, 255))
+        
         icon_size = ingredient_block.get_width() // (len(items) * 1.5)
         icon_width = ingredient_block.get_width() // len(items)
         j = icon_size // 3
+        render_top = 15 + icon_size
         for name, count in items.items():
             icon = image.load("images/icon-%s.gif" % name).convert()
             icon = transform.scale(icon, (icon_size, icon_size))
             ingredient_block.blit(icon, (j, 10))
+
+            # Put an item count under the icon.
             ren = self.__font.render(str(count), True, (0, 0, 0))
             fw, fh = ren.get_size()
             render_left = j + (icon_size // 2) - (fw // 2)
-            render_top = 20 + icon_size
             ingredient_block.blit(ren, (render_left, render_top))
             j += icon_width
 
         ren = self.__font.render("Funds: %s" % format_money(money), True, (0, 0, 0))
         fw, fh = ren.get_size()
         render_left = ingredient_block.get_width() // 2 - fw // 2
-        render_top = (ingredient_block.get_height() - (20 + icon_size)) // 2 + (20 + icon_size)
+        render_top = (ingredient_block.get_height() - render_top) // 2 + render_top
         ingredient_block.blit(ren, (render_left, render_top))
 
         return ingredient_block
