@@ -98,7 +98,7 @@ class LemonadeGui(GameEngineElement):
 
         return self._blit_to_block(text_arr)
 
-    def ingredient_count(self, items, screen):
+    def ingredient_count(self, items, money):
         # sides are at 650 and 675
         #            /1200    /900
         #            13/24   27/36
@@ -116,12 +116,16 @@ class LemonadeGui(GameEngineElement):
             fw, fh = ren.get_size()
             render_left = j + (icon_size // 2) - (fw // 2)
             render_top = 20 + icon_size
-            print render_left
             ingredient_block.blit(ren, (render_left, render_top))
             j += icon_width
 
-        screen.blit(ingredient_block, (self.game_engine.width * 13/24,
-                                       self.game_engine.height * 27/36))
+        ren = self.__font.render("Funds: %s" % format_money(money), True, (0, 0, 0))
+        fw, fh = ren.get_size()
+        render_left = ingredient_block.get_width() // 2 - fw // 2
+        render_top = (ingredient_block.get_height() - (20 + icon_size)) // 2 + (20 + icon_size)
+        ingredient_block.blit(ren, (render_left, render_top))
+
+        return ingredient_block
 
     def draw(self, screen, tick):
         main = self.game_engine.get_object('main')
@@ -134,7 +138,9 @@ class LemonadeGui(GameEngineElement):
         block = self.draw_log(main.messages)
         screen.blit(block, (10, self.game_engine.height // 2 + 10))
 
-        self.ingredient_count(main.resource_list, screen)
+        block = self.ingredient_count(main.resource_list, main.money)
+        screen.blit(block, (self.game_engine.width * 13 // 24,
+                            self.game_engine.height * 27 // 36))
 
     def _blit_to_block(self, text_array, text_color=(255, 255, 255),
                        block_color=(0, 0, 0)):
