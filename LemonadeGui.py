@@ -88,13 +88,6 @@ class LemonadeGui(GameEngineElement):
             "",
             _("- Inventory -")]
 
-        # Add Resources
-        items = main.resource_list
-        for item_key in ITEMS:
-            text_arr.append("   %s: %d" % \
-                    (ITEMS[item_key]['name'], items[item_key]))
-
-
         # Add Lemonade Recipe
         text_arr.append("")
         text_arr.append(_("- Recipe -"))
