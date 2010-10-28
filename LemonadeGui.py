@@ -136,7 +136,7 @@ class LemonadeGui(GameEngineElement):
         screen.blit(block, (10, 10))
 
         block = self.draw_log(main.messages)
-        screen.blit(block, (10, self.game_engine.height // 2 + 10))
+        screen.blit(block, (0, self.game_engine.height * 4 // 9))
 
         block = self.ingredient_count(main.resource_list, main.money)
         screen.blit(block, (self.game_engine.width * 13 // 24,
