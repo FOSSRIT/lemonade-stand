@@ -104,9 +104,9 @@ class LemonadeGui(GameEngineElement):
                                     self.game_engine.height * 9/36))
         ingredient_block.fill((0, 0, 255))
         
-        icon_size = ingredient_block.get_width() // (len(items) * 1.5)
-        icon_width = ingredient_block.get_width() // len(items)
-        j = icon_size // 3
+        icon_size = ingredient_block.get_width() / (len(items) * 1.5)
+        icon_width = ingredient_block.get_width() / len(items)
+        j = icon_size / 3
         render_top = 15 + icon_size
         for name, count in items.items():
             icon = image.load("images/icon-%s.gif" % name).convert()
@@ -116,14 +116,14 @@ class LemonadeGui(GameEngineElement):
             # Put an item count under the icon.
             ren = self.__font.render(str(count), True, (0, 0, 0))
             fw, fh = ren.get_size()
-            render_left = j + (icon_size // 2) - (fw // 2)
+            render_left = j + (icon_size / 2) - (fw / 2)
             ingredient_block.blit(ren, (render_left, render_top))
             j += icon_width
 
         ren = self.__font.render("Funds: %s" % format_money(money), True, (0, 0, 0))
         fw, fh = ren.get_size()
-        render_left = ingredient_block.get_width() // 2 - fw // 2
-        render_top = (ingredient_block.get_height() - render_top) // 2 + render_top
+        render_left = ingredient_block.get_width() / 2 - fw / 2
+        render_top = (ingredient_block.get_height() - render_top) / 2 + render_top
         ingredient_block.blit(ren, (render_left, render_top))
 
         return ingredient_block
@@ -137,11 +137,11 @@ class LemonadeGui(GameEngineElement):
         screen.blit(block, (10, 10))
 
         block = self.draw_log(main.messages)
-        screen.blit(block, (0, self.game_engine.height * 4 // 9))
+        screen.blit(block, (0, self.game_engine.height * 4 / 9))
 
         block = self.ingredient_count(main.resource_list, main.money)
-        screen.blit(block, (self.game_engine.width * 13 // 24,
-                            self.game_engine.height * 27 // 36))
+        screen.blit(block, (self.game_engine.width * 13 / 24,
+                            self.game_engine.height * 27 / 36))
 
     def _blit_to_block(self, text_array, text_color=(255, 255, 255),
                        block_color=(0, 0, 0)):
