@@ -105,6 +105,31 @@ class LemonadeGui(GameEngineElement):
 
         return self._blit_to_block(text_arr)
 
+    def ingredient_count(self, items, screen):
+        # sides are at 650 and 675
+        #            /1200    /900
+        #            13/24   27/36
+        ingredient_block = Surface((self.game_engine.width * 11/24,
+                                    self.game_engine.height * 9/36))
+        ingredient_block.fill((0, 0, 255))
+        icon_size = ingredient_block.get_width() // (len(items) * 1.5)
+        icon_width = ingredient_block.get_width() // len(items)
+        j = icon_size // 3
+        for name, count in items.items():
+            icon = image.load("images/icon-%s.gif" % name).convert()
+            icon = transform.scale(icon, (icon_size, icon_size))
+            ingredient_block.blit(icon, (j, 10))
+            ren = self.__font.render(str(count), True, (0, 0, 0))
+            fw, fh = ren.get_size()
+            render_left = j + (icon_size // 2) - (fw // 2)
+            render_top = 20 + icon_size
+            print render_left
+            ingredient_block.blit(ren, (render_left, render_top))
+            j += icon_width
+
+        screen.blit(ingredient_block, (self.game_engine.width * 13/24,
+                                       self.game_engine.height * 27/36))
+
     def draw(self, screen, tick):
         main = self.game_engine.get_object('main')
         self.change_background(main.weather)
@@ -115,6 +140,8 @@ class LemonadeGui(GameEngineElement):
 
         block = self.draw_log(main.messages)
         screen.blit(block, (10, self.game_engine.height // 2 + 10))
+
+        self.ingredient_count(main.resource_list, screen)
 
     def _blit_to_block(self, text_array, text_color=(255, 255, 255),
                        block_color=(0, 0, 0)):
