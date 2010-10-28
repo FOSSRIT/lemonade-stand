@@ -170,25 +170,23 @@ class LemonadeMain:
 
         # Show profit and expenses if the difficuly is less than impossible
         if self.__difficulty < DIFFICULTY.index("Impossible"):
-            self.add_msg("You spent %s on supplies and made %s in sales" % \
-                   (format_money(self.__resources['money'] - start_money), \
-                    format_money(self.__resources['last_income'])))
+            self.add_msg("You spent %s on supplies" % \
+                    format_money(self.__resources['money'] - start_money))
+            self.add_msg("and made %s in sales" % \
+                    format_money(self.__resources['last_income']))
 
         profit_to_calculate = (self.__resources['money'] - start_money)\
                               + self.__resources['last_income']
         self.__resources['last_profit'] = profit_to_calculate
 
-        #print profit_to_calculate
-
         if profit_to_calculate > 0:
-            return True
-
-        else:
             # Show the net porfit if difficulty is less than normal
             if self.__difficulty < DIFFICULTY.index("Hard"):
                 self.add_msg("That comes to %s in profit" % \
                     (format_money(self.__resources['last_profit'])))
+            return True
 
+        else:
             self.process_day_end(-1)
             return False
 
