@@ -187,25 +187,32 @@ class LemonadeMain:
             return True
 
         else:
-            self.process_day_end(-1)
+            self.__resources['money'] += self.__resources['last_income']
+            self.process_day_end()
             return False
 
-    def process_day_end(self, mini_game_key):
+    def process_change(self, mini_game_key):
         """
-        Processes the end of the day
+        Processes the counting game effects
 
         @param mini_game_key:    A dictionary of keys and values of the
                                  mini game
         """
         if self.__resources['last_profit'] > 0:
-            if self.count_game(mini_game_key, self.__resources['last_profit']):
+            mini_game_success = self.count_game(mini_game_key, self.__resources['last_profit'])
+            if mini_game_success:
                 # Give them the money if they added
                 self.__resources['money'] += self.__resources['last_income']
             else:
-                self.add_msg(\
-                    _("You dropped your money while trying to count it"))
-        else:
-            self.__resources['money'] += self.__resources['last_income']
+                self.add_msg(_("Not quite."))
+                return False
+        return True
+
+    def process_day_end(self):
+        """
+        Processes the end of the day events.
+        """
+        
         # Decay items
         self.decay_items()
 

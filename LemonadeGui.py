@@ -185,8 +185,10 @@ class LemonadeGui(GameEngineElement):
                         self.game_mode = 1
 
                 elif self.game_mode == 1:
-                    main.process_day_end(item_list)
-                    self.game_mode = 0
+                    mini_game_success = main.process_change(item_list)
+                    if mini_game_success:
+                        main.process_day_end()
+                        self.game_mode = 0
 
             elif event.key == K_ESCAPE:
                 self.game_engine.stop_event_loop()
