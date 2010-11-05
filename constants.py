@@ -1,7 +1,14 @@
 # Lemonade stand is Licensed under the Don't Be A Dick License
 # (dbad-license). This license is an extension of the Apache License.
 #
-# You may find a copy of this license at http://dbad-license.org/license
+# If you do not wish to comply with the restrictions of the Don't Be A Dick
+# License, this software is also available under the terms of the
+# GNU General Public License as published by the Free Software Foundation,
+# either version 3 of the License, or (at your option) any later version.
+#
+# The text of the Don't Be A Dick License is available at at
+# <http://dbad-license.org/license>, while the GNU General Public License
+# is available at <http://www.gnu.org/licenses/>.
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
