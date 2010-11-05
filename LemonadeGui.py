@@ -20,7 +20,7 @@ from gettext import gettext as _
 from pygame import Surface, transform, image
 from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB,\
                           K_DOWN, K_UP, K_ESCAPE,\
-                          K_KP1, K_KP2, K_KP8
+                          K_KP1, K_KP2, K_KP3, K_KP8, K_KP9
 
 
 class LemonadeGui(GameEngineElement):
