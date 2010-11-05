@@ -52,7 +52,7 @@ class LemonadeGui(GameEngineElement):
         self.__background = transform.scale(bg, (self.game_engine.width,
                                                  self.game_engine.height))
 
-    def draw_log(self, messages):
+    def draw_log(self, messages, day_no):
         # Add Buy Dialog
         text_array = []
         if self.game_mode == 0:
@@ -82,7 +82,7 @@ class LemonadeGui(GameEngineElement):
 
         # Add day log to text
         text_array.append("")
-        text_array.append(_("- Day Log -"))
+        text_array.append(_("- Day %s Log -" % day_no))
         for message in messages:
             text_array.append(message)
         
@@ -90,7 +90,6 @@ class LemonadeGui(GameEngineElement):
 
     def data_block(self, main):
         text_arr = [
-            _("Day: %d") % main.day,
             _("Weather: %s") % WEATHER[main.weather]]
 
         # Add Lemonade Recipe
@@ -143,7 +142,7 @@ class LemonadeGui(GameEngineElement):
         block = self.data_block(main)
         screen.blit(block, (10, 10))
 
-        block = self.draw_log(main.messages)
+        block = self.draw_log(main.messages, main.day)
         screen.blit(block, (0, self.game_engine.height * 4 / 9))
 
         block = self.ingredient_count(main.resource_list, main.money)
