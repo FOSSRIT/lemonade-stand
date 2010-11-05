@@ -231,5 +231,26 @@ class LemonadeGui(GameEngineElement):
 
                 self.__input_string[self.game_mode][self.__input_mode[\
                     self.game_mode]] = handle
+                    
+            elif event.key == K_KP9: # Increment
+
+                handle = int(self.__input_string[self.game_mode]\
+                    [self.__input_mode[self.game_mode]])
+
+                handle += 1
+
+                self.__input_string[self.game_mode][self.__input_mode[\
+                    self.game_mode]] = handle
+                    
+            elif event.key == K_KP3: # Decrement
+
+                handle = int(self.__input_string[self.game_mode]\
+                    [self.__input_mode[self.game_mode]])
+                
+                if handle > 0:
+                    handle -= 1
+
+                self.__input_string[self.game_mode][self.__input_mode[\
+                    self.game_mode]] = handle
 
             self.game_engine.set_dirty()
