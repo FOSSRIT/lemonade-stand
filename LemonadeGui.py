@@ -39,11 +39,11 @@ class LemonadeGui(GameEngineElement):
 
         self.game_mode = 0
 
-        self.__input_keys = [ITEMS.keys(), CURRENCY.keys(), []]
-        self.__input_mode = [0, 0]
+        self.__input_keys = [ITEMS.keys(), CURRENCY.keys(), [None]]
+        self.__input_mode = [0, 0, 0]
         self.__input_string = []
-        self.__input_string.append(['0'] * len(self.__input_keys[0]))
-        self.__input_string.append(['0'] * len(self.__input_keys[1]))
+        for key in self.__input_keys:
+            self.__input_string.append(['0'] * len(key))
 
     def change_background(self, weather):
         bg = image.load("images/field_%s.gif" % WEATHER[weather]).convert()
@@ -306,7 +306,7 @@ class LemonadeGui(GameEngineElement):
                 handle += 1
 
                 self.__input_string[self.game_mode][self.__input_mode[\
-                    self.game_mode]] = handle
+                    self.game_mode]] = "%s" % handle
 
             # Decrement
             elif event.key == K_KP3:
@@ -318,6 +318,6 @@ class LemonadeGui(GameEngineElement):
                     handle -= 1
 
                 self.__input_string[self.game_mode][self.__input_mode[\
-                    self.game_mode]] = handle
+                    self.game_mode]] = "%s" % handle
 
             self.game_engine.set_dirty()
