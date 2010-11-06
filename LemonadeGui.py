@@ -151,6 +151,12 @@ class LemonadeGui(GameEngineElement):
 
     def _blit_to_block(self, text_array, text_color=(255, 255, 255),
                        block_color=(0, 0, 0)):
+        """
+        Takes an array of strings with optional text and background colors,
+        creates a Surface to house them, blits the text and returns the
+        Surface.
+        """
+
         rendered_text = []
         font_width = []
         font_height = []
@@ -173,6 +179,10 @@ class LemonadeGui(GameEngineElement):
         return block
 
     def event_handler(self, event):
+        """
+        Responds to any events that happen during the course of the game.
+        """
+        
         if event.type == KEYDOWN:
 
             if event.key in [K_RETURN, K_KP1]:
@@ -228,7 +238,7 @@ class LemonadeGui(GameEngineElement):
                     (self.__input_mode[self.game_mode] - 1) %\
                         len(self.__input_keys[self.game_mode])
 
-            # Only handle numbers (ascii 48 - 58)
+            # Text input, only handles numbers (ascii 48 - 58)
             elif event.key >= 48 and event.key <= 58:
                 key = str(event.unicode)
 
@@ -242,8 +252,9 @@ class LemonadeGui(GameEngineElement):
 
                 self.__input_string[self.game_mode][self.__input_mode[\
                     self.game_mode]] = handle
-                    
-            elif event.key == K_KP9: # Increment
+
+            # Increment
+            elif event.key == K_KP9:
 
                 handle = int(self.__input_string[self.game_mode]\
                     [self.__input_mode[self.game_mode]])
@@ -252,8 +263,9 @@ class LemonadeGui(GameEngineElement):
 
                 self.__input_string[self.game_mode][self.__input_mode[\
                     self.game_mode]] = handle
-                    
-            elif event.key == K_KP3: # Decrement
+
+            # Decrement
+            elif event.key == K_KP3:
 
                 handle = int(self.__input_string[self.game_mode]\
                     [self.__input_mode[self.game_mode]])
