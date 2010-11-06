@@ -55,30 +55,19 @@ class LemonadeGui(GameEngineElement):
     def draw_log(self, messages, day_no):
         # Add Buy Dialog
         text_array = []
-        if self.game_mode == 0:
-            text_array.append(_("- Buy Options  -"))
-        elif self.game_mode == 1:
+        if self.game_mode == 1:
             text_array.append(_("- How much did you make -"))
 
-        for i in range(0, len(self.__input_keys[self.game_mode])):
-            if i == self.__input_mode[self.game_mode]:
-                t = ">"
+            for i in range(0, len(self.__input_keys[self.game_mode])):
+                if i == self.__input_mode[self.game_mode]:
+                    t = ">"
 
-            else:
-                t = " "
-
-            if self.game_mode == 0:
-                text_array.append(_("%s %s(%d @ %s each): %s") % \
-                 (t, ITEMS[self.__input_keys[0][i]]['name'],
-                 ITEMS[self.__input_keys[0][i]]['bulk'],
-                 format_money(\
-                    ITEMS[self.__input_keys[0][i]]['cost']),
-                self.__input_string[0][i]))
-            else:
+                else:
+                    t = " "
+                    
                 text_array.append("%s %s: %s" % \
                 (t, self.__input_keys[self.game_mode][i],
                 self.__input_string[self.game_mode][i]))
-
 
         # Add day log to text
         text_array.append("")
