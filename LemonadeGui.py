@@ -39,7 +39,7 @@ class LemonadeGui(GameEngineElement):
 
         self.game_mode = 0
 
-        self.__input_keys = [ITEMS.keys(), CURRENCY.keys()]
+        self.__input_keys = [ITEMS.keys(), CURRENCY.keys(), []]
         self.__input_mode = [0, 0]
         self.__input_string = []
         self.__input_string.append(['0'] * len(self.__input_keys[0]))
@@ -189,12 +189,17 @@ class LemonadeGui(GameEngineElement):
                     #Will return true if go to profit game
                     if(main.process_day_logic(item_list)):
                         self.game_mode = 1
+                    else:
+                        self.game_mode = 2
 
                 elif self.game_mode == 1:
                     mini_game_success = main.process_change(item_list)
                     if mini_game_success:
                         main.process_day_end()
-                        self.game_mode = 0
+                        self.game_mode = 2
+
+                elif self.game_mode == 2:
+                    self.game_mode = 0
 
             elif event.key == K_ESCAPE:
                 self.game_engine.stop_event_loop()
