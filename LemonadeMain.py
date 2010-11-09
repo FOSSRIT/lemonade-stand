@@ -211,7 +211,7 @@ class LemonadeMain:
                 # Give them the money if they added
                 self.__resources['money'] += self.__resources['last_income']
             else:
-                self.add_msg(_("Not quite."))
+                self.add_msg(_("That is the incorrect amount of money. Try again."))
                 return False
         return True
 
