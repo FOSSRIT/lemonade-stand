@@ -188,6 +188,13 @@ class LemonadeGui(GameEngineElement):
             outline.blit(icon, (icon_size / 10, icon_size / 10))
             store.blit(outline, (j, self.game_engine.height / 4))
 
+            # Put pricing info under the item.
+            ren = self.__font.render("%s for %d" % (format_money(ITEMS[name]["cost"] * ITEMS[name]["bulk"]),
+                            ITEMS[name]["bulk"]), True, (0, 0, 0))
+            fw, fh = ren.get_size()
+            render_left = j + (icon_size / 2) - (fw / 2)
+            store.blit(ren, (render_left, self.game_engine.height / 4 + icon_size + 5))
+
             # Put an item count under the icon.
             ren = self.__font.render(self.__input_string[0][num], True, (0, 0, 0))
             fw, fh = ren.get_size()
