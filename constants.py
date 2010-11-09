@@ -43,7 +43,7 @@ ITEMS = {
         'name': _('Sugar'),
         'cost': 5,
         'decay': 0,
-        'bulk': 100
+        'bulk': 50
     },
 #    'strawberry': {
 #        'name': _('Strawberry'),
