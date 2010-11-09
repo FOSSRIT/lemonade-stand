@@ -67,7 +67,12 @@ EVENTS = [
     {'text': _("Ants steal some of your supplies!"),
      'item': 'sugar',
      'change': -10
+    },
+    {'text': _("A sugar salesman gives you some free samples!"),
+     'item': 'sugar',
+     'change': 10
     }
+
 ]
 
 DIFFICULTY = [
