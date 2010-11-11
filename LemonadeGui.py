@@ -123,11 +123,26 @@ class LemonadeGui(GameEngineElement):
 
         return ingredient_block
 
-    def draw(self, screen, tick):
+    def draw_help(self):
         if self.game_mode == 0:
-            self.draw_store(self.__input_mode[self.game_mode], screen)
+            block = self._blit_to_block([_("Type in the number you want to buy of each item"),
+                                         _("(be careful: you will need all 3 supplies to make the lemonade)")])
+        elif self.game_mode == 1:
+            block = self._blit_to_block([_("You made %s. You need to put your money away for safekeeping." % "$200"),
+                                         _("Enter the number of dollars, quarters, dimes, nickels, and pennies that you have made.")])
         else:
-            main = self.game_engine.get_object('main')
+            block = self._blit_to_block([_("Weather can affect the amount of lemonade you sell."),
+                                         _("Watch the weather each day to see how it changes sales.")])
+        return block
+
+    def draw(self, screen, tick):
+        main = self.game_engine.get_object('main')
+
+        if self.game_mode == 0:
+            store = self.draw_store(self.__input_mode[self.game_mode])
+            screen.blit(store, (0, 0))
+
+        else:
             self.change_background(main.weather)
             screen.blit(self.__background, (0, 0))
 
@@ -140,11 +155,12 @@ class LemonadeGui(GameEngineElement):
             block = self.ingredient_count(main.resource_list, main.money)
             screen.blit(block, (self.game_engine.width * 13 / 24,
                                 self.game_engine.height * 27 / 36))
+        if main.day == 1:
+            block = self.draw_help()
+            screen.blit(block, (self.game_engine.width / 2 - block.get_width() / 2, 0))
 
-    def draw_store(self, key, screen):
-        """
-        Draws the store interface, including currently selected items.
-        """
+    def draw_store(self, key):
+        """Draws the store interface, including currently selected items."""
 
         store = image.load("images/store-outline.gif").convert()
         store = transform.scale(store, (self.game_engine.width, self.game_engine.height))
@@ -172,6 +188,13 @@ class LemonadeGui(GameEngineElement):
             outline.blit(icon, (icon_size / 10, icon_size / 10))
             store.blit(outline, (j, self.game_engine.height / 4))
 
+            # Put pricing info under the item.
+            ren = self.__font.render("%s for %d" % (format_money(ITEMS[name]["cost"] * ITEMS[name]["bulk"]),
+                            ITEMS[name]["bulk"]), True, (0, 0, 0))
+            fw, fh = ren.get_size()
+            render_left = j + (icon_size / 2) - (fw / 2)
+            store.blit(ren, (render_left, self.game_engine.height / 4 + icon_size + 5))
+
             # Put an item count under the icon.
             ren = self.__font.render(self.__input_string[0][num], True, (0, 0, 0))
             fw, fh = ren.get_size()
@@ -180,7 +203,7 @@ class LemonadeGui(GameEngineElement):
             
             j += icon_size + spacer
 
-        screen.blit(store, (0, 0))
+        return store
 
     def _blit_to_block(self, text_array, text_color=(255, 255, 255),
                        block_color=(0, 0, 0)):

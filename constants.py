@@ -43,7 +43,7 @@ ITEMS = {
         'name': _('Sugar'),
         'cost': 5,
         'decay': 0,
-        'bulk': 100
+        'bulk': 50
     },
 #    'strawberry': {
 #        'name': _('Strawberry'),
@@ -67,7 +67,12 @@ EVENTS = [
     {'text': _("Ants steal some of your supplies!"),
      'item': 'sugar',
      'change': -10
+    },
+    {'text': _("A sugar salesman gives you some free samples!"),
+     'item': 'sugar',
+     'change': 10
     }
+
 ]
 
 DIFFICULTY = [
