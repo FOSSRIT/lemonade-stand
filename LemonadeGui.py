@@ -26,8 +26,8 @@ from constants import ITEMS, format_money, WEATHER, CURRENCY
 from gettext import gettext as _
 from pygame import Surface, transform, image
 from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB,\
-                          K_DOWN, K_UP, K_ESCAPE,\
-                          K_KP1, K_KP2, K_KP3, K_KP8, K_KP9
+                          K_DOWN, K_UP, K_LEFT, K_RIGHT, K_ESCAPE,\
+                          K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP8, K_KP9
 
 
 class LemonadeGui(GameEngineElement):
@@ -283,13 +283,13 @@ class LemonadeGui(GameEngineElement):
                                     self.game_mode]] = handle
 
             # Go to the next field
-            elif event.key in [K_TAB, K_DOWN, K_KP2]:
+            elif event.key in [K_TAB, K_DOWN, K_RIGHT, K_KP2, K_KP6]:
                 self.__input_mode[self.game_mode] = \
                     (self.__input_mode[self.game_mode] + 1) %\
                         len(self.__input_keys[self.game_mode])
 
             # Go up to previous field
-            elif event.key in [K_UP, K_KP8]:
+            elif event.key in [K_UP, K_LEFT, K_KP4, K_KP8]:
                 self.__input_mode[self.game_mode] = \
                     (self.__input_mode[self.game_mode] - 1) %\
                         len(self.__input_keys[self.game_mode])
