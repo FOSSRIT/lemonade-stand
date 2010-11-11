@@ -45,6 +45,11 @@ class LemonadeGui(GameEngineElement):
         for key in self.__input_keys:
             self.__input_string.append(['0'] * len(key))
 
+    def splash(self):
+        splash = image.load("images/splash.gif")
+        self.__background = transform.scale(splash, (self.game_engine.width,
+                                                     self.game_engine.height))
+
     def change_background(self, weather):
         bg = image.load("images/field_%s.gif" % WEATHER[weather]).convert()
         stand = image.load("images/booth.gif").convert()
@@ -137,6 +142,10 @@ class LemonadeGui(GameEngineElement):
 
     def draw(self, screen, tick):
         main = self.game_engine.get_object('main')
+        if main.splash:
+            self.splash()
+            screen.blit(self.__background, (0, 0))
+            return
 
         if self.game_mode == 0:
             store = self.draw_store(self.__input_mode[self.game_mode])
@@ -244,12 +253,17 @@ class LemonadeGui(GameEngineElement):
             if event.key in [K_RETURN, K_KP1]:
                 # Process Data
 
+                main = self.game_engine.get_object('main')
+
+                if main.splash:
+                    main.splash = not main.splash
+                    return
+
                 item_list = {}
                 for i in range(0, len(self.__input_keys[self.game_mode])):
                     item_list[self.__input_keys[self.game_mode][i]] = \
                                 int(self.__input_string[self.game_mode][i])
                     self.__input_string[self.game_mode][i] = "0"
-                main = self.game_engine.get_object('main')
                 if self.game_mode == 0:
 
                     #Will return true if go to profit game

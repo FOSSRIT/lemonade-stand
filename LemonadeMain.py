@@ -37,6 +37,7 @@ class LemonadeMain:
     """
 
     def __init__(self, difficulty_level=0):
+        self.splash = True
         self.__day = 1
         self.__difficulty = difficulty_level
         self.__resources = {
