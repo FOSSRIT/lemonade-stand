@@ -152,9 +152,9 @@ class LemonadeGui(GameEngineElement):
             block = self.draw_log(main.messages, main.day)
             screen.blit(block, (0, self.game_engine.height * 4 / 9))
 
-            block = self.ingredient_count(main.resource_list, main.money)
-            screen.blit(block, (self.game_engine.width * 13 / 24,
-                                self.game_engine.height * 27 / 36))
+        block = self.ingredient_count(main.resource_list, main.money)
+        screen.blit(block, (self.game_engine.width * 13 / 24,
+                            self.game_engine.height * 27 / 36))
         if main.day == 1:
             block = self.draw_help()
             screen.blit(block, (self.game_engine.width / 2 - block.get_width() / 2, 0))
