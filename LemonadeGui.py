@@ -102,7 +102,7 @@ class LemonadeGui(GameEngineElement):
         #            13/24   27/36
         ingredient_block = Surface((self.game_engine.width * 11/24,
                                     self.game_engine.height * 9/36))
-        ingredient_block.fill((0, 0, 255))
+        ingredient_block.fill((255, 255, 255))
         
         icon_size = int(ingredient_block.get_width() / (len(items) * 1.5))
         icon_width = ingredient_block.get_width() / len(items)
