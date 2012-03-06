@@ -75,3 +75,4 @@ class VteActivity(activity.Activity):
         if not DEBUG_TERMINAL:
             import sys
             sys.exit()
+

@@ -8,14 +8,17 @@ from optparse import OptionParser
 from pygame import font
 parser = OptionParser()
 
-parser.add_option("", "--width", dest="width", help="window width",
+parser.add_option("-x", "--width", dest="width", help="window width",
                   metavar="WIDTH", default=640, type="int")
 
-parser.add_option("", "--height", dest="height", help="window height",
+parser.add_option("-y", "--height", dest="height", help="window height",
                   metavar="HEIGHT", default=480, type="int")
 
-parser.add_option("-f", "--font", dest="font", help="font size",
+parser.add_option("-s", "--font", dest="font", help="font size",
                   metavar="SIZE", default=20, type="int")
+
+parser.add_option("-f", "--fullscreen", dest="fullscreen", help="full screen",
+                  action='store_true')
 
 parser.add_option("", "--shopFont", dest="shopFont", help="shop font size",
                   metavar="SHOPSIZE", default="25", type="int")
@@ -31,7 +34,7 @@ parser.add_option("-d", "--difficulty", dest="difficulty", help="difficulty leve
 
 (opts, args) = parser.parse_args()
 
-ge = GameEngine(width=opts.width, height=opts.height, always_draw=False)
+ge = GameEngine(width=opts.width, height=opts.height, always_draw=False, fullscreen=opts.fullscreen)
 ge.add_object('font', font.SysFont(font.get_default_font(), opts.font))
 ge.add_object('shopFont', font.SysFont(font.get_default_font(), opts.shopFont))
 ge.add_object('shopNumFont', font.SysFont(font.get_default_font(), opts.shopNumFont))
