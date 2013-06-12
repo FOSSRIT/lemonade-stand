@@ -205,9 +205,9 @@ class LemonadeGui(GameEngineElement):
         for num, name in enumerate(ITEMS):
             outline = Surface((icon_size, icon_size))
             if num == key:
-                outline.fill((255, 255, 0))
+                outline.fill((255, 255, 255))
             else:
-                outline.fill((255, 255, 225))
+                outline.fill((0, 0, 0))
             icon = image.load("images/icon-%s.gif" % name).convert()
             icon = transform.scale(icon, (icon_size * 8 / 10, icon_size * 8 / 10))
             outline.blit(icon, (icon_size / 10, icon_size / 10 ))
@@ -222,9 +222,9 @@ class LemonadeGui(GameEngineElement):
 
             # Put an item count under the icon.
             if self.__input_string[0][num] != '0':
-                color = (0, 255,0)
-            else:
                 color = (255, 255, 255)
+            else:
+                color = (0, 0, 0) 
 
             ren = self.__shopNumFont.render(self.__input_string[0][num], 1, color)
             fw, fh = ren.get_size()
