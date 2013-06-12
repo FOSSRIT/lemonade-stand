@@ -18,6 +18,9 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """Activity helper classes."""
 from sugar.activity import activity
+from sugar.graphics.toolbarbox import ToolbarBox
+from sugar.graphics.toolbarbox import ToolbarButton
+from sugar.activity.widgets import StopButton
 
 # Set to false to hide terminal and auto quit on exit
 DEBUG_TERMINAL = False
@@ -64,7 +67,7 @@ class VteActivity(activity.Activity):
         self._pid = self._vte.fork_command \
             (command='/bin/sh',
              argv=['/bin/sh','-c',
-             'python %s/LemonadeStand.py --width=1200 --height=900 --font=36' % bundle_path],
+             'python %s/LemonadeStand.py --width=1200 --height=875 --font=36 --shopFont=52 --shopNumFont=72' % bundle_path],
              envv=["PYTHONPATH=%s/library" % bundle_path],
              directory=bundle_path)
     def on_child_exit(self, widget):
@@ -72,4 +75,3 @@ class VteActivity(activity.Activity):
         if not DEBUG_TERMINAL:
             import sys
             sys.exit()
-

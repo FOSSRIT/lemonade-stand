@@ -14,8 +14,7 @@
 # software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 # KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
+# specific language governing permissions and limitations # under the License.
 #
 # Authors:
 #     Justin Lewis <jlew.blackout@gmail.com>
@@ -28,10 +27,10 @@ STARTING_PRICE = 150
 MAX_MSG = 10
 ITEMS = {
     'cup': {
-        'name': _('Cups'),
+        'name': _('Cup'),
         'cost': 10,
         'decay': 0,
-        'bulk': 12
+        'bulk': 1
     },
     'lemon': {
         'name': _('Lemons'),
@@ -43,7 +42,7 @@ ITEMS = {
         'name': _('Sugar'),
         'cost': 5,
         'decay': 0,
-        'bulk': 50
+        'bulk': 1
     },
 #    'strawberry': {
 #        'name': _('Strawberry'),
@@ -93,12 +92,14 @@ CURRENCY = {
 
 RECIPES = {
     'basic': {
+        'name': _("basic"),
         'cup': 1,
         'lemon': 2,
         'sugar': 3,
         'cost': 150
     },
     'strawberry': {
+        'name': _("strawberry"),
         'cup': 1,
         'lemon': 2,
         'sugar': 2,
@@ -106,6 +107,7 @@ RECIPES = {
         'cost': 225
     },
     'epic': {
+        'name': _("epic"),
         'cup': 2,
         'lemon': 3,
         'sugar': 5,

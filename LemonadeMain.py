@@ -52,19 +52,28 @@ class LemonadeMain:
         for item_key in ITEMS.keys():
             self.__resources[item_key] = []
 
+        # Give starting supplies
+        self.add_item('lemon', 15)
+        self.add_item('sugar', 10)
+        self.add_item('cup', 10)
+
         self.__weather = 1
         self.__msg_queue = []
 
         # run weather
         self.weather_change()
 
-        # run random
-        self.random_event()
+    @property
+    def current_recipe(self):
+        return self.__resources['recipe']
 
     @property
     def money(self):
         return self.__resources['money']
 
+    @property
+    def profit(self):
+        return self.__resources['last_profit']
     @property
     def day(self):
         return self.__day
@@ -135,7 +144,6 @@ class LemonadeMain:
 
     def process_day_logic(self, items):
         self.clear_queue()
-        self.__day += 1
         start_money = self.__resources['money']
         self.add_msg(_("Starting Money: %s" % format_money(start_money)))
 
@@ -220,7 +228,6 @@ class LemonadeMain:
         """
         Processes the end of the day events.
         """
-        
         # Decay items
         self.decay_items()
 
