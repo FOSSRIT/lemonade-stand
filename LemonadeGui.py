@@ -42,8 +42,8 @@ class LemonadeGui(GameEngineElement):
 
         self.game_mode = 0
 
-        self.__input_keys = [ITEMS.keys(), CURRENCY.keys(), [None]]
-        self.__input_mode = [0, 0, 0]
+        self.__input_keys = [ITEMS.keys(), ITEMS.keys(),CURRENCY.keys(), [None]]
+        self.__input_mode = [0, 0, 0, 0]
         self.__input_string = []
         for key in self.__input_keys:
             self.__input_string.append(['0'] * len(key))
@@ -63,7 +63,7 @@ class LemonadeGui(GameEngineElement):
     def draw_log(self, messages, day_no):
         # Add Buy Dialog
         text_array = []
-        if self.game_mode == 1:
+        if self.game_mode == 2:
             text_array.append(_("- How much did you make -"))
 
             for i in range(0, len(self.__input_keys[self.game_mode])):
@@ -134,15 +134,26 @@ class LemonadeGui(GameEngineElement):
     def draw_help(self):
         main = self.game_engine.get_object('main')
 
+        #Check if the game is currently in the shop
         if self.game_mode == 0:
             block = self._blit_to_block([_("Type in the number you want to buy of each item")])
-                                        # _("(be careful: you will need all 3 supplies to make the lemonade)")])
+
         elif self.game_mode == 1:
+            block = self._blit_to_block([_("This is where you will see how much you spent on each supply,"),
+                                        _("how many cups of lemonade you sold, and how much you made.")])
+
+        #Check if the game is currently is in the profit mini game
+        elif self.game_mode == 2:
             block = self._blit_to_block([_("You made %s. You need to put your money away for safekeeping." % format_money(main.profit)),
                                          _("Enter the number of dollars, quarters, dimes, nickels, and pennies that you have made.")])
+
+        #Check if the game is currently at the end of the day
         else:
             block = self._blit_to_block([_("Weather can affect the amount of lemonade you sell."),
-                                         _("Watch the weather each day to see how it changes sales.")])
+                                         _("Watch the weather each day to see how it changes sales."),
+                                         _(""),
+                                         _("Press Enter to return back to the shop and begin your next day.")])
+
         return block
 
     def draw(self, screen, tick):
@@ -163,8 +174,9 @@ class LemonadeGui(GameEngineElement):
             block = self.data_block(main)
             screen.blit(block, (10, 10))
 
-            block = self.draw_log(main.messages, main.day)
-            screen.blit(block, (0, self.game_engine.height * 4 / 9))
+            if self.game_mode == 2:        
+                block = self.draw_log(main.messages, main.day)
+                screen.blit(block, (0, self.game_engine.height * 4 / 9))
 
         block = self.ingredient_count(main.resource_list, main.money)
         screen.blit(block, (self.game_engine.width * 13 / 24,
@@ -303,21 +315,33 @@ class LemonadeGui(GameEngineElement):
                     item_list[self.__input_keys[self.game_mode][i]] = \
                                 int(self.__input_string[self.game_mode][i])
                     self.__input_string[self.game_mode][i] = "0"
+
+                #Checks if you are leaving the shop to begin day
                 if self.game_mode == 0:
+                    self.game_mode = 1
 
-                    #Will return true if go to profit game
-                    if(main.process_day_logic(item_list)):
-                        self.game_mode = 1
-                    else:
-                        self.game_mode = 2
-
+                #Checks if you are at the beginning of the day
                 elif self.game_mode == 1:
-                    mini_game_success = main.process_change(item_list)
-                    if mini_game_success:
-                        main.process_day_end()
+
+                    #Checks if you made profit from the day 
+                    #If you made profit, sends you to the mini game
+                    if (main.process_day_logic(item_list)):
                         self.game_mode = 2
 
+                    #If you didn't make profit, sends you to end of the day
+                    else:
+                        self.game_mode = 3
+
+                #Checks if you are doing the profit mini game
                 elif self.game_mode == 2:
+                   # mini_game_success = main.process_change(item_list)
+                    #Checks if you gave the correct amount of change
+                    if main.process_change(item_list):
+                        main.process_day_end()
+                        self.game_mode = 3    
+
+                #Checks if you completed your day, returns you to the shop
+                elif self.game_mode == 3:
                     self.game_mode = 0
                     main.day += 1
 
