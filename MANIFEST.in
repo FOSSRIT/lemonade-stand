@@ -1,4 +1,0 @@
-include *.py *.txt *.gif NEWS README
-recursive-include activity *.svg *.info
-include olpcgames/COPYING
-recursive-include olpcgames *.py
