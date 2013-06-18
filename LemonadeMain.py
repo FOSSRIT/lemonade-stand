@@ -27,7 +27,8 @@ from gettext import gettext as _
 from operator import itemgetter
 
 from constants import STARTING_MONEY, STARTING_PRICE, MAX_MSG, EVENTS,\
-                      ITEMS, CURRENCY, RECIPES, DIFFICULTY, format_money
+                      ITEMS, CURRENCY, RECIPES, DIFFICULTY, format_money,\
+                      WEATHER
 
 
 class LemonadeMain:
@@ -44,6 +45,7 @@ class LemonadeMain:
             'money': STARTING_MONEY,
             'last_income': 0,
             'last_profit': 0,
+            'last_spent': 0,
             'price': STARTING_PRICE,
             'recipe': RECIPES['basic']
         }
@@ -64,6 +66,18 @@ class LemonadeMain:
         self.weather_change()
 
     @property
+    def spent(self):
+        return self.__resources['spent']
+
+    @property
+    def price(self):
+        return self.__resources['price']
+
+    @property
+    def income(self):
+        return self.__resources['last_income']
+
+    @property
     def current_recipe(self):
         return self.__resources['recipe']
 
@@ -74,6 +88,7 @@ class LemonadeMain:
     @property
     def profit(self):
         return self.__resources['last_profit']
+
     @property
     def day(self):
         return self.__day
@@ -81,6 +96,10 @@ class LemonadeMain:
     @property
     def weather(self):
         return self.__weather
+
+    @property
+    def weather_name(self):
+        return WEATHER[self.weather]
 
     def get_resource(self, key):
         return self.count_item(key)
@@ -110,6 +129,10 @@ class LemonadeMain:
     def weather_change(self):
         """
         Randomly change the weather, but not more than one unit away
+
+        0 = cloudy
+        1 = nice
+        2 = hot
         """
         self.__weather += randint(-1, 1)
 
@@ -142,23 +165,56 @@ class LemonadeMain:
 
             self.add_msg(event['text'])
 
-    def process_day_logic(self, items):
+    def process_day_logic(self):
         self.clear_queue()
-        start_money = self.__resources['money']
-        self.add_msg(_("Starting Money: %s" % format_money(start_money)))
 
-        # Process Item Payment
+        # Show profit and expenses if the difficuly is less than impossible
+        if self.__difficulty < DIFFICULTY.index("Impossible"):
+            self.add_msg("You spent %s on supplies" % \
+                    format_money(self.spent))
+            self.add_msg("and made %s in sales" % \
+                    format_money(self.income))
+
+        # Check if any profit was made
+        if self.profit > 0:
+            # Show the net porfit if difficulty is less than normal
+            if self.__difficulty < DIFFICULTY.index("Hard"):
+                self.add_msg("That comes to %s in profit" % \
+                    format_money(self.profit))
+            return True
+
+        # If not profit is made, go to the end of the end
+        else:
+            self.money += self.profit
+            if self.money < 0:
+                self.money = 0
+            return False
+
+    def update_day_log(self, items):
+
+        self.clear_queue()
+        self.spent = 0
+
+        # Display the current day
+        self.add_msg(_("--Day %s Log--") % self.day)
+        self.add_msg("")
+
+        self.add_msg(_("Today's weather: %s") % self.weather_name.upper())
+        self.add_msg("")
+
+        # Display the amount of each item you bought and for how much
+        self.add_msg(_("Purchased:"))
         for item in items:
-            status = self.buy_item(item, items[item])
-            if status == -1:
-                self.add_msg(_("You can't afford any units of %s.") % \
-                    ITEMS[item]['name'])
+            total_bought = self.buy_item(item, items[item])
+            self.add_msg("%d %s for %s" % (total_bought, ITEMS[item]['name'], \
+            format_money(total_bought * ITEMS[item]['cost'])))
+            self.spent += total_bought * ITEMS[item]['cost']
 
-            else:
-                self.add_msg(_("Bought %d units of %s.") % \
-                    (items[item], ITEMS[item]['name']))
-
-        # Calculate how many can be bought
+        self.add_msg(_("------------------------------"))
+        self.add_msg(_("Total Spent: %s") % format_money(self.spent))
+        self.add_msg("")
+   
+        # Calculate the max number of cups of lemonade you can sell
         inventory_hold = []
         for item_key in ITEMS.keys():
             if self.recipe(item_key) == 0:
@@ -168,44 +224,28 @@ class LemonadeMain:
 
         sales = min(inventory_hold)
 
-        # Calculate how many will be bought by weather
-        if sales != 0:
-            if self.__weather == 0:
-                sales = int(sales * .8)
-            elif self.__weather == -1:
-                sales = int(sales * .6)
+        # Calculates how many will be bought by weather
+        if self.__weather == 0:
+            sales = int(sales * .8)
+        elif self.__weather == -1:
+            sales = int(sales * .6)
+        
+        # Calculate the money you made from sales
+        self.income = sales * self.price
 
-        # Remove items required per cup sold
+        # Display the number of cups you sold, at what price, and the
+        # total amount of money that you made
+        self.add_msg(_("Sales:"))
+        self.add_msg(_("%d cups of Lemonade sold") % sales)
+        self.add_msg(_("    @ %s each") % format_money(self.price))
+        self.add_msg(_("------------------------------"))
+        self.add_msg(_("Total Made: %s") % format_money(self.income))
+
+        # Remove supplies required to make your number of sales 
         for item_key in ITEMS.keys():
             self.remove_item(item_key, sales * self.recipe(item_key))
 
-        self.__resources['last_income'] = sales * self.__resources['price']
-
-        self.add_msg(_("Sold %d cups, at %s each") % \
-                (sales, format_money(self.__resources['price'])))
-
-        # Show profit and expenses if the difficuly is less than impossible
-        if self.__difficulty < DIFFICULTY.index("Impossible"):
-            self.add_msg("You spent %s on supplies" % \
-                    format_money(self.__resources['money'] - start_money))
-            self.add_msg("and made %s in sales" % \
-                    format_money(self.__resources['last_income']))
-
-        profit_to_calculate = (self.__resources['money'] - start_money)\
-                              + self.__resources['last_income']
-        self.__resources['last_profit'] = profit_to_calculate
-
-        if profit_to_calculate > 0:
-            # Show the net porfit if difficulty is less than normal
-            if self.__difficulty < DIFFICULTY.index("Hard"):
-                self.add_msg("That comes to %s in profit" % \
-                    (format_money(self.__resources['last_profit'])))
-            return True
-
-        else:
-            self.__resources['money'] += self.__resources['last_income']
-            self.process_day_end()
-            return False
+        self.profit = self.income - self.spent
 
     def process_change(self, mini_game_key):
         """
@@ -214,11 +254,11 @@ class LemonadeMain:
         @param mini_game_key:    A dictionary of keys and values of the
                                  mini game
         """
-        if self.__resources['last_profit'] > 0:
-            mini_game_success = self.count_game(mini_game_key, self.__resources['last_profit'])
+        if self.profit > 0:
+            mini_game_success = self.count_game(mini_game_key, self.profit)
             if mini_game_success:
                 # Give them the money if they added
-                self.__resources['money'] += self.__resources['last_income']
+                self.money += self.profit
             else:
                 self.add_msg(_("That is the incorrect amount of money. Try again."))
                 return False
@@ -228,6 +268,8 @@ class LemonadeMain:
         """
         Processes the end of the day events.
         """
+        self.clear_queue()
+
         # Decay items
         self.decay_items()
 
@@ -236,6 +278,11 @@ class LemonadeMain:
 
         # Random event
         self.random_event()
+
+        self.add_msg("")
+        self.add_msg(_("Time to get some rest."))
+        self.add_msg(_("It looks like it will be %s tomorrow.") % \
+                        self.weather_name)
 
     def buy_item(self, key, quanity):
         """
@@ -252,19 +299,19 @@ class LemonadeMain:
         total = quanity * the_item['bulk']
         cost = the_item['cost'] * total
 
-        if cost < self.__resources['money']:
-            self.__resources['money'] -= cost
+        if cost < self.money:
+            self.money -= cost
             self.add_item(key, total)
             return total
 
         else:
             bulk_price = the_item['bulk'] * the_item['cost']
             # Lets try to buy as many as we can
-            can_buy = self.__resources['money'] / bulk_price
+            can_buy = self.money / bulk_price
 
             if can_buy != 0:
                 total = can_buy * the_item['bulk']
-                self.__resources['money'] -= can_buy * bulk_price
+                self.money -= can_buy * bulk_price
                 self.add_item(key, total)
 
                 return total

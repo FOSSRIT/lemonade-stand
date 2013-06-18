@@ -24,7 +24,7 @@ from gettext import gettext as _
 
 STARTING_MONEY = 1000
 STARTING_PRICE = 150
-MAX_MSG = 10
+MAX_MSG = 18
 ITEMS = {
     'cup': {
         'name': _('Cup'),

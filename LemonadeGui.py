@@ -60,11 +60,13 @@ class LemonadeGui(GameEngineElement):
         self.__background = transform.scale(bg, (self.game_engine.width,
                                                  self.game_engine.height))
 
-    def draw_log(self, messages, day_no):
+    def draw_log(self, messages):
+
         # Add Buy Dialog
         text_array = []
         if self.game_mode == 2:
             text_array.append(_("- How much did you make -"))
+            text_array.append("")
 
             for i in range(0, len(self.__input_keys[self.game_mode])):
                 if i == self.__input_mode[self.game_mode]:
@@ -76,28 +78,13 @@ class LemonadeGui(GameEngineElement):
                 text_array.append("%s %s: %s" % \
                 (t, self.__input_keys[self.game_mode][i],
                 self.__input_string[self.game_mode][i]))
+            text_array.append("")
 
         # Add day log to text
-        text_array.append("")
-        text_array.append(_("- Day %s Log -" % day_no))
         for message in messages:
             text_array.append(message)
 
         return self._blit_to_block(text_array, (0, 0, 0), (255, 255, 255))
-
-    def data_block(self, main):
-        text_arr = [
-            _("Weather: %s") % WEATHER[main.weather]]
-
-        # Add Lemonade Recipe
-        text_arr.append("")
-        text_arr.append(_("- Recipe -"))
-
-        for item_key in ITEMS:
-            text_arr.append("   %s: %d" % \
-                (ITEMS[item_key]['name'], main.recipe(item_key)))
-
-        return self._blit_to_block(text_arr)
 
     def ingredient_count(self, items, money):
         # sides are at 650 and 675
@@ -136,7 +123,9 @@ class LemonadeGui(GameEngineElement):
 
         #Check if the game is currently in the shop
         if self.game_mode == 0:
-            block = self._blit_to_block([_("Type in the number you want to buy of each item")])
+            block = self._blit_to_block([
+                _("Type in the number you want to buy of each item")],
+                (255, 255,255), (0, 0, 0))
 
         elif self.game_mode == 1:
             block = self._blit_to_block([_("This is where you will see how much you spent on each supply,"),
@@ -151,7 +140,6 @@ class LemonadeGui(GameEngineElement):
         else:
             block = self._blit_to_block([_("Weather can affect the amount of lemonade you sell."),
                                          _("Watch the weather each day to see how it changes sales."),
-                                         _(""),
                                          _("Press Enter to return back to the shop and begin your next day.")])
 
         return block
@@ -171,12 +159,8 @@ class LemonadeGui(GameEngineElement):
             self.change_background(main.weather)
             screen.blit(self.__background, (0, 0))
 
-            block = self.data_block(main)
-            screen.blit(block, (10, 10))
-
-            if self.game_mode == 2:        
-                block = self.draw_log(main.messages, main.day)
-                screen.blit(block, (0, self.game_engine.height * 4 / 9))
+            block = self.draw_log(main.messages)
+            screen.blit(block, (0, self.game_engine.height / 4))
 
         block = self.ingredient_count(main.resource_list, main.money)
         screen.blit(block, (self.game_engine.width * 13 / 24,
@@ -188,11 +172,15 @@ class LemonadeGui(GameEngineElement):
                 width = self.game_engine.width/2 - block.get_width()/2
                 height = 0
 
-                screen.blit(self._blit_to_block([_("Your mother was nice enough to"),
-                _("give you a few starting supplies.")]), (self.game_engine.width / 5, 9 * self.game_engine.height / 10))
+                screen.blit(self._blit_to_block([
+                _("Your mother was nice enough to"),
+                _("give you a few starting supplies.")],
+                 (255, 255,255), (0, 0, 0)),
+                 (self.game_engine.width / 5,
+                 9 * self.game_engine.height / 10))
             else:
                 width = 0
-                height = self.game_engine.height/3
+                height = self.game_engine.height  / 10
 
             screen.blit(block, (width, height))
 
@@ -200,7 +188,8 @@ class LemonadeGui(GameEngineElement):
         """Draws the store interface, including currently selected items."""
 
         store = image.load("images/store-outline.gif").convert()
-        store = transform.scale(store, (self.game_engine.width, self.game_engine.height))
+        store = transform.scale(store,
+        (self.game_engine.width, self.game_engine.height))
 
         # Store apron text.
         #block_arr = [Surface((self.game_engine.width / 4, self.game_engine.height / 6))] * 3
@@ -265,8 +254,8 @@ class LemonadeGui(GameEngineElement):
 
         return store
 
-    def _blit_to_block(self, text_array, text_color=(255, 255, 255),
-                       block_color=(0, 0, 0)):
+    def _blit_to_block(self, text_array, text_color=(0, 0, 0),
+                       block_color=(255, 255 ,255)):
         """
         Takes an array of strings with optional text and background colors,
         creates a Surface to house them, blits the text and returns the
@@ -319,26 +308,27 @@ class LemonadeGui(GameEngineElement):
                 #Checks if you are leaving the shop to begin day
                 if self.game_mode == 0:
                     self.game_mode = 1
+                    main.update_day_log(item_list)
 
                 #Checks if you are at the beginning of the day
                 elif self.game_mode == 1:
 
                     #Checks if you made profit from the day 
                     #If you made profit, sends you to the mini game
-                    if (main.process_day_logic(item_list)):
+                    if (main.process_day_logic()):
                         self.game_mode = 2
 
                     #If you didn't make profit, sends you to end of the day
                     else:
                         self.game_mode = 3
-
+                        main.process_day_end()
+                        
                 #Checks if you are doing the profit mini game
                 elif self.game_mode == 2:
-                   # mini_game_success = main.process_change(item_list)
                     #Checks if you gave the correct amount of change
                     if main.process_change(item_list):
+                        self.game_mode = 3
                         main.process_day_end()
-                        self.game_mode = 3    
 
                 #Checks if you completed your day, returns you to the shop
                 elif self.game_mode == 3:
@@ -410,4 +400,4 @@ class LemonadeGui(GameEngineElement):
                 self.__input_string[self.game_mode][self.__input_mode[\
                     self.game_mode]] = "%s" % handle
 
-            self.game_engine.set_dirty()
+        self.game_engine.set_dirty()
