@@ -41,12 +41,21 @@ class LemonadeGui(GameEngineElement):
         self.add_to_engine()
 
         self.game_mode = 0
+        self.failed = False
+        self.fail_key= 0
 
         self.__input_keys = [ITEMS.keys(), ITEMS.keys(),CURRENCY.keys(), [None]]
         self.__input_mode = [0, 0, 0, 0]
         self.__input_string = []
         for key in self.__input_keys:
             self.__input_string.append(['0'] * len(key))
+
+    def currency(self, num):
+        return CURRENCY.keys()[num]
+
+    @property
+    def input(self):
+        return self.__input_string
 
     def splash(self):
         splash = image.load("images/splash.gif")
@@ -145,6 +154,8 @@ class LemonadeGui(GameEngineElement):
         return block
 
     def draw(self, screen, tick):
+    
+        self.game_engine.set_dirty()
         main = self.game_engine.get_object('main')
         if main.splash:
             self.splash()
@@ -152,8 +163,18 @@ class LemonadeGui(GameEngineElement):
             return
 
         if self.game_mode == 0:
-            store = self.draw_store(self.__input_mode[self.game_mode], main)
+            store = self.draw_store( \
+                self.__input_mode[self.game_mode], main)
             screen.blit(store, (0, 0))
+
+            block = self.ingredient_count(main.resource_list, main.money)
+            screen.blit(block, (self.game_engine.width * 13 / 24,
+                            self.game_engine.height * 27 / 36))
+
+        elif self.game_mode == 2:
+            cashbox = self.draw_mini_game( \
+                self.__input_mode[self.game_mode], main)
+            screen.blit(cashbox, (0, 0))
 
         else:
             self.change_background(main.weather)
@@ -162,27 +183,128 @@ class LemonadeGui(GameEngineElement):
             block = self.draw_log(main.messages)
             screen.blit(block, (0, self.game_engine.height / 4))
 
-        block = self.ingredient_count(main.resource_list, main.money)
-        screen.blit(block, (self.game_engine.width * 13 / 24,
+            block = self.ingredient_count(main.resource_list, main.money)
+            screen.blit(block, (self.game_engine.width * 13 / 24,
                             self.game_engine.height * 27 / 36))
-        if main.day == 1:
-            block = self.draw_help()
+        #if main.day == 1:
+        #    block = self.draw_help()
 
-            if self.game_mode == 0:
-                width = self.game_engine.width/2 - block.get_width()/2
-                height = 0
+         #   if self.game_mode == 0:
+          #      width = self.game_engine.width/2 - block.get_width()/2
+           #     height = 0
 
-                screen.blit(self._blit_to_block([
-                _("Your mother was nice enough to"),
-                _("give you a few starting supplies.")],
-                 (255, 255,255), (0, 0, 0)),
-                 (self.game_engine.width / 5,
-                 9 * self.game_engine.height / 10))
+            #    screen.blit(self._blit_to_block([
+             #   _("Your mother was nice enough to"),
+              #  _("give you a few starting supplies.")],
+              #   (255, 255,255), (0, 0, 0)),
+               #  (self.game_engine.width / 5,
+                # 9 * self.game_engine.height / 10))
+           # else:
+            #    width = 0
+             #   height = self.game_engine.height  / 10
+
+           # screen.blit(block, (width, height))
+
+    def draw_mini_game(self, key, main):
+
+        # Load in the cash box image, covert it, and scale it
+        cashbox = image.load("images/cash-box.gif").convert()
+        cashbox = transform.scale(cashbox,
+        (self.game_engine.width, self.game_engine.height))
+
+        # Create the spacing and the height and width for
+        # the boxs that are used to selecting a value
+        spacer = self.game_engine.height / ((len(CURRENCY) - 1)  * 3)
+        box_width = (self.game_engine.width / 3) - 10
+        box_height = (self.game_engine.height - (len(CURRENCY) + 1) * \
+            (spacer)) / (len(CURRENCY))
+
+        j = spacer + (self.game_engine.height / 7) - 20
+
+        # Loop through all of the currency values
+        for i in range (0, len(CURRENCY)):
+
+            # Create the box
+            outline = Surface((box_width, box_height))
+
+            # Set the color to white if selected or black if not
+            if key == i:
+                color = (255, 255, 255)
             else:
-                width = 0
-                height = self.game_engine.height  / 10
+                color = (0, 0, 225)
 
-            screen.blit(block, (width, height))
+            outline.fill(color)
+            cashbox.blit(outline, ((self.game_engine.width / 4) + 8, j))
+
+            # Display the name of the currency next to its box
+            name = self.__shopFont.render(self.currency(i), 1, (0, 0, 0))
+            render_left = self.game_engine.width / 15
+            cashbox.blit(name, (render_left, j + 10))
+
+            # Sets the color of the amount of the currency
+            if key == i:
+                color = (0, 0, 255)
+            else:
+                color = (255, 255, 255)
+
+            # Display the amount of the currency within the box
+            amount = self.__shopNumFont.render(self.input[2][i], 1, color)
+            fw, fh = amount.get_size()
+            render_left = ((self.game_engine.width / 4) + 8) + \
+                (box_width / 2) - (fw / 2)
+            cashbox.blit(amount, (render_left, j + 10))
+
+            j += (box_height / 2) + spacer
+
+        color = (0, 0, 0)
+        
+        # Display current day in the log book
+        day_title = self.__shopFont.render("-- Day %s --" % main.day, 1, color)
+        fw, fh = day_title.get_size()
+        render_top = self.game_engine.height / 15
+        render_left = (self.game_engine.width * 8 / 10) - (fw / 2)
+        cashbox.blit(day_title, (render_left, render_top))
+
+        # Display the current day's starting money
+        money_start = self.__shopFont.render("Start: %s" % \
+            format_money(main.start_money), True, (0, 0, 0))
+        render_top = self.game_engine.height / 5
+        render_left = (self.game_engine.width * 2 / 3)
+        cashbox.blit(money_start, (render_left, render_top))
+
+        # Display the current day's ending money
+        money_end = self.__shopFont.render("End: %s" % \
+            format_money(main.start_money + main.profit), True, (0, 0, 0))
+        render_top = (self.game_engine.height / 5) + fh + 5
+        render_left = (self.game_engine.width * 2 / 3)
+        cashbox.blit(money_end, (render_left, render_top))
+
+        # Display the current day's total profit
+        profit = self.__shopFont.render("Profit: %s" % \
+            format_money(main.profit), True, (0, 0, 0))
+        render_top = (self.game_engine.height / 5) + (fh * 4) - 20
+        render_left = (self.game_engine.width * 2 / 3)
+        cashbox.blit(profit, (render_left, render_top))
+
+        # Display if the user passed or failed the mini game
+        if self.failed == True:
+            if self.__input_mode[2] == self.fail_key:
+                fail = self.__shopFont.render("Incorrect!", True, (255, 0, 0))
+                fw, fh = fail.get_size()
+                render_top = (self.game_engine.height * 6 / 13)
+                render_left = (self.game_engine.width * 8 / 10)
+                cashbox.blit(fail, (render_left - (fw / 2), render_top))
+
+                try_again = self.__shopFont.render( \
+                    "Please try again.", True, (255, 0, 0))
+                fw, fh = try_again.get_size()
+                cashbox.blit(try_again, (render_left - (fw / 2) , \
+                    render_top + fh))
+
+            else:
+                self.failed = False
+
+        return cashbox
 
     def draw_store(self, key, main):
         """Draws the store interface, including currently selected items."""
@@ -329,6 +451,10 @@ class LemonadeGui(GameEngineElement):
                     if main.process_change(item_list):
                         self.game_mode = 3
                         main.process_day_end()
+
+                    else:
+                        self.failed = True
+                        self.fail_key = self.__input_mode[2]
 
                 #Checks if you completed your day, returns you to the shop
                 elif self.game_mode == 3:

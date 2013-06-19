@@ -43,6 +43,7 @@ class LemonadeMain:
         self.__difficulty = difficulty_level
         self.__resources = {
             'money': STARTING_MONEY,
+            'day_start_money': STARTING_MONEY,
             'last_income': 0,
             'last_profit': 0,
             'last_spent': 0,
@@ -64,6 +65,10 @@ class LemonadeMain:
 
         # run weather
         self.weather_change()
+
+    @property
+    def start_money(self):
+        return self.__resources['day_start_money']
 
     @property
     def spent(self):
@@ -195,6 +200,8 @@ class LemonadeMain:
         self.clear_queue()
         self.spent = 0
 
+        self.start_money = self.money
+
         # Display the current day
         self.add_msg(_("--Day %s Log--") % self.day)
         self.add_msg("")
@@ -316,7 +323,7 @@ class LemonadeMain:
 
                 return total
             else:
-                return -1
+                return 0
 
     def add_item(self, key, quantity):
         """
