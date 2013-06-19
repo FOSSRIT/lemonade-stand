@@ -55,9 +55,17 @@ ITEMS = {
 WEATHER = ["cloudy", "nice", "hot"]
 
 EVENTS = [
+    {'text': _("A small animal takes some lemons while you weren't looking!"),
+     'item': 'lemon',
+     'change': -10
+    },
     {'text': _("A lemon truck crashes in front of your stand!"),
      'item': 'lemon',
      'change': 10
+    },
+    {'text': _("A strong wind blows away some of your cups!"),
+     'item': 'cup',
+     'change': -10
     },
     {'text': _("It starts raining cups!"),
      'item': 'cup',
@@ -70,8 +78,7 @@ EVENTS = [
     {'text': _("A sugar salesman gives you some free samples!"),
      'item': 'sugar',
      'change': 10
-    }
-
+    },
 ]
 
 DIFFICULTY = [

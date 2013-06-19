@@ -152,23 +152,41 @@ class LemonadeMain:
         """
         Attempt to run random events
         """
-        event_num = randint(0, 10)
+        event_num = randint(0, 6)
+        self.__event_msg = ""
+        self.__result_msg = ""
 
         if event_num < len(EVENTS):
+            msg = "    You "
             event = EVENTS[event_num]
 
             itemcount = self.count_item(event['item'])
             
             if event['change'] < 0:
+                msg += "lost "
                 remove = abs(event['change'])
+                if self.__difficulty == DIFFICULTY.index("Easy"):
+                    remove += int(itemcount * .2)
+                elif self.__difficulty == DIFFICULTY.index("Normal"):
+                    remove += int(itemcount * .4)
+                elif self.__difficulty == DIFFICULTY.index("Hard"):
+                    remove += int(itemcount * .6)
+                elif self.__difficulty == DIFFICULTY.index("Impossible"):
+                    remove += int(itemcount * .8)
                 if itemcount > remove:
                     self.remove_item(event['item'], remove)
+                    msg += str(remove)
                 else:
                     self.remove_item(event['item'], itemcount)
+                    msg += str(itemcount)
             else:
                 self.add_item(event['item'], event['change'])
-
-            self.add_msg(event['text'])
+                msg += "gained " + str(event['change'])
+            msg += " " + event['item']
+            if event['item'] == 'cup' or event['item'] == 'lemon':
+                msg += "s"
+            self.__event_msg = event['text']
+            self.__result_msg = msg
 
     def process_day_logic(self):
         self.clear_queue()
@@ -209,6 +227,9 @@ class LemonadeMain:
         self.add_msg(_("Today's weather: %s") % self.weather_name.upper())
         self.add_msg("")
 
+        self.random_event()
+        self.add_msg("")
+        
         # Display the amount of each item you bought and for how much
         self.add_msg(_("Purchased:"))
         for item in items:
@@ -220,7 +241,10 @@ class LemonadeMain:
         self.add_msg(_("------------------------------"))
         self.add_msg(_("Total Spent: %s") % format_money(self.spent))
         self.add_msg("")
-   
+
+        # Chance a random event occur
+        self.random_event()
+
         # Calculate the max number of cups of lemonade you can sell
         inventory_hold = []
         for item_key in ITEMS.keys():
@@ -283,8 +307,10 @@ class LemonadeMain:
         # Weather
         self.weather_change()
 
-        # Random event
-        self.random_event()
+        # Random event messege
+        self.add_msg(self.__event_msg)
+        self.add_msg(self.__result_msg)
+        #self.random_event()
 
         self.add_msg("")
         self.add_msg(_("Time to get some rest."))
