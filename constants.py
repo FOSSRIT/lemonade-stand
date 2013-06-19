@@ -55,7 +55,7 @@ ITEMS = {
 WEATHER = ["cloudy", "nice", "hot"]
 
 EVENTS = [
-    {'text': _("A small animal takes some lemons while you weren't looking!"),
+    {'text': _("A small animal takes some lemons!"),
      'item': 'lemon',
      'change': -10
     },

@@ -186,6 +186,11 @@ class LemonadeGui(GameEngineElement):
             block = self.ingredient_count(main.resource_list, main.money)
             screen.blit(block, (self.game_engine.width * 13 / 24,
                             self.game_engine.height * 27 / 36))
+
+            if self.game_mode == 1 and main.event_messages != []:
+                block = self.draw_random_event_log(main.event_messages)
+                screen.blit(block, (0, self.game_engine.height * 9 / 10))
+
         #if main.day == 1:
         #    block = self.draw_help()
 
@@ -204,6 +209,15 @@ class LemonadeGui(GameEngineElement):
              #   height = self.game_engine.height  / 10
 
            # screen.blit(block, (width, height))
+
+    def draw_random_event_log(self, messages):
+
+        text_array = []
+
+        for message in messages:
+            text_array.append(message)
+
+        return self._blit_to_block(text_array)
 
     def draw_mini_game(self, key, main):
 
