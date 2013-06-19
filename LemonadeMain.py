@@ -307,7 +307,6 @@ class LemonadeMain:
         cost = the_item['cost'] * total
 
         if cost < self.money:
-            self.money -= cost
             self.add_item(key, total)
             return total
 
@@ -318,7 +317,6 @@ class LemonadeMain:
 
             if can_buy != 0:
                 total = can_buy * the_item['bulk']
-                self.money -= can_buy * bulk_price
                 self.add_item(key, total)
 
                 return total
