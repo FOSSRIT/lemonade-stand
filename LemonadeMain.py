@@ -26,9 +26,9 @@ from gettext import gettext as _
 
 from operator import itemgetter
 
-from constants import STARTING_MONEY, STARTING_PRICE, MAX_MSG, EVENTS,\
+from constants import STARTING_MONEY, STARTING_PRICE, MAX_MSG, BAD_EVENTS,\
                       ITEMS, CURRENCY, RECIPES, DIFFICULTY, format_money,\
-                      WEATHER
+                      WEATHER, GOOD_EVENTS
 
 
 class LemonadeMain:
@@ -164,11 +164,24 @@ class LemonadeMain:
         Attempt to run random events
         """
         self.event_messages = []
-        event_num = randint(0, 10)
+        event_num = randint(1, 100)
+        if self.difficulty == DIFFICULTY.index("Easy"):
+            bad_odd = 45
+            good_odd = 5
+        elif self.difficulty == DIFFICULTY.index("Normal"):
+            bad_odd = 38
+            good_odd = 12
+        elif self.difficulty == DIFFICULTY.index("Hard"):
+            bad_odd = 12
+            good_odd = 38
+        elif self.difficulty == DIFFICULTY.index("Impossible"):
+            bad_odd = 5
+            good_odd = 45
 
-        if event_num < len(EVENTS):
+        if event_num < bad_odd:
             msg = "    You "
-            event = EVENTS[event_num]
+            event_num = randint(0, len(BAD_EVENTS)-1)
+            event = BAD_EVENTS[event_num]
 
             # Get the amount of the item you have
             itemcount = self.count_item(event['item'])
@@ -215,6 +228,24 @@ class LemonadeMain:
             if event['item'] == 'cup' or event['item'] == 'lemon':
                 msg += "s"
 
+            # Add the messages to the event message list
+            self.event_messages.append(event['text'])
+            self.event_messages.append(msg)
+        elif event_num > bad_odd and event_num < (good_odd + bad_odd):         
+            msg = "    You "
+            event_num = randint(0, len(GOOD_EVENTS)-1)
+            event = GOOD_EVENTS[event_num]
+
+            if event['change'] < 0:
+                remove = abs(event['change'])
+            else:
+                self.add_item(event['item'], event['change'])
+                msg += "gained " + str(event['change'])
+
+            msg += " " + event['item']
+            if event['item'] == 'cup' or event['item'] == 'lemon':
+                msg += "s"
+                
             # Add the messages to the event message list
             self.event_messages.append(event['text'])
             self.event_messages.append(msg)

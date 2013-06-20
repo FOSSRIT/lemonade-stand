@@ -54,7 +54,7 @@ ITEMS = {
 
 WEATHER = ["cloudy", "nice", "hot"]
 
-EVENTS = [
+BAD_EVENTS = [
     {'text': _("A small animal takes some lemons!"),
      'item': 'lemon',
      'change': -10,
@@ -67,6 +67,7 @@ EVENTS = [
      'item': 'cup',
      'change': -10,
     },
+<<<<<<< Updated upstream
     {'text': _("It starts raining cups!"),
      'item': 'cup',
      'change': 10,
@@ -78,7 +79,27 @@ EVENTS = [
     {'text': _("A sugar salesman gives you some free samples!"),
      'item': 'sugar',
      'change': 10,
+=======
+    {'text': _("Ants steal some of your supplies!"),
+     'item': 'sugar',
+     'change': -10
+    }
+]
+
+GOOD_EVENTS = [
+    {'text':_("A lemon truck crashes in front of your stand!"),
+     'item': 'lemon',
+     'change': 10
     },
+    {'text':_("It starts raining cups!"),
+     'item': 'cup',
+     'change': 10
+>>>>>>> Stashed changes
+    },
+    {'text':_("A sugar salesman gives you some free samples!"),
+     'item': 'sugar',
+     'change':10
+    }
 ]
 
 DIFFICULTY = [
