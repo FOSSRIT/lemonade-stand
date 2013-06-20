@@ -62,6 +62,7 @@ class LemonadeMain:
 
         self.__weather = 1
         self.__msg_queue = []
+        self.challenge_mdoe = False
 
         # run weather
         self.weather_change()

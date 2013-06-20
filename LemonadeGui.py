@@ -22,7 +22,7 @@
 #     Nathaniel Case <Qalthos@gmail.com>
 
 from fortuneengine.GameEngineElement import GameEngineElement
-from constants import ITEMS, format_money, WEATHER, CURRENCY
+from constants import ITEMS, format_money, WEATHER, CURRENCY, DIFFICULTY, MENU
 from gettext import gettext as _
 from pygame import Surface, transform, image
 from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB,\
@@ -37,57 +37,112 @@ class LemonadeGui(GameEngineElement):
         self.__font = self.game_engine.get_object('font')
         self.__shopFont = self.game_engine.get_object('shopFont')
         self.__shopNumFont = self.game_engine.get_object('shopNumFont')
-        self.__shopNumFontBig = self.game_engine.get_object('shopNumFontBig')
+        self.__menuFont= self.game_engine.get_object('menuFont')
         self.add_to_engine()
 
-        self.game_mode = 0
+        self.game_mode = 4
         self.failed = False
         self.fail_key= 0
 
-        self.__input_keys = [ITEMS.keys(), ITEMS.keys(),CURRENCY.keys(), [None]]
-        self.__input_mode = [0, 0, 0, 0]
+        self.tutorial = False
+        self.menu = True
+
+        self.__input_keys = [ITEMS.keys(), ITEMS.keys(),CURRENCY.keys(), \
+            [None], MENU, DIFFICULTY]
+        self.__input_mode = [0, 0, 0, 0, 0, 0]
         self.__input_string = []
+
         for key in self.__input_keys:
             self.__input_string.append(['0'] * len(key))
-
-    def currency(self, num):
-        return CURRENCY.keys()[num]
 
     @property
     def input(self):
         return self.__input_string
+
+    def currency(self, num):
+        return CURRENCY.keys()[num]
 
     def splash(self):
         splash = image.load("images/splash.gif")
         self.__background = transform.scale(splash, (self.game_engine.width,
                                                      self.game_engine.height))
 
+    def menu_screen(self):
+        menu = image.load("images/ui-menu.gif").convert()
+        self.__background = transform.scale(menu, (self.game_engine.width,
+                                                    self.game_engine.height))
+
+    def difficulty_screen(self):
+        difficulty = image.load("images/ui-difficulty.gif").convert()
+        self.__background = transform.scale(difficulty, (self.game_engine.width,
+                                                    self.game_engine.height))
+
     def change_background(self, weather):
         bg = image.load("images/field_%s.gif" % WEATHER[weather]).convert()
         stand = image.load("images/booth.gif").convert()
-        bg.blit(stand, (720, 450))
+        stand = transform.scale(stand, (self.game_engine.width / 4,
+                                                self.game_engine.height / 3))
+        bg.blit(stand, (800, 375))
         self.__background = transform.scale(bg, (self.game_engine.width,
                                                  self.game_engine.height))
+    
+    def draw_difficulty(self, key, screen):
+
+        # Spacer is the space in between the different difficulty texts
+        # Interval is the interval that is added to the spacer after each word
+        interval = .1725
+        spacer = .3075
+
+        # Loop through and display all the difficulty settings
+        for i in range(len(DIFFICULTY)):
+
+            play_difficulty = self.__menuFont.render("%s" % DIFFICULTY[i], \
+                True, (0, 0, 0))
+            fw, fh = play_difficulty.get_size()
+            render_left = (self.game_engine.width / 2) - (fw / 2)
+            render_top = (self.game_engine.height * spacer) - (fh / 2)
+            screen.blit(play_difficulty, (render_left, render_top))
+
+            if key == i:
+                cup_icon = image.load("images/cursor_cup.gif").convert()
+                cup_icon = transform.scale(cup_icon, (
+                    self.game_engine.width / 10,
+                    self.game_engine.height / 10))
+                screen.blit(cup_icon, (self.game_engine.width / 15,
+                                        render_top - 10))
+
+            spacer += interval
+
+    def draw_menu(self, key, screen):
+
+        # Spacer is the space in between the different difficulty texts
+        # Interval is the interval that is added to the spacer after each word
+        interval = .17
+        spacer = .4
+
+        # Loop through and display all of the menu items
+        for i in range(len(MENU)):
+
+            play_menu_item = self.__menuFont.render("%s" % MENU[i], \
+                True, (0, 0, 0))
+            fw, fh = play_menu_item.get_size()
+            render_left = (self.game_engine.width / 2) - (fw / 2)
+            render_top = (self.game_engine.height * spacer) - (fh / 2)
+            screen.blit(play_menu_item, (render_left, render_top))
+
+            if key == i:
+                lemon_icon = image.load("images/cursor_lemon.gif").convert()
+                lemon_icon = transform.scale(lemon_icon, (
+                    self.game_engine.width / 12,
+                    self.game_engine.height / 10))
+                screen.blit(lemon_icon, (self.game_engine.width / 17,
+                                            render_top - 10))
+
+            spacer += interval
 
     def draw_log(self, messages):
 
-        # Add Buy Dialog
         text_array = []
-        if self.game_mode == 2:
-            text_array.append(_("- How much did you make -"))
-            text_array.append("")
-
-            for i in range(0, len(self.__input_keys[self.game_mode])):
-                if i == self.__input_mode[self.game_mode]:
-                    t = ">"
-
-                else:
-                    t = " "
-
-                text_array.append("%s %s: %s" % \
-                (t, self.__input_keys[self.game_mode][i],
-                self.__input_string[self.game_mode][i]))
-            text_array.append("")
 
         # Add day log to text
         for message in messages:
@@ -137,31 +192,45 @@ class LemonadeGui(GameEngineElement):
                 (255, 255,255), (0, 0, 0))
 
         elif self.game_mode == 1:
-            block = self._blit_to_block([_("This is where you will see how much you spent on each supply,"),
-                                        _("how many cups of lemonade you sold, and how much you made.")])
+            block = self._blit_to_block([
+            _("This is where you will see how much you spent on each supply,"),
+            _("how many cups of lemonade you sold, and how much you made.")])
 
         #Check if the game is currently is in the profit mini game
         elif self.game_mode == 2:
-            block = self._blit_to_block([_("You made %s. You need to put your money away for safekeeping." % format_money(main.profit)),
-                                         _("Enter the number of dollars, quarters, dimes, nickels, and pennies that you have made.")])
+            block = self._blit_to_block([
+            _("You made %s. You need to put your money away for safekeeping." \
+                % format_money(main.profit)),
+            _("Enter the number of dollars, quarters, dimes, nickels, and pennies that you have made.")])
 
         #Check if the game is currently at the end of the day
         else:
-            block = self._blit_to_block([_("Weather can affect the amount of lemonade you sell."),
-                                         _("Watch the weather each day to see how it changes sales."),
-                                         _("Press Enter to return back to the shop and begin your next day.")])
+            block = self._blit_to_block([
+            _("Weather can affect the amount of lemonade you sell."),
+            _("Watch the weather each day to see how it changes sales."),
+            _("Press Enter to return back to the shop and begin your next day.")])
 
         return block
 
     def draw(self, screen, tick):
     
-        self.game_engine.set_dirty()
         main = self.game_engine.get_object('main')
-        if main.splash:
-            self.splash()
+
+        # Check if the user is at the menu screen
+        if self.game_mode == 4:
+            self.menu_screen()
             screen.blit(self.__background, (0, 0))
+            self.draw_menu(self.__input_mode[self.game_mode], screen)
             return
 
+        # Check if the user is at the difficulty screen
+        if self.game_mode == 5:
+            self.difficulty_screen()
+            screen.blit(self.__background, (0, 0))
+            self.draw_difficulty(self.__input_mode[self.game_mode], screen)
+            return
+
+        # Check if the user is at the shop
         if self.game_mode == 0:
             store = self.draw_store( \
                 self.__input_mode[self.game_mode], main)
@@ -171,6 +240,7 @@ class LemonadeGui(GameEngineElement):
             screen.blit(block, (self.game_engine.width * 13 / 24,
                             self.game_engine.height * 27 / 36))
 
+        # Check if the user is at the mini game screen
         elif self.game_mode == 2:
             cashbox = self.draw_mini_game( \
                 self.__input_mode[self.game_mode], main)
@@ -181,12 +251,14 @@ class LemonadeGui(GameEngineElement):
             screen.blit(self.__background, (0, 0))
 
             block = self.draw_log(main.messages)
-            screen.blit(block, (0, self.game_engine.height / 4))
+            screen.blit(block, (0, self.game_engine.height / 3))
 
             block = self.ingredient_count(main.resource_list, main.money)
             screen.blit(block, (self.game_engine.width * 13 / 24,
                             self.game_engine.height * 27 / 36))
 
+            # Check if there was a random event and the uesr
+            # is at the beginning of the day
             if self.game_mode == 1 and main.event_messages != []:
                 block = self.draw_random_event_log(main.event_messages)
                 screen.blit(block, (0, self.game_engine.height * 9 / 10))
@@ -327,14 +399,6 @@ class LemonadeGui(GameEngineElement):
         store = transform.scale(store,
         (self.game_engine.width, self.game_engine.height))
 
-        # Store apron text.
-        #block_arr = [Surface((self.game_engine.width / 4, self.game_engine.height / 6))] * 3
-        #h = self.game_engine.width * 7 / 24
-        #j = self.game_engine.width / 12
-        #for num, block in enumerate(block_arr):
-        #    store.blit(block, (j, 20))
-        #    j += h
-
         # Store item display.
         spacer = self.game_engine.width / (len(ITEMS) * 4)
         icon_size = (self.game_engine.width - (len(ITEMS)+ 1) * (spacer)) / len(ITEMS)
@@ -351,8 +415,9 @@ class LemonadeGui(GameEngineElement):
             store.blit(outline, (j, self.game_engine.height / 4 - 12))
 
             # Put pricing info under the item.
-            ren = self.__shopFont.render("%s for %d" % (format_money(ITEMS[name]["cost"] * ITEMS[name]["bulk"]),
-                            ITEMS[name]["bulk"]), True, (0, 0, 0))
+            ren = self.__shopFont.render("%s for %d" % (format_money( \
+                ITEMS[name]["cost"] * ITEMS[name]["bulk"]),
+                ITEMS[name]["bulk"]), True, (0, 0, 0))
             fw, fh = ren.get_size()
             render_left = j + (icon_size / 2) - (fw / 2)
             store.blit(ren, (render_left, self.game_engine.height / 4 + icon_size - 15))
@@ -377,7 +442,8 @@ class LemonadeGui(GameEngineElement):
             j += icon_size + spacer
 
         # Title above recipe
-        ren = self.__shopNumFont.render("Ingredients for %s lemonade:" % main.current_recipe['name'], 1, (255, 240, 0))
+        ren = self.__shopNumFont.render("Ingredients for %s lemonade:" \
+            % main.current_recipe['name'], 1, (255, 240, 0))
         render_left = 5
         render_top = self.game_engine.height / 11
         store.blit(ren, (render_left, render_top))
@@ -424,15 +490,21 @@ class LemonadeGui(GameEngineElement):
         Responds to any events that happen during the course of the game.
         """
 
-        if event.type == KEYDOWN:
-
+        if event.type == KEYDOWN: 
             if event.key in [K_RETURN, K_KP1]:
                 # Process Data
 
                 main = self.game_engine.get_object('main')
 
-                if main.splash:
-                    main.splash = not main.splash
+                # Check if you are in the main menu
+                if self.game_mode == 4: 
+                    self.game_mode = 5
+                    return
+
+                # Check if you are in the difficulty settings
+                if self.game_mode == 5:
+                    main.difficulty = self.__input_mode[self.game_mode]
+                    self.game_mode = 0
                     return
 
                 item_list = {}

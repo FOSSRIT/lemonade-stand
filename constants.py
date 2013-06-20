@@ -57,27 +57,27 @@ WEATHER = ["cloudy", "nice", "hot"]
 EVENTS = [
     {'text': _("A small animal takes some lemons!"),
      'item': 'lemon',
-     'change': -10
+     'change': -10,
     },
     {'text': _("A lemon truck crashes in front of your stand!"),
      'item': 'lemon',
-     'change': 10
+     'change': 10,
     },
     {'text': _("A strong wind blows away some of your cups!"),
      'item': 'cup',
-     'change': -10
+     'change': -10,
     },
     {'text': _("It starts raining cups!"),
      'item': 'cup',
-     'change': 10
+     'change': 10,
     },
     {'text': _("Ants steal some of your supplies!"),
      'item': 'sugar',
-     'change': -10
+     'change': -10,
     },
     {'text': _("A sugar salesman gives you some free samples!"),
      'item': 'sugar',
-     'change': 10
+     'change': 10,
     },
 ]
 
@@ -86,6 +86,12 @@ DIFFICULTY = [
     "Normal",
     "Hard",
     "Impossible"
+]
+
+MENU = [
+    "Play",
+    "Challenge",
+    "Tutorial"
 ]
 
 # TODO: How to Localize data structures
