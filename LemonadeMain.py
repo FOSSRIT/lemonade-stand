@@ -160,17 +160,29 @@ class LemonadeMain:
             self.__weather = 2
 
     def even_select(self, events = [], scale = {}):
+        """
+        Randomly selects an event based on the weight
+        """
         count = 0;
+
+        # Totals the weights to get a random range
         for event in events:
             count += scale[event['odds']]
+
+        # Generates a random number to determine the event
         event_num = randint(1, count)
+
         count = 0
+
+        # Determines which event to return
         for event in events:
             if event_num > count and event_num <= (count + \
             scale[event['odds']]):
                 return event
             else:
                 count += scale[event['odds']]
+
+        # If this return is reached then event list should be empty
         return None
 
     def random_event(self):
