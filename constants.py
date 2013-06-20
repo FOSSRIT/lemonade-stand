@@ -59,27 +59,10 @@ BAD_EVENTS = [
      'item': 'lemon',
      'change': -10,
     },
-    {'text': _("A lemon truck crashes in front of your stand!"),
-     'item': 'lemon',
-     'change': 10,
-    },
     {'text': _("A strong wind blows away some of your cups!"),
      'item': 'cup',
      'change': -10,
     },
-<<<<<<< Updated upstream
-    {'text': _("It starts raining cups!"),
-     'item': 'cup',
-     'change': 10,
-    },
-    {'text': _("Ants steal some of your supplies!"),
-     'item': 'sugar',
-     'change': -10,
-    },
-    {'text': _("A sugar salesman gives you some free samples!"),
-     'item': 'sugar',
-     'change': 10,
-=======
     {'text': _("Ants steal some of your supplies!"),
      'item': 'sugar',
      'change': -10
@@ -94,7 +77,6 @@ GOOD_EVENTS = [
     {'text':_("It starts raining cups!"),
      'item': 'cup',
      'change': 10
->>>>>>> Stashed changes
     },
     {'text':_("A sugar salesman gives you some free samples!"),
      'item': 'sugar',
