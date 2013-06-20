@@ -159,6 +159,20 @@ class LemonadeMain:
         elif self.__weather >= 2:
             self.__weather = 2
 
+    def even_select(self, events = [], scale = {}):
+        count = 0;
+        for event in events:
+            count += scale[event['odds']]
+        event_num = randint(1, count)
+        count = 0
+        for event in events:
+            if event_num > count and event_num <= (count + \
+            scale[event['odds']]):
+                return event
+            else:
+                count += scale[event['odds']]
+        return None
+
     def random_event(self):
         """
         Attempt to run random events
