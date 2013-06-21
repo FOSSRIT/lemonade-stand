@@ -61,41 +61,47 @@ ITEMS = {
 
 WEATHER = ["cloudy", "nice", "hot"]
 
+BAD_ODDS = [5, 12, 38, 45]
+
 BAD_EVENTS = [
     {'text': _("A small animal takes some lemons!"),
      'item': 'lemon',
-     'change': -10,
-     'odds': 'normal'
+     'change': -2,
+     'weight': 5
     },
     {'text': _("A strong wind blows away some of your cups!"),
      'item': 'cup',
-     'change': -10,
-     'odds': 'normal'
+     'change': -2,
+     'weight': 5
     },
     {'text': _("Ants steal some of your supplies!"),
      'item': 'sugar',
-     'change': -10,
-     'odds': 'normal'
+     'change': -2,
+     'weight': 5
     }
 ]
+
+GOOD_ODDS = [45, 38, 12, 5]
 
 GOOD_EVENTS = [
     {'text':_("A lemon truck crashes in front of your stand!"),
      'item': 'lemon',
      'change': 10,
-     'odds': 'normal'
+     'weight': 10
     },
     {'text':_("It starts raining cups!"),
      'item': 'cup',
      'change': 10,
-     'odds': 'normal'
+     'weight': 10
     },
     {'text':_("A sugar salesman gives you some free samples!"),
      'item': 'sugar',
      'change':10,
-     'odds': 'normal'
+     'weight': 10
     }
 ]
+
+SCALE = [.2, .4, .6, .8]
 
 DIFFICULTY = [
     "Easy",
