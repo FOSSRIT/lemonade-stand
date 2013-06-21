@@ -43,8 +43,8 @@ class LemonadeMain:
         self.__day = 1
         self.__difficulty = difficulty_level
         self.__resources = {
-            'money': STARTING_MONEY[self.difficulty],
-            'day_start_money': STARTING_MONEY[self.difficulty],
+            'money': 0,
+            'day_start_money': 0,
             'last_income': 0,
             'last_profit': 0,
             'last_spent': 0,
@@ -55,8 +55,6 @@ class LemonadeMain:
         # Populate resources with item keys
         for item_key in ITEMS.keys():
             self.__resources[item_key] = []
-            self.add_item(item_key, \
-                STARTING_ITEMS[item_key][self.difficulty])
 
         self.__weather = 1
         self.__msg_queue = []
@@ -132,6 +130,20 @@ class LemonadeMain:
     def messages(self):
         return self.__msg_queue
 
+    def populate_resources(self, difficulty):
+        
+        # Set the new difficulty
+        self.difficulty = difficulty
+
+        # Populate the player's inventory with the starting
+        # items for this specific difficulty
+        for item_key in ITEMS.keys():
+            self.add_item(item_key, STARTING_ITEMS[item_key][difficulty])
+
+        # Give the player starting money depending on the difficulty
+        self.__resources['money'] = STARTING_MONEY[difficulty]
+        self.__resources['day_start_money'] = STARTING_MONEY[difficulty]
+        
     def add_msg(self, mesg):
         self.__msg_queue.append(mesg)
         if len(self.__msg_queue) > MAX_MSG:
@@ -205,7 +217,7 @@ class LemonadeMain:
             # Check if event scales
             if event['change'] < 0:
                 # Find the amount of items to remove based on the scale
-                remove = int(abs(event['change']) +\
+                remove = int(abs(event['change']) + \
                              (itemcount * SCALE[self.difficulty]))
 
             # Else remove a flat amount
@@ -241,8 +253,9 @@ class LemonadeMain:
             self.event_messages.append(msg)
 
         # Check if you got a good event
-        elif event_num > BAD_ODDS[self.difficulty] and\
-             event_num <= (GOOD_ODDS[self.difficulty] + BAD_ODDS[self.difficulty]):         
+        elif event_num > BAD_ODDS[self.difficulty] and \
+             event_num <= (GOOD_ODDS[self.difficulty] + \
+             BAD_ODDS[self.difficulty]):         
 
             # Generate a good event
             event = self.event_select(GOOD_EVENTS)

@@ -43,14 +43,12 @@ class LemonadeGui(GameEngineElement):
 
         self.game_mode = 4
         self.failed = False
-        self.fail_key= 0
-
-        self.tutorial = False
-        self.menu = True
+        self.fail_key = 0
+        self.screen_number = 0
 
         self.__input_keys = [ITEMS.keys(), ITEMS.keys(),CURRENCY.keys(), \
-            [None], MENU, DIFFICULTY]
-        self.__input_mode = [0, 0, 0, 0, 0, 0]
+            [None], MENU, DIFFICULTY, [None]]
+        self.__input_mode = [0, 0, 0, 0, 0, 0, 0]
         self.__input_string = []
 
         for key in self.__input_keys:
@@ -87,6 +85,12 @@ class LemonadeGui(GameEngineElement):
         self.__background = transform.scale(bg, (self.game_engine.width,
                                                  self.game_engine.height))
     
+    def tutorial_screen(self):
+        tutorial = image.load("images/tutorial_{}.png".format(
+            self.screen_number)).convert()
+        self.__background = transform.scale(tutorial, (self.game_engine.width,
+                                                    self.game_engine.height))
+
     def draw_difficulty(self, key, screen):
 
         # Spacer is the space in between the different difficulty texts
@@ -229,6 +233,12 @@ class LemonadeGui(GameEngineElement):
             self.difficulty_screen()
             screen.blit(self.__background, (0, 0))
             self.draw_difficulty(self.__input_mode[self.game_mode], screen)
+            return
+
+        # Check if the user is in the tutorial
+        if self.game_mode == 6:
+            self.tutorial_screen()
+            screen.blit(self.__background, (0, 0))
             return
 
         # Check if the user is at the shop
@@ -499,13 +509,33 @@ class LemonadeGui(GameEngineElement):
 
                 # Check if you are in the main menu
                 if self.game_mode == 4: 
-                    self.game_mode = 5
+
+                    # Check if the player chose 'Normal'
+                    if self.__input_mode[self.game_mode] == 0:
+                        self.game_mode = 5
+
+                    # Check if the player chose 'Tutorial'
+                    elif self.__input_mode[self.game_mode] == 2:
+                        self.game_mode = 6
+
                     return
 
                 # Check if you are in the difficulty settings
                 if self.game_mode == 5:
-                    main.difficulty = self.__input_mode[self.game_mode]
+                    main.populate_resources(self.__input_mode[self.game_mode])
                     self.game_mode = 0
+                    return
+
+                # Check if the player is watching the tutorial
+                if self.game_mode == 6:
+
+                    self.screen_number += 1
+
+                    # Check if the player is done with the tutorial
+                    if self.screen_number == 5:
+                        self.screen_number = 0
+                        self.game_mode = 4
+
                     return
 
                 item_list = {}

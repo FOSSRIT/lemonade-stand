@@ -26,10 +26,16 @@ STARTING_MONEY = [1500, 1250, 1000, 750]
 STARTING_PRICE = 150
 MAX_MSG = 18
 
+# Dictionary of lists of the amount of starting items
+# the player is given depending on difficulty
 STARTING_ITEMS = {
     'cup' : [12, 10, 5, 0],
     'lemon' : [18, 15, 5, 0],
     'sugar' : [20, 10, 5, 0]
+}
+
+CHALLENGE_MODES = {
+        
 }
 
 ITEMS = {
@@ -103,6 +109,7 @@ GOOD_EVENTS = [
 
 SCALE = [.2, .4, .6, .8]
 
+# List of difficulty types
 DIFFICULTY = [
     "Easy",
     "Normal",
@@ -110,6 +117,7 @@ DIFFICULTY = [
     "Impossible"
 ]
 
+# List of menu items
 MENU = [
     "Play",
     "Challenge",
