@@ -189,86 +189,94 @@ class LemonadeMain:
         """
         Attempt to run random events
         """
+
+        # Create a message list and a random number for checking
+        # if you got a good, bad, or no event
         self.event_messages = []
         event_num = randint(1, 100)
+
+        # Set the odds of a good or bad event occuring
+        # depending on the current difficulty selected
+        
+        # Check if you are plaing 'Easy'
         if self.difficulty == DIFFICULTY.index("Easy"):
-            bad_odd = 45
-            good_odd = 5
-        elif self.difficulty == DIFFICULTY.index("Normal"):
-            bad_odd = 38
-            good_odd = 12
-        elif self.difficulty == DIFFICULTY.index("Hard"):
-            bad_odd = 12
-            good_odd = 38
-        elif self.difficulty == DIFFICULTY.index("Impossible"):
             bad_odd = 5
             good_odd = 45
+            scale = .2
 
-        if event_num < bad_odd:
-            msg = "    You "
+        # Check if you are playing 'Normal'
+        elif self.difficulty == DIFFICULTY.index("Normal"):
+            bad_odd = 12
+            good_odd = 38
+            scale = .4
+
+        # Check if you are playing 'Hard'
+        elif self.difficulty == DIFFICULTY.index("Hard"):
+            bad_odd = 38
+            good_odd = 12
+            scale = .6
+
+        # Implies you are on impossible
+        else:
+            bad_odd = 45
+            good_odd = 5
+            scale = .8
+
+        # Check if you got a bad event
+        if event_num <= bad_odd:
+
+            # Generate a bad event
             event_num = randint(0, len(BAD_EVENTS)-1)
             event = BAD_EVENTS[event_num]
 
             # Get the amount of the item you have
             itemcount = self.count_item(event['item'])
             
-            # Check if you had a negative event and lost items
-            if event['change'] < 0:
-                msg += "lost "
+            # Find the amount of items to remove based on the scale
+            remove = abs(event['change']) + (itemcount * scale)
 
-                remove = abs(event['change'])
+            # Check if you have more supplies than you lost
+            if itemcount > remove:
 
-                # Scale the amount of items lost according to easy
-                if self.difficulty == DIFFICULTY.index("Easy"):
-                    remove += int(itemcount * .2)
+                # Create a message
+                msg = "    You lost {} {}".format( \
+                    str(remove), event['item'])
 
-                # Scale the amount of items lost according to normal
-                elif self.difficulty == DIFFICULTY.index("Normal"):
-                    remove += int(itemcount * .4)
+                # Remove the items from your inventory
+                self.remove_item(event['item'], remove)
 
-                # Scale the amount of items lost according to hard 
-                elif self.difficulty == DIFFICULTY.index("Hard"):
-                    remove += int(itemcount * .6)
-
-                # Scale the amount of items lost according to impossible
-                elif self.difficulty == DIFFICULTY.index("Impossible"):
-                    remove += int(itemcount * .8)
-
-                # Check if you have more supplies than you lost
-                if itemcount > remove:
-                    self.remove_item(event['item'], remove)
-                    msg += str(remove)
-
-                # If you lost more supplies than you have, just remove
-                # all of your current supplies for that item
-                else:
-                    self.remove_item(event['item'], itemcount)
-                    msg += str(itemcount)
-
-            # You had a positive event and gain items
+            # If you lost more supplies than you have, just remove
+            # all of your current supplies for that item
             else:
-                self.add_item(event['item'], event['change'])
-                msg += "gained " + str(event['change'])
 
-            msg += " " + event['item']
-            if event['item'] == 'cup' or event['item'] == 'lemon':
-                msg += "s"
+                # Create a message
+                msg = "    You lost {} {}".format( \
+                    str(itemcount), event['item'])
+
+                # Remove the rest of that item from your inventory
+                self.remove_item(event['item'], itemcount)
+
+                if event['item'] == 'cup' or event['item'] == 'lemon':
+                    msg += "s"
 
             # Add the messages to the event message list
             self.event_messages.append(event['text'])
             self.event_messages.append(msg)
-        elif event_num > bad_odd and event_num < (good_odd + bad_odd):         
-            msg = "    You "
+
+        # Check if you got a good event
+        elif event_num > bad_odd and event_num <= (good_odd + bad_odd):         
+
+            # Generate a good event
             event_num = randint(0, len(GOOD_EVENTS)-1)
             event = GOOD_EVENTS[event_num]
 
-            if event['change'] < 0:
-                remove = abs(event['change'])
-            else:
-                self.add_item(event['item'], event['change'])
-                msg += "gained " + str(event['change'])
+            # Create a message
+            msg = "    You gained {} {}".format( \
+                str(event['change']), event['item'])
 
-            msg += " " + event['item']
+            # Add your new supplies to your inventory
+            self.add_item(event['item'], event['change'])
+
             if event['item'] == 'cup' or event['item'] == 'lemon':
                 msg += "s"
                 
