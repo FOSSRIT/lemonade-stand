@@ -29,7 +29,7 @@ class VteActivity(activity.Activity):
     """Activity subclass built around the Vte terminal widget."""
     def __init__(self, handle):
         import gtk, pango, vte
-        super(VteActivity, self).__init__(handle, create_jobject=False)
+        super(VteActivity, self).__init__(handle, create_jobject=True)
         self.__source_object_id = None
 
         # creates vte widget

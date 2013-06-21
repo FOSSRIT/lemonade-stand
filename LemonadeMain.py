@@ -28,7 +28,7 @@ from operator import itemgetter
 
 from constants import STARTING_MONEY, STARTING_PRICE, MAX_MSG, BAD_EVENTS,\
                       ITEMS, CURRENCY, RECIPES, DIFFICULTY, format_money,\
-                      WEATHER, GOOD_EVENTS
+                      WEATHER, GOOD_EVENTS, STARTING_ITEMS
 
 
 class LemonadeMain:
@@ -54,11 +54,8 @@ class LemonadeMain:
         # Populate resources with item keys
         for item_key in ITEMS.keys():
             self.__resources[item_key] = []
-
-        # Give starting supplies
-        self.add_item('lemon', 15)
-        self.add_item('sugar', 10)
-        self.add_item('cup', 10)
+            self.add_item(item_key, \
+                STARTING_ITEMS[item_key][self.difficulty])
 
         self.__weather = 1
         self.__msg_queue = []

@@ -25,6 +25,13 @@ from gettext import gettext as _
 STARTING_MONEY = [1500, 1250, 1000, 750]
 STARTING_PRICE = 150
 MAX_MSG = 18
+
+STARTING_ITEMS = {
+    'cup' : [12, 10, 5, 0],
+    'lemon' : [18, 15, 5, 0],
+    'sugar' : [20, 10, 5, 0]
+}
+
 ITEMS = {
     'cup': {
         'name': _('Cup'),
