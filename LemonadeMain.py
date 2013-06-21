@@ -55,11 +55,8 @@ class LemonadeMain:
         # Populate resources with item keys
         for item_key in ITEMS.keys():
             self.__resources[item_key] = []
-
-        # Give starting supplies
-        self.add_item('lemon', 15)
-        self.add_item('sugar', 10)
-        self.add_item('cup', 10)
+            self.add_item(item_key, \
+                STARTING_ITEMS[item_key][self.difficulty])
 
         self.__weather = 1
         self.__msg_queue = []
@@ -160,7 +157,7 @@ class LemonadeMain:
         elif self.__weather >= 2:
             self.__weather = 2
 
-    def even_select(self, events = [], scale = {}):
+    def event_select(self, events):
         """
         Randomly selects an event based on the weight
         """
@@ -168,7 +165,7 @@ class LemonadeMain:
 
         # Totals the weights to get a random range
         for event in events:
-            count += scale[event['odds']]
+            count += event['weight']
 
         # Generates a random number to determine the event
         event_num = randint(1, count)
@@ -178,10 +175,10 @@ class LemonadeMain:
         # Determines which event to return
         for event in events:
             if event_num > count and event_num <= (count + \
-            scale[event['odds']]):
+            event['weight']):
                 return event
             else:
-                count += scale[event['odds']]
+                count += event['weight']
 
         # If this return is reached then event list should be empty
         return None
@@ -196,45 +193,24 @@ class LemonadeMain:
         self.event_messages = []
         event_num = randint(1, 100)
 
-        # Set the odds of a good or bad event occuring
-        # depending on the current difficulty selected
-        
-        # Check if you are plaing 'Easy'
-        if self.difficulty == DIFFICULTY.index("Easy"):
-            bad_odd = 5
-            good_odd = 45
-            scale = .2
-
-        # Check if you are playing 'Normal'
-        elif self.difficulty == DIFFICULTY.index("Normal"):
-            bad_odd = 12
-            good_odd = 38
-            scale = .4
-
-        # Check if you are playing 'Hard'
-        elif self.difficulty == DIFFICULTY.index("Hard"):
-            bad_odd = 38
-            good_odd = 12
-            scale = .6
-
-        # Implies you are on impossible
-        else:
-            bad_odd = 45
-            good_odd = 5
-            scale = .8
-
         # Check if you got a bad event
-        if event_num <= bad_odd:
+        if event_num <= BAD_ODDS[self.difficulty]:
 
             # Generate a bad event
-            event_num = randint(0, len(BAD_EVENTS)-1)
-            event = BAD_EVENTS[event_num]
+            event = self.event_select(BAD_EVENTS)
 
             # Get the amount of the item you have
             itemcount = self.count_item(event['item'])
             
-            # Find the amount of items to remove based on the scale
-            remove = int(abs(event['change']) + (itemcount * scale))
+            # Check if event scales
+            if event['change'] < 0:
+                # Find the amount of items to remove based on the scale
+                remove = int(abs(event['change']) +\
+                             (itemcount * SCALE[self.difficulty]))
+
+            # Else remove a flat amount
+            else:
+                remove = event['change']
 
             # Check if you have more supplies than you lost
             if itemcount > remove:
@@ -257,26 +233,39 @@ class LemonadeMain:
                 # Remove the rest of that item from your inventory
                 self.remove_item(event['item'], itemcount)
 
-                if event['item'] == 'cup' or event['item'] == 'lemon':
-                    msg += "s"
+            if event['item'] == 'cup' or event['item'] == 'lemon':
+                msg += "s"
 
             # Add the messages to the event message list
             self.event_messages.append(event['text'])
             self.event_messages.append(msg)
 
         # Check if you got a good event
-        elif event_num > bad_odd and event_num <= (good_odd + bad_odd):         
+        elif event_num > BAD_ODDS[self.difficulty] and\
+             event_num <= (GOOD_ODDS[self.difficulty] + BAD_ODDS[self.difficulty]):         
 
             # Generate a good event
-            event_num = randint(0, len(GOOD_EVENTS)-1)
-            event = GOOD_EVENTS[event_num]
+            event = self.event_select(GOOD_EVENTS)
+
+            # Checks if event scales
+            if event['change'] < 0:
+                # Get the amount of the item you have
+                itemcount = self.count_item(event['item'])
+
+                # Find the amount of items to add based on the scale
+                add = int(abs(event['change']) +\
+                          (itemcount * SCALE[3 - self.difficulty]))
+
+            # Else add a flat amount
+            else:
+                add = event['change']
 
             # Create a message
             msg = "    You gained {} {}".format( \
-                str(event['change']), event['item'])
+                str(add), event['item'])
 
             # Add your new supplies to your inventory
-            self.add_item(event['item'], event['change'])
+            self.add_item(add, event['change'])
 
             if event['item'] == 'cup' or event['item'] == 'lemon':
                 msg += "s"
