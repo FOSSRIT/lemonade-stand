@@ -265,7 +265,7 @@ class LemonadeMain:
                 str(add), event['item'])
 
             # Add your new supplies to your inventory
-            self.add_item(add, event['change'])
+            self.add_item(event['item'], add)
 
             if event['item'] == 'cup' or event['item'] == 'lemon':
                 msg += "s"
