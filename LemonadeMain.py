@@ -42,8 +42,8 @@ class LemonadeMain:
         self.__day = 1
         self.__difficulty = difficulty_level
         self.__resources = {
-            'money': STARTING_MONEY,
-            'day_start_money': STARTING_MONEY,
+            'money': STARTING_MONEY[self.difficulty],
+            'day_start_money': STARTING_MONEY[self.difficulty],
             'last_income': 0,
             'last_profit': 0,
             'last_spent': 0,
@@ -233,7 +233,7 @@ class LemonadeMain:
             itemcount = self.count_item(event['item'])
             
             # Find the amount of items to remove based on the scale
-            remove = abs(event['change']) + (itemcount * scale)
+            remove = int(abs(event['change']) + (itemcount * scale))
 
             # Check if you have more supplies than you lost
             if itemcount > remove:
@@ -328,8 +328,9 @@ class LemonadeMain:
         for item in items:
             total_bought = self.buy_item(item, items[item])
             self.add_msg("%d %s for %s" % (total_bought, ITEMS[item]['name'], \
-            format_money(total_bought * ITEMS[item]['cost'])))
-            self.spent += total_bought * ITEMS[item]['cost']
+            format_money(total_bought * ITEMS[item]['cost'][self.difficulty])))
+            self.spent += total_bought * \
+                ITEMS[item]['cost'][self.difficulty]
 
         self.add_msg(_("------------------------------"))
         self.add_msg(_("Total Spent: %s") % format_money(self.spent))
@@ -400,7 +401,6 @@ class LemonadeMain:
         # Weather
         self.weather_change()
 
-        self.add_msg("")
         self.add_msg(_("Time to get some rest."))
         self.add_msg(_("It looks like it will be %s tomorrow.") % \
                         self.weather_name)
@@ -418,14 +418,14 @@ class LemonadeMain:
         the_item = ITEMS[key]
 
         total = quanity * the_item['bulk']
-        cost = the_item['cost'] * total
+        cost = the_item['cost'][self.difficulty] * total
 
         if cost < self.money:
             self.add_item(key, total)
             return total
 
         else:
-            bulk_price = the_item['bulk'] * the_item['cost']
+            bulk_price = the_item['bulk'] * the_item['cost'][self.difficulty]
             # Lets try to buy as many as we can
             can_buy = self.money / bulk_price
 

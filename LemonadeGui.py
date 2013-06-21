@@ -21,6 +21,7 @@
 #     Justin Lewis <jlew.blackout@gmail.com>
 #     Nathaniel Case <Qalthos@gmail.com>
 
+import pygame
 from fortuneengine.GameEngineElement import GameEngineElement
 from constants import ITEMS, format_money, WEATHER, CURRENCY, DIFFICULTY, MENU
 from gettext import gettext as _
@@ -416,7 +417,7 @@ class LemonadeGui(GameEngineElement):
 
             # Put pricing info under the item.
             ren = self.__shopFont.render("%s for %d" % (format_money( \
-                ITEMS[name]["cost"] * ITEMS[name]["bulk"]),
+                ITEMS[name]["cost"][main.difficulty] * ITEMS[name]["bulk"]),
                 ITEMS[name]["bulk"]), True, (0, 0, 0))
             fw, fh = ren.get_size()
             render_left = j + (icon_size / 2) - (fw / 2)

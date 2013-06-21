@@ -22,25 +22,25 @@
 
 from gettext import gettext as _
 
-STARTING_MONEY = 1000
+STARTING_MONEY = [1500, 1250, 1000, 750]
 STARTING_PRICE = 150
 MAX_MSG = 18
 ITEMS = {
     'cup': {
         'name': _('Cup'),
-        'cost': 10,
+        'cost': [5, 10, 15, 30],
         'decay': 0,
         'bulk': 1
     },
     'lemon': {
         'name': _('Lemons'),
-        'cost': 35,
+        'cost': [15, 35, 55, 105],
         'decay': 5,
         'bulk': 1
     },
     'sugar': {
         'name': _('Sugar'),
-        'cost': 5,
+        'cost': [2, 5, 8, 15],
         'decay': 0,
         'bulk': 1
     },
