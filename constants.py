@@ -73,34 +73,95 @@ BAD_EVENTS = [
     {'text': _("A small animal takes some lemons!"),
      'item': 'lemon',
      'change': -2,
+     'weight': 1
+    },
+    {'text': _("Your friend has eaten some of your lemons!"),
+     'item': 'lemon',
+     'change': 10,
      'weight': 5
+    },
+    {'text': _("You sat on some of your lemons!"),
+     'item': 'lemon',
+     'change': 5,
+     'weight': 10
     },
     {'text': _("A strong wind blows away some of your cups!"),
      'item': 'cup',
      'change': -2,
+     'weight': 1
+    },
+    {'text': _("A batch of cups have cracked!"),
+     'item': 'cup',
+     'change': 10,
      'weight': 5
+    },
+    {'text': _("You stepped on some cups!"),
+     'item': 'cup',
+     'change': 5,
+     'weight': 10
     },
     {'text': _("Ants steal some of your supplies!"),
      'item': 'sugar',
      'change': -2,
+     'weight': 1
+    },
+    {'text': _("You sneese and blow away some sugar!"),
+     'change': 'sugar',
+     'change': 10,
      'weight': 5
+    },
+    {'text': _("Your sugar gets wet and ruined!"),
+     'item': 'sugar',
+     'change': 5,
+     'weight': 10
     }
+
 ]
 
 GOOD_ODDS = [45, 38, 12, 5]
 
 GOOD_EVENTS = [
-    {'text':_("A lemon truck crashes in front of your stand!"),
+    {'text': _("You find a baby Lemonzilla!"),
+     'item': 'lemon',
+     'change': -5,
+     'weight': 1
+    },
+    {'text': _("A lemon truck crashes in front of your stand!"),
+     'item': 'lemon',
+     'change': 100,
+     'weight': 5
+    },
+    {'text': _("Your parents give you some lemons!"),
      'item': 'lemon',
      'change': 10,
      'weight': 10
     },
-    {'text':_("It starts raining cups!"),
+    {'text': _("You brush a cup and a magical being comes out!"),
+     'item': 'cup',
+     'change': -5,
+     'weight': 1
+    },
+    {'text': _("It starts raining cups!"),
+     'item': 'cup',
+     'change': 100,
+     'weight': 5
+    },
+    {'text': _("A friendly neighbor give you some cups!"),
      'item': 'cup',
      'change': 10,
      'weight': 10
     },
-    {'text':_("A sugar salesman gives you some free samples!"),
+    {'text': _("A sugar farm would like to invest in you stand!"),
+     'item': 'sugar',
+     'change': -5,
+     'weight': 1
+    },
+    {'text': _("You find a bag of sugar on the side of the road!"),
+     'item': 'sugar',
+     'change': 100,
+     'weight': 5
+    },
+    {'text': _("A sugar salesman gives you some free samples!"),
      'item': 'sugar',
      'change':10,
      'weight': 10

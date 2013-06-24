@@ -173,6 +173,7 @@ class LemonadeMain:
         """
         Randomly selects an event based on the weight
         """
+
         count = 0;
 
         # Totals the weights to get a random range
@@ -199,6 +200,10 @@ class LemonadeMain:
         """
         Attempt to run random events
         """
+
+        # Adds a event free buffer for the first few days
+        if self.__day < 5:
+            return None
 
         # Create a message list and a random number for checking
         # if you got a good, bad, or no event
