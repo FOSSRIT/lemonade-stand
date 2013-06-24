@@ -136,7 +136,7 @@ GOOD_EVENTS = [
      'change': 10,
      'weight': 10
     },
-    {'text': _("You brush a cup and a magical being comes out!"),
+    {'text': _("You brush a cup and your wish for cups is granted!"),
      'item': 'cup',
      'change': -5,
      'weight': 1

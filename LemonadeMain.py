@@ -242,20 +242,24 @@ class LemonadeMain:
             # If you lost more supplies than you have, just remove
             # all of your current supplies for that item
             else:
+                # To prevent an event from taking nothing
+                if itemcount > 0:
+                    # Create a message
+                    msg = "    You lost {} {}".format( \
+                        str(itemcount), event['item'])
 
-                # Create a message
-                msg = "    You lost {} {}".format( \
-                    str(itemcount), event['item'])
+                    # Remove the rest of that item from your inventory
+                    self.remove_item(event['item'], itemcount)
+            # To prevent a message from displaying if nothing is removed
+            if  itemcount > 0:
+                # Adds s to pluralise nouns that need it
+                if (event['item'] == 'cup' or event['item'] == 'lemon')\
+                   and itemcount > 1:
+                    msg += "s"
 
-                # Remove the rest of that item from your inventory
-                self.remove_item(event['item'], itemcount)
-
-            if event['item'] == 'cup' or event['item'] == 'lemon':
-                msg += "s"
-
-            # Add the messages to the event message list
-            self.event_messages.append(event['text'])
-            self.event_messages.append(msg)
+                # Add the messages to the event message list
+                self.event_messages.append(event['text'])
+                self.event_messages.append(msg)
 
         # Check if you got a good event
         elif event_num > BAD_ODDS[self.difficulty] and \
@@ -285,6 +289,7 @@ class LemonadeMain:
             # Add your new supplies to your inventory
             self.add_item(event['item'], add)
 
+            # Adds s to pluralise nouns that need it
             if event['item'] == 'cup' or event['item'] == 'lemon':
                 msg += "s"
                 
