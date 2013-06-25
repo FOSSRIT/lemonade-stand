@@ -58,12 +58,21 @@ class LemonadeMain:
 
         self.__weather = 1
         self.__msg_queue = []
-        self.challenge_mdoe = False
+        self.challenge_mode = False
+        self.challenge_completed = False
 
         # run weather
         self.weather_change()
 
         self.event_messages = []
+
+    @property
+    def challenge_completed(self):
+        return self.challenge_completed
+
+    @property
+    def challenge(self):
+        return self.challenge_mode
 
     @property
     def event_messages(self):
@@ -130,7 +139,21 @@ class LemonadeMain:
     def messages(self):
         return self.__msg_queue
 
+    def reset_game(self):
+        """
+        Resets the game to its beginning game states
+        """
+        self.day = 1
+        self.challenge = False
+        self.challenge_completed = False
+
     def populate_resources(self, difficulty):
+        """
+        Populates the player's resources depending on the difficulty
+
+        :type difficulty: int
+        :param difficulty: The difficulty setting
+        """
         
         # Set the new difficulty
         self.difficulty = difficulty
@@ -141,8 +164,8 @@ class LemonadeMain:
             self.add_item(item_key, STARTING_ITEMS[item_key][difficulty])
 
         # Give the player starting money depending on the difficulty
-        self.__resources['money'] = STARTING_MONEY[difficulty]
-        self.__resources['day_start_money'] = STARTING_MONEY[difficulty]
+        self.money = STARTING_MONEY[difficulty]
+        self.start_money = STARTING_MONEY[difficulty]
         
     def add_msg(self, mesg):
         self.__msg_queue.append(mesg)
@@ -155,11 +178,8 @@ class LemonadeMain:
     def weather_change(self):
         """
         Randomly change the weather, but not more than one unit away
-
-        0 = cloudy
-        1 = nice
-        2 = hot
         """
+
         self.__weather += randint(-1, 1)
 
         # It looks like its going to rain tomorrow
@@ -407,16 +427,22 @@ class LemonadeMain:
         Processes the end of the day events.
         """
         self.clear_queue()
-
+        
         # Decay items
         self.decay_items()
 
         # Weather
         self.weather_change()
 
-        self.add_msg(_("Time to get some rest."))
-        self.add_msg(_("It looks like it will be %s tomorrow.") % \
-                        self.weather_name)
+        if self.challenge and self.day ==  90:
+           self.add_msg(_("Summer is over!"))
+           self.add_msg(_("You have successfully completed Lemonade Stand!"))
+           self.challenge_completed = True
+        
+        else:
+            self.add_msg(_("Time to get some rest."))
+            self.add_msg(_("It looks like it will be %s tomorrow.") % \
+                            self.weather_name)
 
     def buy_item(self, key, quanity):
         """
