@@ -26,10 +26,10 @@ from gettext import gettext as _
 
 from operator import itemgetter
 
-from constants import STARTING_MONEY, STARTING_PRICE, MAX_MSG, BAD_EVENTS,\
-                      ITEMS, CURRENCY, RECIPES, DIFFICULTY, format_money,\
-                      WEATHER, GOOD_EVENTS, GOOD_ODDS, BAD_ODDS, SCALE,\
-					  STARTING_ITEMS
+from constants import STARTING_MONEY, STARTING_PRICE, MAX_MSG, ITEMS, \
+                      CURRENCY, RECIPES, DIFFICULTY, format_money, \
+                      WEATHER, GOOD_ODDS, BAD_ODDS, SCALE, EVENT_KEYS, \
+					  STARTING_ITEMS, G_EVENTS_DICT, B_EVENTS_DICT
 
 
 class LemonadeMain:
@@ -60,12 +60,16 @@ class LemonadeMain:
         self.__msg_queue = []
         self.challenge_mode = False
         self.challenge_completed = False
+        self.total_weight = 0
 
         # run weather
         self.weather_change()
 
         self.event_messages = []
 
+    @property
+    def total_weight(self):
+        return self.total_weight
     @property
     def challenge_completed(self):
         return self.challenge_completed
@@ -193,28 +197,18 @@ class LemonadeMain:
         """
         Randomly selects an event based on the weight
         """
+        
+        # Generate a random value
+        rand_num = randint(1,100)
+        
+        # Loop through all the weights starting with the lowest
+        for key in EVENT_KEYS:
 
-        count = 0;
-
-        # Totals the weights to get a random range
-        for event in events:
-            count += event['weight']
-
-        # Generates a random number to determine the event
-        event_num = randint(1, count)
-
-        count = 0
-
-        # Determines which event to return
-        for event in events:
-            if event_num > count and event_num <= (count + \
-            event['weight']):
-                return event
-            else:
-                count += event['weight']
-
-        # If this return is reached then event list should be empty
-        return None
+            # Once you found which weight value you are using,
+            # return a random event with that weight
+            if rand_num <= int(key):
+                index = randint(0, len(events[key]) - 1)
+                return events[key][index]
 
     def random_event(self):
         """
@@ -222,8 +216,8 @@ class LemonadeMain:
         """
 
         # Adds a event free buffer for the first few days
-        if self.__day < 5:
-            return None
+        if self.day < 5:
+            return
 
         # Create a message list and a random number for checking
         # if you got a good, bad, or no event
@@ -234,13 +228,18 @@ class LemonadeMain:
         if event_num <= BAD_ODDS[self.difficulty]:
 
             # Generate a bad event
-            event = self.event_select(BAD_EVENTS)
+            event = self.event_select(B_EVENTS_DICT)
 
             # Get the amount of the item you have
             itemcount = self.count_item(event['item'])
             
+            # If you have none of that item, return
+            if itemcount == 0:
+                return
+            
             # Check if event scales
             if event['change'] < 0:
+
                 # Find the amount of items to remove based on the scale
                 remove = int(abs(event['change']) + \
                              (itemcount * SCALE[self.difficulty]))
@@ -249,37 +248,25 @@ class LemonadeMain:
             else:
                 remove = event['change']
 
-            # Check if you have more supplies than you lost
-            if itemcount > remove:
+            # If you lose more items than you have, remove all your items
+            if itemcount < remove:
+                remove = itemcount
 
-                # Create a message
-                msg = "    You lost {} {}".format( \
-                    str(remove), event['item'])
+            # Create a message
+            msg = "    You lost {} {}".format( \
+                str(remove), event['item'])
 
-                # Remove the items from your inventory
-                self.remove_item(event['item'], remove)
+            # Remove the items from your inventory
+            self.remove_item(event['item'], remove)
 
-            # If you lost more supplies than you have, just remove
-            # all of your current supplies for that item
-            else:
-                # To prevent an event from taking nothing
-                if itemcount > 0:
-                    # Create a message
-                    msg = "    You lost {} {}".format( \
-                        str(itemcount), event['item'])
+            # Adds s to pluralise nouns that need it
+            if (event['item'] == 'cup' or event['item'] == 'lemon')\
+               and itemcount > 1:
+                msg += "s"
 
-                    # Remove the rest of that item from your inventory
-                    self.remove_item(event['item'], itemcount)
-            # To prevent a message from displaying if nothing is removed
-            if  itemcount > 0:
-                # Adds s to pluralise nouns that need it
-                if (event['item'] == 'cup' or event['item'] == 'lemon')\
-                   and itemcount > 1:
-                    msg += "s"
-
-                # Add the messages to the event message list
-                self.event_messages.append(event['text'])
-                self.event_messages.append(msg)
+            # Add the messages to the event message list
+            self.event_messages.append(event['text'])
+            self.event_messages.append(msg)
 
         # Check if you got a good event
         elif event_num > BAD_ODDS[self.difficulty] and \
@@ -287,7 +274,7 @@ class LemonadeMain:
              BAD_ODDS[self.difficulty]):         
 
             # Generate a good event
-            event = self.event_select(GOOD_EVENTS)
+            event = self.event_select(G_EVENTS_DICT)
 
             # Checks if event scales
             if event['change'] < 0:

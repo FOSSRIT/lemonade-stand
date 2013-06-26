@@ -68,105 +68,132 @@ ITEMS = {
 WEATHER = ["cloudy", "nice", "hot"]
 
 BAD_ODDS = [5, 12, 38, 45]
-
-BAD_EVENTS = [
-    {'text': _("A small animal takes some lemons!"),
-     'item': 'lemon',
-     'change': -2,
-     'weight': 1
-    },
-    {'text': _("Your friend has eaten some of your lemons!"),
-     'item': 'lemon',
-     'change': 10,
-     'weight': 5
-    },
-    {'text': _("You sat on some of your lemons!"),
-     'item': 'lemon',
-     'change': 5,
-     'weight': 10
-    },
-    {'text': _("A strong wind blows away some of your cups!"),
-     'item': 'cup',
-     'change': -2,
-     'weight': 1
-    },
-    {'text': _("A batch of cups have cracked!"),
-     'item': 'cup',
-     'change': 10,
-     'weight': 5
-    },
-    {'text': _("You stepped on some cups!"),
-     'item': 'cup',
-     'change': 5,
-     'weight': 10
-    },
-    {'text': _("Ants steal some of your supplies!"),
-     'item': 'sugar',
-     'change': -2,
-     'weight': 1
-    },
-    {'text': _("You sneese and blow away some sugar!"),
-     'change': 'sugar',
-     'change': 10,
-     'weight': 5
-    },
-    {'text': _("Your sugar gets wet and ruined!"),
-     'item': 'sugar',
-     'change': 5,
-     'weight': 10
-    }
-
-]
-
 GOOD_ODDS = [45, 38, 12, 5]
 
-GOOD_EVENTS = [
-    {'text': _("You find a baby Lemonzilla!"),
-     'item': 'lemon',
-     'change': -5,
-     'weight': 1
-    },
-    {'text': _("A lemon truck crashes in front of your stand!"),
-     'item': 'lemon',
-     'change': 100,
-     'weight': 5
-    },
-    {'text': _("Your parents give you some lemons!"),
-     'item': 'lemon',
-     'change': 10,
-     'weight': 10
-    },
-    {'text': _("You brush a cup and your wish for cups is granted!"),
-     'item': 'cup',
-     'change': -5,
-     'weight': 1
-    },
-    {'text': _("It starts raining cups!"),
-     'item': 'cup',
-     'change': 100,
-     'weight': 5
-    },
-    {'text': _("A friendly neighbor give you some cups!"),
-     'item': 'cup',
-     'change': 10,
-     'weight': 10
-    },
-    {'text': _("A sugar farm would like to invest in you stand!"),
-     'item': 'sugar',
-     'change': -5,
-     'weight': 1
-    },
-    {'text': _("You find a bag of sugar on the side of the road!"),
-     'item': 'sugar',
-     'change': 100,
-     'weight': 5
-    },
-    {'text': _("A sugar salesman gives you some free samples!"),
-     'item': 'sugar',
-     'change':10,
-     'weight': 10
-    }
-]
+# Need to be in ascending order
+EVENT_KEYS = ['20', '50', '80', '100']
+
+B_EVENTS_DICT = {
+    '20': [
+            {
+            'text': _("A small animal takes some lemons!"),
+            'item': 'lemon',
+            'change': -2
+            },
+            {
+            'text': _("A strong wind blows away some of your cups!"),
+            'item': 'cup',
+            'change': -2
+            },
+            {
+            'text': _("Ants steal some of your supplies!"),
+            'item': 'sugar',
+            'change': -2
+            }
+        ],
+    '50': [
+            {
+            'text': _("Your friend has eaten some of your lemons!"),
+            'item': 'lemon',
+            'change': 10
+            },
+            {
+            'text': _("A batch of cups have cracked!"),
+            'item': 'cup',
+            'change': 10
+            },
+            {
+            'text': _("You sneeze and blow away some sugar!"),
+            'item': 'sugar',
+            'change': 10
+            }
+        ],
+    '80': [
+            {
+            'text': _("You sat on some of your lemons!"),
+            'item': 'lemon',
+            'change': 5
+            },
+            {
+            'text': _("You stepped on some cups!"),
+            'item': 'cup',
+            'change': 5
+            },
+            {
+            'text': _("Your sugar gets wet and ruined!"),
+            'item': 'sugar',
+            'change': 5
+            }
+        ],
+    '100': [
+            {
+            'text': _("You mother takes some of your cups!"),
+            'item': 'cup',
+            'change': 2
+            }
+        ]
+}
+
+G_EVENTS_DICT = {
+    '20': [
+            {
+            'text': _("You find a baby Lemonzilla!"),
+            'item': 'lemon',
+            'change': -5
+            },
+            {
+            'text': _("You rub a cup and your wish for cups is granted!"),
+            'item':'cup',
+            'change': -5
+            },
+            {
+            'text': _("A sugar farm would like to invest in your stand!"),
+            'item': 'sugar',
+            'change': -5
+            }
+        ],
+    '50': [
+            {
+            'text': _("A lemon truck crashes in front of your stand!"),
+            'item': 'lemon',
+            'change': 100
+            },
+            {
+            'text': _("It starts raining cups!"),
+            'item': 'cup',
+            'change': 100
+            },
+            {
+            'text': _("You find a bag of sugar on the side of the road!"),
+            'item': 'sugar',
+            'change': 100
+            }
+        ],
+    '80': [
+            {
+            'text': _("Your parents give you some lemons!"),
+            'item': 'lemon',
+            'change': 10
+            },
+            {
+            'text': _("A friendly neighbor gives you some cups!"),
+            'item': 'cup',
+            'change': 10
+            },
+            {
+            'text': _("A sugar salesman gives you some free samples!"),
+            'item': 'sugar',
+            'change': 10
+            }
+        ],
+    '100': [
+            {
+            'text': _("You find extra lemons in your bag!"),
+            'item': 'lemon',
+            'change': 5
+            }
+           ]
+}
 
 SCALE = [.2, .4, .6, .8]
 
