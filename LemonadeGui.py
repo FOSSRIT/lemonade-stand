@@ -45,6 +45,7 @@ class LemonadeGui(GameEngineElement):
         self.failed = False
         self.fail_key = 0
         self.screen_number = 0
+        self.version = "lemonade"
 
         self.__input_keys = [ITEMS.keys(), ITEMS.keys(),CURRENCY.keys(), \
             [None], MENU, DIFFICULTY, [None]]
@@ -67,20 +68,13 @@ class LemonadeGui(GameEngineElement):
         """
         return CURRENCY.keys()[index]
 
-    def splash(self):
-        """
-        Loads and changes the background image to the splash image
-        """
-        splash = image.load("images/splash.gif")
-        self.__background = transform.scale(splash, (self.game_engine.width,
-                                                     self.game_engine.height))
-
     def menu_screen(self):
         """
         Loads and changes the background image to the menu screen
         """
 
-        menu = image.load("images/ui-menu.gif").convert()
+        menu = image.load("images/{}/ui/menu.gif".format(\
+                self.version)).convert()
         self.__background = transform.scale(menu, (self.game_engine.width,
                                                     self.game_engine.height))
 
@@ -89,7 +83,8 @@ class LemonadeGui(GameEngineElement):
         Loads and changes the background image to the difficulty screen
         """
 
-        difficulty = image.load("images/ui-difficulty.gif").convert()
+        difficulty = image.load("images/{}/ui/difficulty.gif".format(\
+                self.version)).convert()
         self.__background = transform.scale(difficulty, (self.game_engine.width,
                                                     self.game_engine.height))
 
@@ -101,8 +96,12 @@ class LemonadeGui(GameEngineElement):
         :param weather: The current weather in game
         """
 
-        bg = image.load("images/field_%s.gif" % WEATHER[weather]).convert()
-        stand = image.load("images/booth.gif").convert()
+        bg = image.load("images/{}/field/{}.gif".format(\
+            self.version, WEATHER[weather])).convert()
+
+        stand = image.load("images/{}/booth.gif".format(\
+            self.version)).convert()
+
         stand = transform.scale(stand, (self.game_engine.width / 4,
                                                 self.game_engine.height / 3))
         bg.blit(stand, (800, 375))
@@ -114,8 +113,9 @@ class LemonadeGui(GameEngineElement):
         Loads and changes the background image to the specific tutorial screen
         """
 
-        tutorial = image.load("images/tutorial_{}.png".format(
-            self.screen_number)).convert()
+        tutorial = image.load("images/{}/tutorial/{}.png".format(\
+            self.version, self.screen_number)).convert()
+
         self.__background = transform.scale(tutorial, (self.game_engine.width,
                                                     self.game_engine.height))
 
@@ -139,15 +139,16 @@ class LemonadeGui(GameEngineElement):
         # Loop through and display all the difficulty settings
         for i in range(len(DIFFICULTY)):
 
-            play_difficulty = self.__menuFont.render("%s" % DIFFICULTY[i], \
-                True, (0, 0, 0))
+            play_difficulty = self.__menuFont.render("{}".format(\
+                DIFFICULTY[i]), True, (0, 0, 0))
             fw, fh = play_difficulty.get_size()
             render_left = (self.game_engine.width / 2) - (fw / 2)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
             screen.blit(play_difficulty, (render_left, render_top))
 
             if key == i:
-                cup_icon = image.load("images/cursor_cup.gif").convert()
+                cup_icon = image.load("images/{}/cursor/cup.gif".format(\
+                    self.version)).convert()
                 cup_icon = transform.scale(cup_icon, (
                     self.game_engine.width / 10,
                     self.game_engine.height / 10))
@@ -162,7 +163,7 @@ class LemonadeGui(GameEngineElement):
 
         :type key: int
         :param key: The value of the current menu item selected
-        
+
         :type screen: Surface
         :param screen: The surface to display menu items on
         """
@@ -175,8 +176,8 @@ class LemonadeGui(GameEngineElement):
         # Loop through and display all of the menu items
         for i in range(len(MENU)):
 
-            play_menu_item = self.__menuFont.render("%s" % MENU[i], \
-                True, (0, 0, 0))
+            play_menu_item = self.__menuFont.render("{}".format(\
+                MENU[i]), True, (0, 0, 0))
             fw, fh = play_menu_item.get_size()
             render_left = (self.game_engine.width / 2) - (fw / 2)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
@@ -184,7 +185,8 @@ class LemonadeGui(GameEngineElement):
 
             # Check if this item is currently selected
             if key == i:
-                lemon_icon = image.load("images/cursor_lemon.gif").convert()
+                lemon_icon = image.load("images/{}/cursor/lemon.gif".format(\
+                    self.version)).convert()
                 lemon_icon = transform.scale(lemon_icon, (
                     self.game_engine.width / 12,
                     self.game_engine.height / 10))
@@ -222,7 +224,8 @@ class LemonadeGui(GameEngineElement):
         j = icon_size / 3
         render_top = 15 + icon_size
         for name, count in reversed(items.items()):
-            icon = image.load("images/icon-%s.gif" % name).convert()
+            icon = image.load("images/{}/icon/{}.gif".format(\
+                self.version, name)).convert()
             icon = transform.scale(icon, (icon_size, icon_size))
             ingredient_block.blit(icon, (j, 10))
 
@@ -233,7 +236,8 @@ class LemonadeGui(GameEngineElement):
             ingredient_block.blit(ren, (render_left, render_top))
             j += icon_width
 
-        ren = self.__font.render("Money: %s" % format_money(money), True, (0, 0, 0))
+        ren = self.__font.render("Money: {}".format(\
+            format_money(money)), True, (0, 0, 0))
         fw, fh = ren.get_size()
         render_left = ingredient_block.get_width() / 2 - fw / 2
         render_top = (ingredient_block.get_height() - render_top) / 2 + render_top
@@ -248,7 +252,6 @@ class LemonadeGui(GameEngineElement):
 
         # Checks if the player is on the first tutorial sreen
         if self.screen_number == 0:
-
             info = self._blit_to_block([
                 _("Welcome to Lemonade Stand!"),
                 _("Here you will get to run your own lemonade stand."),
@@ -264,7 +267,6 @@ class LemonadeGui(GameEngineElement):
 
         # Checks if the player is on the second tutorial screen
         elif self.screen_number == 1:
-            
             info = self._blit_to_block([
                _("Above each item, in yellow, displays how much of"),
                _("that item is needed to make one cup of lemonade."),
@@ -282,7 +284,6 @@ class LemonadeGui(GameEngineElement):
 
         # Checks if the player is on the third tutorial screen
         elif self.screen_number == 2:
-            
             info = self._blit_to_block([
                 _("Here displays the current day's information."),
                 _("To the left of the screen is your daily log."),
@@ -299,7 +300,6 @@ class LemonadeGui(GameEngineElement):
 
         # Checks if the player is on the fourth tutorial screen
         elif self.screen_number == 3:
-            
             info = self._blit_to_block([
                 _("This is the profit mini game screen!"),
                 _(""),
@@ -342,7 +342,7 @@ class LemonadeGui(GameEngineElement):
         return info
 
     def draw(self, screen, tick):
-    
+
         main = self.game_engine.get_object('main')
 
         # Check if the user is at the menu screen
@@ -377,7 +377,7 @@ class LemonadeGui(GameEngineElement):
 
             if self.screen_number > 2:
                 render_left = self.game_engine.width * .59
-                render_top = self.game_engine.height * .47 
+                render_top = self.game_engine.height * .47
                 screen.blit(info, (render_left, render_top))
 
             return
@@ -436,7 +436,8 @@ class LemonadeGui(GameEngineElement):
         """
 
         # Load in the cash box image, covert it, and scale it
-        cashbox = image.load("images/cash-box.gif").convert()
+        cashbox = image.load("images/{}/cash-box.gif".format(\
+            self.version)).convert()
         cashbox = transform.scale(cashbox,
         (self.game_engine.width, self.game_engine.height))
 
@@ -462,7 +463,7 @@ class LemonadeGui(GameEngineElement):
                 color = (0, 0, 225)
 
             outline.fill(color)
-            cashbox.blit(outline, ((self.game_engine.width / 4) + 8, 
+            cashbox.blit(outline, ((self.game_engine.width / 4) + 8,
                                     space_between))
 
             # Display the name of the currency next to its box
@@ -486,31 +487,32 @@ class LemonadeGui(GameEngineElement):
             space_between += (box_height / 2) + spacer
 
         color = (0, 0, 0)
-        
+
         # Display current day in the log book
-        day_title = self.__shopFont.render("-- Day %s --" % main.day, 1, color)
+        day_title = self.__shopFont.render("-- Day {} --".format(\
+            main.day), 1, color)
         fw, fh = day_title.get_size()
         render_top = self.game_engine.height / 15
         render_left = (self.game_engine.width * 8 / 10) - (fw / 2)
         cashbox.blit(day_title, (render_left, render_top))
 
         # Display the current day's starting money
-        money_start = self.__shopFont.render("Start: %s" % \
-            format_money(main.start_money), True, (0, 0, 0))
+        money_start = self.__shopFont.render("Start: {}".format(\
+            format_money(main.start_money)), True, (0, 0, 0))
         render_top = self.game_engine.height / 5
         render_left = (self.game_engine.width * 2 / 3)
         cashbox.blit(money_start, (render_left, render_top))
 
         # Display the current day's ending money
-        money_end = self.__shopFont.render("End: %s" % \
-            format_money(main.start_money + main.profit), True, (0, 0, 0))
+        money_end = self.__shopFont.render("End: {}".format(\
+            format_money(main.start_money + main.profit)), True, (0, 0, 0))
         render_top = (self.game_engine.height / 5) + fh + 5
         render_left = (self.game_engine.width * 2 / 3)
         cashbox.blit(money_end, (render_left, render_top))
 
         # Display the current day's total profit
-        profit = self.__shopFont.render("Profit: %s" % \
-            format_money(main.profit), True, (0, 0, 0))
+        profit = self.__shopFont.render("Profit: {}".format(\
+            format_money(main.profit)), True, (0, 0, 0))
         render_top = (self.game_engine.height / 5) + (fh * 4) - 20
         render_left = (self.game_engine.width * 2 / 3)
         cashbox.blit(profit, (render_left, render_top))
@@ -545,7 +547,8 @@ class LemonadeGui(GameEngineElement):
         :type main: LemonadeMain
         :param main: The main class of Lemonade Stand that contains info
         """
-        store = image.load("images/store-outline.gif").convert()
+        store = image.load("images/{}/store-outline.gif".format(\
+            self.version)).convert()
         store = transform.scale(store,
         (self.game_engine.width, self.game_engine.height))
 
@@ -561,14 +564,16 @@ class LemonadeGui(GameEngineElement):
                 outline.fill((255, 255, 255))
             else:
                 outline.fill((0, 0, 0))
-            icon = image.load("images/icon-%s.gif" % name).convert()
-            icon = transform.scale(icon, 
+            icon = image.load("images/{}/icon/{}.gif".format(\
+                self.version, name)).convert()
+            icon = transform.scale(icon,
                     (icon_size * 8 / 10, icon_size * 8 / 10))
             outline.blit(icon, (icon_size / 10, icon_size / 10 ))
             store.blit(outline, (j, self.game_engine.height / 4 - 12))
 
             # Display pricing info under the item.
-            ren = self.__shopFont.render("%s for %d" % (format_money( \
+            ren = self.__shopFont.render("{} for {}".format(\
+                format_money(\
                 ITEMS[name]["cost"][main.difficulty] * ITEMS[name]["bulk"]),
                 ITEMS[name]["bulk"]), True, (0, 0, 0))
             fw, fh = ren.get_size()
@@ -580,7 +585,7 @@ class LemonadeGui(GameEngineElement):
             if self.__input_string[0][num] != '0':
                 color = (255, 255, 255)
             else:
-                color = (0, 0, 0) 
+                color = (0, 0, 0)
 
             ren = self.__shopNumFont.render(self.__input_string[0][num],
                                             1, color)
@@ -589,8 +594,8 @@ class LemonadeGui(GameEngineElement):
             store.blit(ren, (render_left, self.game_engine.height * 6 / 10 - 20))
 
             # Put the amount of the item needed for the current recipe
-            ren = self.__shopNumFont.render("x%d" % \
-                main.current_recipe[name], 1, (255, 240, 0))
+            ren = self.__shopNumFont.render("x{}".format(\
+                main.current_recipe[name]), 1, (255, 240, 0))
             fw, fh = ren.get_size()
             render_left = j + (icon_size / 2) - (fw / 2)
             store.blit(ren, (render_left, self.game_engine.height / 6 - 5))
@@ -598,8 +603,8 @@ class LemonadeGui(GameEngineElement):
             j += icon_size + spacer
 
         # Title above recipe
-        ren = self.__shopNumFont.render("Ingredients for %s lemonade:" \
-            % main.current_recipe['name'], 1, (255, 240, 0))
+        ren = self.__shopNumFont.render("Ingredients for {} {}:".format(\
+            main.current_recipe['name'], self.version), 1, (255, 240, 0))
         render_left = 5
         render_top = self.game_engine.height / 11
         store.blit(ren, (render_left, render_top))
@@ -646,14 +651,14 @@ class LemonadeGui(GameEngineElement):
         Responds to any events that happen during the course of the game.
         """
 
-        if event.type == KEYDOWN: 
+        if event.type == KEYDOWN:
             if event.key in [K_RETURN, K_KP1]:
                 # Process Data
 
                 main = self.game_engine.get_object('main')
 
                 # Check if you are in the main menu
-                if self.game_mode == 4: 
+                if self.game_mode == 4:
 
                     # Check if the player chose 'Normal'
                     if self.__input_mode[self.game_mode] == 0:
@@ -702,7 +707,7 @@ class LemonadeGui(GameEngineElement):
                 #Checks if you are at the beginning of the day
                 elif self.game_mode == 1:
 
-                    #Checks if you made profit from the day 
+                    #Checks if you made profit from the day
                     #If you made profit, sends you to the mini game
                     if (main.process_day_logic()):
                         self.game_mode = 2
@@ -711,7 +716,7 @@ class LemonadeGui(GameEngineElement):
                     else:
                         self.game_mode = 3
                         main.process_day_end()
-                        
+
                 #Checks if you are doing the profit mini game
                 elif self.game_mode == 2:
 
@@ -779,7 +784,7 @@ class LemonadeGui(GameEngineElement):
                 if handle == "0":
                     handle = key
                 else:
-                    handle = "%s%s" % (handle, key)
+                    handle = "{}{}".format(handle, key)
 
                 self.__input_string[self.game_mode][self.__input_mode[\
                     self.game_mode]] = handle
@@ -793,7 +798,7 @@ class LemonadeGui(GameEngineElement):
                 handle += 1
 
                 self.__input_string[self.game_mode][self.__input_mode[\
-                    self.game_mode]] = "%s" % handle
+                    self.game_mode]] = "{}".format(handle)
 
             # Decrement
             elif event.key == K_KP3:
@@ -805,6 +810,6 @@ class LemonadeGui(GameEngineElement):
                     handle -= 1
 
                 self.__input_string[self.game_mode][self.__input_mode[\
-                    self.game_mode]] = "%s" % handle
+                    self.game_mode]] = "{}".format(handle)
 
         self.game_engine.set_dirty()

@@ -35,7 +35,12 @@ STARTING_ITEMS = {
 }
 
 CHALLENGE_MODES = {
-        
+
+}
+
+SERVING_ITEM = {
+    'lemonade': _('cup'),
+    'hamburger': _('plate')
 }
 
 ITEMS = {
