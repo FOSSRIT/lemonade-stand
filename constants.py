@@ -132,8 +132,18 @@ B_EVENTS_DICT = {
         ],
     '100': [
             {
+            'text': _("Some of your lemons are Lemonzilla eggs!"),
+            'item': 'lemon',
+            'change': 2
+            },
+            {
             'text': _("You mother takes some of your cups!"),
             'item': 'cup',
+            'change': 2
+            },
+            {
+            'text': _("You used too much sugar in one cup!"),
+            'item': 'sugar',
             'change': 2
             }
         ]
@@ -196,6 +206,16 @@ G_EVENTS_DICT = {
             'text': _("You find extra lemons in your bag!"),
             'item': 'lemon',
             'change': 5
+            },
+            {
+            'text': _("Something hits you in the back of the head!"),
+            'item': 'cups',
+            'change': 5
+            },
+            {
+            'text': _("Some customers didn't notice you forgot the sugar!"),
+            'item': 'sugar',
+            'change': 5
             }
            ]
 }
@@ -232,22 +252,22 @@ RECIPES = {
         'cup': 1,
         'lemon': 2,
         'sugar': 3,
-        'cost': 150
+        'cost': [100, 175, 250, 350]
     },
-    'strawberry': {
-        'name': _("strawberry"),
-        'cup': 1,
-        'lemon': 2,
-        'sugar': 2,
-        'strawberry': 1,
-        'cost': 225
-    },
+#    'strawberry': {
+#        'name': _("strawberry"),
+#        'cup': 1,
+#        'lemon': 2,
+#        'sugar': 2,
+#        'strawberry': 1,
+#        'cost': 225
+#    },
     'epic': {
         'name': _("epic"),
         'cup': 2,
         'lemon': 3,
         'sugar': 5,
-        'cost': 500
+        'cost': [130, 275, 400, 550]
     }
 }
 
