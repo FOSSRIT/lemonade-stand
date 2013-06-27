@@ -102,12 +102,10 @@ class LemonadeGui(GameEngineElement):
         stand = image.load("images/{}/booth.gif".format(\
             self.version)).convert()
 
-        stand = transform.scale(stand, (self.game_engine.width / 4,
-                                                self.game_engine.height / 3))
-        bg.blit(stand, (800, 375))
+        bg.blit(stand, (850, 325))
         self.__background = transform.scale(bg, (self.game_engine.width,
                                                  self.game_engine.height))
-    
+
     def tutorial_screen(self):
         """
         Loads and changes the background image to the specific tutorial screen
@@ -209,7 +207,7 @@ class LemonadeGui(GameEngineElement):
         for message in messages:
             text_array.append(message)
 
-        return self._blit_to_block(text_array, (0, 0, 0), (255, 255, 255))
+        return self._blit_to_block(text_array, (0, 0, 0), (255, 255, 255), False)
 
     def ingredient_count(self, items, money):
         # sides are at 650 and 675
@@ -553,10 +551,11 @@ class LemonadeGui(GameEngineElement):
         (self.game_engine.width, self.game_engine.height))
 
         # Store item display.
-        spacer = self.game_engine.width / (len(ITEMS) * 4)
-        icon_size = (self.game_engine.width - (len(ITEMS)+ 1) * \
-                                    (spacer)) / len(ITEMS)
+        spacer = self.game_engine.width / ((len(ITEMS)) * 4)
+        icon_size = (self.game_engine.width - (len(ITEMS)) * \
+            (3 * spacer) / 2) / (len(ITEMS))
         j = spacer
+
         # Loop through all of the current items
         for num, name in enumerate(ITEMS):
             outline = Surface((icon_size, icon_size))
@@ -568,8 +567,9 @@ class LemonadeGui(GameEngineElement):
                 self.version, name)).convert()
             icon = transform.scale(icon,
                     (icon_size * 8 / 10, icon_size * 8 / 10))
-            outline.blit(icon, (icon_size / 10, icon_size / 10 ))
-            store.blit(outline, (j, self.game_engine.height / 4 - 12))
+            icon_render_top = self.game_engine.height * .38 - (icon_size / 2)
+            outline.blit(icon, (icon_size / 10, icon_size / 10))
+            store.blit(outline, (j, icon_render_top))
 
             # Display pricing info under the item.
             ren = self.__shopFont.render("{} for {}".format(\
@@ -578,7 +578,7 @@ class LemonadeGui(GameEngineElement):
                 ITEMS[name]["bulk"]), True, (0, 0, 0))
             fw, fh = ren.get_size()
             render_left = j + (icon_size / 2) - (fw / 2)
-            render_top = self.game_engine.height / 4 + icon_size - 15
+            render_top = icon_render_top + icon_size + (fh / 10)
             store.blit(ren, (render_left, render_top))
 
             # Display an item count under the icon.
@@ -591,14 +591,15 @@ class LemonadeGui(GameEngineElement):
                                             1, color)
             fw, fh = ren.get_size()
             render_left = j + (icon_size / 2) - (fw / 2)
-            store.blit(ren, (render_left, self.game_engine.height * 6 / 10 - 20))
+            store.blit(ren, (render_left, self.game_engine.height *.58))
 
             # Put the amount of the item needed for the current recipe
             ren = self.__shopNumFont.render("x{}".format(\
                 main.current_recipe[name]), 1, (255, 240, 0))
             fw, fh = ren.get_size()
             render_left = j + (icon_size / 2) - (fw / 2)
-            store.blit(ren, (render_left, self.game_engine.height / 6 - 5))
+            render_top = icon_render_top - fh
+            store.blit(ren, (render_left, render_top))
 
             j += icon_size + spacer
 
@@ -612,13 +613,13 @@ class LemonadeGui(GameEngineElement):
         # Title above inventory
         ren = self.__shopNumFont.render("Current Supplies:", 1, (255, 240, 0))
         render_left = self.game_engine.width * 8 / 15
-        render_top = self.game_engine.height * 7 / 10 - 18
+        render_top = self.game_engine.height * .68
         store.blit(ren, (render_left, render_top))
 
         return store
 
     def _blit_to_block(self, text_array, text_color=(0, 0, 0),
-                       block_color=(255, 255 ,255)):
+                       block_color=(255, 255 ,255), fill_block=True):
         """
         Takes an array of strings with optional text and background colors,
         creates a Surface to house them, blits the text and returns the

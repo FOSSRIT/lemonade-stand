@@ -34,13 +34,18 @@ STARTING_ITEMS = {
     'sugar' : [20, 10, 5, 0]
 }
 
+REP_VALUES = {
+    'gain': [ 4, 3, 2, 1 ],
+    'lose': [ 1, 1, 2, 2 ]
+}
+
 CHALLENGE_MODES = {
 
 }
 
 SERVING_ITEM = {
     'lemonade': _('cup'),
-    'hamburger': _('plate')
+    'hamburgers': _('plate')
 }
 
 ITEMS = {
@@ -218,6 +223,14 @@ G_EVENTS_DICT = {
             'change': 5
             }
            ]
+}
+
+LOCATIONS = {
+    'neighborhood': {
+        'base': 3,
+        'multiple': 2,
+        'cap': 50
+    }
 }
 
 SCALE = [.2, .4, .6, .8]

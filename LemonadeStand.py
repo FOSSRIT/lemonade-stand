@@ -12,13 +12,13 @@ parser.add_option("", "--width", dest="width", help="window width",
                   metavar="WIDTH", default=1200, type="int")
 
 parser.add_option("", "--height", dest="height", help="window height",
-                  metavar="HEIGHT", default=875, type="int")
+                  metavar="HEIGHT", default=855, type="int")
 
 parser.add_option("-f", "--font", dest="font", help="font size",
                   metavar="SIZE", default=36, type="int")
 
 parser.add_option("", "--shopFont", dest="shopFont", help="shop font size",
-                  metavar="SHOPSIZE", default="52", type="int")
+                  metavar="SHOPSIZE", default="48", type="int")
 
 parser.add_option("", "--shopNumFont", dest="shopNumFont", help="shop number font size",
                   metavar="SHOPNUMSIZE", default="72", type="int")

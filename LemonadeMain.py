@@ -29,8 +29,8 @@ from operator import itemgetter
 from constants import STARTING_MONEY, B_EVENTS_DICT, MAX_MSG, ITEMS, \
                       CURRENCY, RECIPES, DIFFICULTY, format_money, \
                       WEATHER, GOOD_ODDS, BAD_ODDS, SCALE, EVENT_KEYS, \
-					  STARTING_ITEMS, G_EVENTS_DICT, SERVING_ITEM
-
+					  STARTING_ITEMS, G_EVENTS_DICT, B_EVENTS_DICT, \
+                      SERVING_ITEM, LOCATIONS, REP_VALUES
 
 class LemonadeMain:
     """
@@ -60,12 +60,24 @@ class LemonadeMain:
         self.__msg_queue = []
         self.challenge_mode = False
         self.challenge_completed = False
+        self.reputation = {
+                'neighborhood': 0
+        }
+        self.location = "neighborhood"
         self.version = "lemonade"
 
         # run weather
         self.weather_change()
 
         self.event_messages = []
+
+    @property
+    def reputation(self):
+        return reputation
+
+    @property
+    def location(self):
+        return self.location
 
     @property
     def version(self):
@@ -323,12 +335,29 @@ class LemonadeMain:
                     format_money(self.profit)))
             return True
 
-        # If not profit is made, go to the end of the end
+        # If no profit is made, go to the end of the day
         else:
             self.money += self.profit
             if self.money < 0:
                 self.money = 0
             return False
+
+    def process_sales(self, max_sales):
+
+        sales = LOCATIONS[self.location]['base'] + \
+            LOCATIONS[self.location]['multiple'] * \
+            self.reputation[self.location]
+
+        if self.reputation != 100:
+            if self.weather == 0:
+               sales *= .5
+            elif self.weather == 1:
+                sales *= .75
+
+        if sales > max_sales:
+            sales = max_sales
+
+        return int(sales)
 
     def update_day_log(self, items):
 
@@ -373,13 +402,19 @@ class LemonadeMain:
             inventory_hold.append(\
                 self.count_item(item_key) / self.recipe(item_key))
 
-        sales = min(inventory_hold)
+        max_sales = min(inventory_hold)
+        sales = self.process_sales(max_sales)
 
-        # Calculates how many will be bought by weather
-        if self.__weather == 0:
-            sales = int(sales * .8)
-        elif self.__weather == -1:
-            sales = int(sales * .6)
+        if sales > 0 and max_sales > sales:
+            self.reputation[self.location] += \
+                REP_VALUES['gain'][self.difficulty]
+            if self.reputation[self.location]  > 100:
+                self.reputation[self.location] = 100
+        else:
+            self.reputation[self.location] -= \
+                REP_VALUES['lose'][self.difficulty]
+            if self.reputation[self.location] < 0:
+                self.reputation[self.location] = 0
 
         # Calculate the money you made from sales
         self.income = sales * self.price
