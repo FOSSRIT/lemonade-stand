@@ -29,9 +29,16 @@ MAX_MSG = 18
 # Dictionary of lists of the amount of starting items
 # the player is given depending on difficulty
 STARTING_ITEMS = {
-    'cup' : [12, 10, 5, 0],
-    'lemon' : [18, 15, 5, 0],
-    'sugar' : [20, 10, 5, 0]
+    'lemonade': {
+        'cup': [12, 10, 5, 0],
+        'lemon': [18, 15, 5, 0],
+        'sugar': [20, 10, 5, 0]
+    },
+    'ice cream': {
+        'cone': [12, 10, 5, 0],
+        'ice cream': [18, 15, 2, 0],
+        'sprinkles': [20, 10, 5, 0]
+    }
 }
 
 REP_VALUES = {
@@ -45,34 +52,57 @@ CHALLENGE_MODES = {
 
 SERVING_ITEM = {
     'lemonade': _('cup'),
-    'hamburgers': _('plate')
+    'hamburgers': _('plate'),
+    'ice cream': _('cone')
 }
 
 ITEMS = {
-    'cup': {
-        'name': _('Cup'),
-        'cost': [5, 10, 15, 30],
-        'decay': 0,
-        'bulk': 1
+    'lemonade': {
+        'cup': {
+            'name': _('Cup'),
+            'cost': [5, 10, 15, 30],
+            'decay': 0,
+            'bulk': 1
+        },
+        'lemon': {
+            'name': _('Lemons'),
+            'cost': [15, 35, 55, 105],
+            'decay': 5,
+            'bulk': 1
+        },
+        'sugar': {
+            'name': _('Sugar'),
+            'cost': [2, 5, 8, 15],
+            'decay': 0,
+            'bulk': 1
+        },
+    #    'strawberry': {
+    #        'name': _('Strawberry'),
+    #        'cost': 50,
+    #        'decay': 3,
+    #        'bulk': 5
+    #    }
     },
-    'lemon': {
-        'name': _('Lemons'),
-        'cost': [15, 35, 55, 105],
-        'decay': 5,
-        'bulk': 1
-    },
-    'sugar': {
-        'name': _('Sugar'),
-        'cost': [2, 5, 8, 15],
-        'decay': 0,
-        'bulk': 1
-    },
-#    'strawberry': {
-#        'name': _('Strawberry'),
-#        'cost': 50,
-#        'decay': 3,
-#        'bulk': 5
-#    }
+    'ice cream': {
+        'cone': {
+            'name': _('Cone'),
+            'cost': [5, 10, 15, 30],
+            'decay': 0,
+            'bulk': 1
+        },
+        'ice cream': {
+            'name': _('Ice cream'),
+            'cost': [15, 35, 55, 105],
+            'decay': 5,
+            'bulk': 1
+        },
+        'sprinkles': {
+            'name': _('Sprinkles'),
+            'cost': [2, 5, 8, 15],
+            'decay': 0,
+            'bulk': 1
+        }
+    }
 }
 
 WEATHER = ["cloudy", "nice", "hot"]
@@ -260,27 +290,45 @@ CURRENCY = {
 }
 
 RECIPES = {
-    'basic': {
-        'name': _("basic"),
-        'cup': 1,
-        'lemon': 2,
-        'sugar': 3,
-        'cost': [100, 175, 250, 350]
+    'lemonade': {
+        'basic': {
+            'name': _("basic"),
+            'cup': 1,
+            'lemon': 2,
+            'sugar': 3,
+            'cost': [100, 175, 250, 350]
+        },
+        'strawberry': {
+            'name': _("strawberry"),
+            'cup': 1,
+            'lemon': 2,
+            'sugar': 2,
+            'strawberry': 1,
+            'cost': 225
+        },
+        'epic': {
+            'name': _("epic"),
+            'cup': 2,
+            'lemon': 3,
+            'sugar': 5,
+            'cost': [130, 275, 400, 550]
+        }
     },
-#    'strawberry': {
-#        'name': _("strawberry"),
-#        'cup': 1,
-#        'lemon': 2,
-#        'sugar': 2,
-#        'strawberry': 1,
-#        'cost': 225
-#    },
-    'epic': {
-        'name': _("epic"),
-        'cup': 2,
-        'lemon': 3,
-        'sugar': 5,
-        'cost': [130, 275, 400, 550]
+    'ice cream': {
+        'basic': {
+            'name': _("basic"),
+            'cone': 1,
+            'ice cream': 2,
+            'sprinkles': 3,
+            'cost': [100, 175, 250, 350]
+        },
+        'epic': {
+            'name': _("epic"),
+            'cone': 2,
+            'ice cream': 3,
+            'sprinkles': 5,
+            'cost': [130, 275, 400, 550]
+        }
     }
 }
 
