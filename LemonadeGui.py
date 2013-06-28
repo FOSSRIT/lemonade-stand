@@ -41,13 +41,16 @@ class LemonadeGui(GameEngineElement):
         self.__menuFont= self.game_engine.get_object('menuFont')
         self.add_to_engine()
 
+        main = self.game_engine.get_object('main')
+
         self.game_mode = 4
         self.failed = False
         self.fail_key = 0
         self.screen_number = 0
-        self.version = "lemonade"
+        self.version = main.version
 
-        self.__input_keys = [ITEMS.keys(), ITEMS.keys(),CURRENCY.keys(), \
+        self.__input_keys = [ITEMS[self.version].keys(), \
+            ITEMS[self.version].keys(),CURRENCY.keys(), \
             [None], MENU, DIFFICULTY, [None]]
         self.__input_mode = [0, 0, 0, 0, 0, 0, 0]
         self.__input_string = []
@@ -102,7 +105,7 @@ class LemonadeGui(GameEngineElement):
         stand = image.load("images/{}/booth.gif".format(\
             self.version)).convert()
 
-        bg.blit(stand, (850, 325))
+        bg.blit(stand, (850, 315))
         self.__background = transform.scale(bg, (self.game_engine.width,
                                                  self.game_engine.height))
 
@@ -380,7 +383,7 @@ class LemonadeGui(GameEngineElement):
 
             return
 
-        # Check if the user is at the shop
+        # Check if the player is at the shop
         if self.game_mode == 0:
             store = self.draw_store( \
                 self.__input_mode[self.game_mode], main)
@@ -390,13 +393,8 @@ class LemonadeGui(GameEngineElement):
             screen.blit(block, (self.game_engine.width * 13 / 24,
                             self.game_engine.height * 27 / 36))
 
-        # Check if the user is at the mini game screen
-        elif self.game_mode == 2:
-            cashbox = self.draw_mini_game( \
-                self.__input_mode[self.game_mode], main)
-            screen.blit(cashbox, (0, 0))
-
-        else:
+        # Check if the player is at the beginning of the day
+        elif self.game_mode == 1:
             self.change_background(main.weather)
             screen.blit(self.__background, (0, 0))
 
@@ -407,11 +405,27 @@ class LemonadeGui(GameEngineElement):
             screen.blit(block, (self.game_engine.width * 13 / 24,
                             self.game_engine.height * 27 / 36))
 
-            # Check if there was a random event and the uesr
-            # is at the beginning of the day
-            if self.game_mode == 1 and main.event_messages != []:
+            # Check if there was a random event
+            if main.event_messages != []:
                 block = self.draw_random_event_log(main.event_messages)
                 screen.blit(block, (0, self.game_engine.height * 9 / 10))
+
+        # Check if the player is at the mini game screen
+        elif self.game_mode == 2:
+            cashbox = self.draw_mini_game( \
+                self.__input_mode[self.game_mode], main)
+            screen.blit(cashbox, (0, 0))
+
+        else:
+            self.change_background(main.weather)
+            screen.blit(self.__background, (0, 0))
+
+            block = self.draw_log(main.messages)
+            screen.blit(block, (0, self.game_engine.height * .5))
+
+            block = self.ingredient_count(main.resource_list, main.money)
+            screen.blit(block, (self.game_engine.width * 13 / 24,
+                            self.game_engine.height * 27 / 36))
 
     def draw_random_event_log(self, messages):
 
@@ -509,11 +523,12 @@ class LemonadeGui(GameEngineElement):
         cashbox.blit(money_end, (render_left, render_top))
 
         # Display the current day's total profit
-        profit = self.__shopFont.render("Profit: {}".format(\
-            format_money(main.profit)), True, (0, 0, 0))
-        render_top = (self.game_engine.height / 5) + (fh * 4) - 20
-        render_left = (self.game_engine.width * 2 / 3)
-        cashbox.blit(profit, (render_left, render_top))
+        if main.difficulty < 2:
+            profit = self.__shopFont.render("Profit: {}".format(\
+                format_money(main.profit)), True, (0, 0, 0))
+            render_top = (self.game_engine.height / 5) + (fh * 4) - 20
+            render_left = (self.game_engine.width * 2 / 3)
+            cashbox.blit(profit, (render_left, render_top))
 
         # Display if the user passed or failed the mini game
         if self.failed == True:
@@ -551,13 +566,13 @@ class LemonadeGui(GameEngineElement):
         (self.game_engine.width, self.game_engine.height))
 
         # Store item display.
-        spacer = self.game_engine.width / ((len(ITEMS)) * 4)
-        icon_size = (self.game_engine.width - (len(ITEMS)) * \
-            (3 * spacer) / 2) / (len(ITEMS))
+        spacer = self.game_engine.width / ((len(main.current_recipe) - 2) * 4)
+        icon_size = (self.game_engine.width - (len(main.current_recipe) - 2)* \
+            (3 * spacer) / 2) / (len(main.current_recipe) - 2)
         j = spacer
 
         # Loop through all of the current items
-        for num, name in enumerate(ITEMS):
+        for num, name in enumerate(ITEMS[self.version]):
             outline = Surface((icon_size, icon_size))
             if num == key:
                 outline.fill((255, 255, 255))
@@ -574,8 +589,9 @@ class LemonadeGui(GameEngineElement):
             # Display pricing info under the item.
             ren = self.__shopFont.render("{} for {}".format(\
                 format_money(\
-                ITEMS[name]["cost"][main.difficulty] * ITEMS[name]["bulk"]),
-                ITEMS[name]["bulk"]), True, (0, 0, 0))
+                ITEMS[self.version][name]["cost"][main.difficulty] * \
+                ITEMS[self.version][name]["bulk"]),
+                ITEMS[self.version][name]["bulk"]), True, (0, 0, 0))
             fw, fh = ren.get_size()
             render_left = j + (icon_size / 2) - (fw / 2)
             render_top = icon_render_top + icon_size + (fh / 10)

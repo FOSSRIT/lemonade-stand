@@ -42,18 +42,19 @@ class LemonadeMain:
         self.splash = True
         self.__day = 1
         self.__difficulty = difficulty_level
+        self.version = "ice cream"
         self.__resources = {
             'money': 0,
             'day_start_money': 0,
             'last_income': 0,
             'last_profit': 0,
             'last_spent': 0,
-            'price': RECIPES['basic']['cost'],
-            'recipe': RECIPES['basic']
+            'price': RECIPES[self.version]['basic']['cost'],
+            'recipe': RECIPES[self.version]['basic']
         }
 
         # Populate resources with item keys
-        for item_key in ITEMS.keys():
+        for item_key in ITEMS[self.version].keys():
             self.__resources[item_key] = []
 
         self.__weather = 1
@@ -64,7 +65,6 @@ class LemonadeMain:
                 'neighborhood': 0
         }
         self.location = "neighborhood"
-        self.version = "lemonade"
 
         # run weather
         self.weather_change()
@@ -145,7 +145,7 @@ class LemonadeMain:
     @property
     def resource_list(self):
         resources = {}
-        for item_key in ITEMS.keys():
+        for item_key in ITEMS[self.version].keys():
             resources[item_key] = self.count_item(item_key)
         return resources
 
@@ -177,8 +177,9 @@ class LemonadeMain:
 
         # Populate the player's inventory with the starting
         # items for this specific difficulty
-        for item_key in ITEMS.keys():
-            self.add_item(item_key, STARTING_ITEMS[item_key][difficulty])
+        for item_key in ITEMS[self.version].keys():
+            self.add_item(item_key,
+                STARTING_ITEMS[self.version][item_key][difficulty])
 
         # Give the player starting money depending on the difficulty
         self.money = STARTING_MONEY[difficulty]
@@ -380,12 +381,12 @@ class LemonadeMain:
             total_bought = self.buy_item(item, items[item])
             self.add_msg("{} {} for {}".format(\
                 total_bought,\
-                ITEMS[item]['name'],\
+                ITEMS[self.version][item]['name'],\
                 format_money(total_bought * \
-                ITEMS[item]['cost'][self.difficulty])))
+                ITEMS[self.version][item]['cost'][self.difficulty])))
 
             self.spent += total_bought * \
-                ITEMS[item]['cost'][self.difficulty]
+                ITEMS[self.version][item]['cost'][self.difficulty]
 
         self.add_msg(_("------------------------------"))
         self.add_msg(_("Total Spent: {}").format(format_money(self.spent)))
@@ -396,7 +397,7 @@ class LemonadeMain:
 
         # Calculate the max number of cups of lemonade you can sell
         inventory_hold = []
-        for item_key in ITEMS.keys():
+        for item_key in ITEMS[self.version].keys():
             if self.recipe(item_key) == 0:
                 continue
             inventory_hold.append(\
@@ -433,7 +434,7 @@ class LemonadeMain:
         self.add_msg(_("Total Made: {}").format(format_money(self.income)))
 
         # Remove supplies required to make your number of sales
-        for item_key in ITEMS.keys():
+        for item_key in ITEMS[self.version].keys():
             self.remove_item(item_key, sales * self.recipe(item_key))
 
         self.profit = self.income - self.spent
@@ -487,7 +488,7 @@ class LemonadeMain:
         @return:          Returns total bought, -1 if you can't
                           afford any
         """
-        the_item = ITEMS[key]
+        the_item = ITEMS[self.version][key]
 
         total = quanity * the_item['bulk']
         cost = the_item['cost'][self.difficulty] * total
@@ -517,7 +518,8 @@ class LemonadeMain:
         @param quantity: The total quantity to add
         """
         total = quantity
-        self.__resources[key].append([ITEMS[key]['decay'], total])
+        self.__resources[key].append(
+            [ITEMS[self.version][key]['decay'], total])
 
     def remove_item(self, key, quantity):
         """
@@ -554,7 +556,7 @@ class LemonadeMain:
         Decays items and removes expired items.
         """
         # Loop through all items
-        for item_key in ITEMS.keys():
+        for item_key in ITEMS[self.version].keys():
             new_list = []
 
             # Loops through all items stored in item list
