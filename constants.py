@@ -50,6 +50,53 @@ CHALLENGE_MODES = {
 
 }
 
+UPGRADES = {
+    'lemonade': [
+        {
+            'name': 'Cooler',
+            'cost': 2500,
+            'prevents_losing': 'lemons',
+            'capacity': 20,
+            'level': 1,
+            'info': [ _("A cooler is used for storing any lemonades that"),
+                    _("you have. This helps prevent lemons from decaying"),
+                    _("as well as anything from getting to your lemons.")]
+        },
+        {
+            'name': 'Sugar Jar',
+            'cost': 3500,
+            'prevents_losing': 'sugar',
+            'capacity': 20,
+            'level': 1,
+            'info': [ _("A sugar jar is used for storing any sugar that"),
+                    _("you have. This helps prevent ants or anything else"),
+                    _("from getting to your sugar supply.")]
+        },
+        {
+            'name': 'Plastic Container',
+            'cost': 1500,
+            'prevents_losing': 'cups',
+            'capacity': 20,
+            'level': 1,
+            'info': [ _("A plastic container is used for storing plastic"),
+                    _("cups that you have. This helps prevent wind from"),
+                    _("blowing your cups away.")]
+        }
+    ],
+    'ice cream':[
+        {
+            'name': 'Cooler',
+            'cost': 2000,
+            'prevents_losing': 'ice cream',
+            'capacity': 20,
+            'level': 1,
+            'info': [ _("A cooler is used for storing any ice cream"),
+                    _("that you have. This helps prevent ice cream"),
+                    _("from melting as well as anything from getting"),
+                    _("to your ice cream supply.")]
+        }
+    ]
+}
 SERVING_ITEM = {
     'lemonade': _('cup'),
     'hamburgers': _('plate'),

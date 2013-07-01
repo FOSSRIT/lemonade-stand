@@ -1,0 +1,361 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-07-01 16:54-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: activity/activity.info:2
+msgid "Lemonade"
+msgstr ""
+
+#: LemonadeMain.py:271
+msgid "    You lost {} {}"
+msgstr ""
+
+#: LemonadeMain.py:308
+msgid "    You gained {} {}"
+msgstr ""
+
+#: LemonadeMain.py:372
+msgid "--Day {} Log--"
+msgstr ""
+
+#: LemonadeMain.py:375
+msgid "Today's weather: {}"
+msgstr ""
+
+#: LemonadeMain.py:380
+msgid "Purchased:"
+msgstr ""
+
+#: LemonadeMain.py:400
+msgid "Total Spent: {}"
+msgstr ""
+
+#: LemonadeMain.py:434
+msgid "Sales:"
+msgstr ""
+
+#: LemonadeMain.py:436
+msgid "{} {}s of {} sold"
+msgstr ""
+
+#: LemonadeMain.py:439
+msgid "{} {} of {} sold"
+msgstr ""
+
+#: LemonadeMain.py:441
+msgid "    @ {} each"
+msgstr ""
+
+#: LemonadeMain.py:443
+msgid "Total Made: {}"
+msgstr ""
+
+#: LemonadeMain.py:464
+msgid "That is the incorrect amount of money. Try again."
+msgstr ""
+
+#: LemonadeMain.py:481
+msgid "Summer is over!"
+msgstr ""
+
+#: LemonadeMain.py:482
+msgid "You have successfully completed Lemonade Stand!"
+msgstr ""
+
+#: LemonadeMain.py:486
+msgid "Time to get some rest."
+msgstr ""
+
+#: LemonadeMain.py:487
+msgid "It looks like it will be {} tomorrow."
+msgstr ""
+
+#: LemonadeGui.py:260
+msgid ""
+"Welcome to Lemonade Stand!\n"
+"Here you will get to run your own lemonade stand.\n"
+"\n"
+"This is the shop where you will be spending money\n"
+"to buy more supplies to make more lemonade.\n"
+"\n"
+"The bottom right hand side of your screen displays\n"
+"your current supplies of each item and how much\n"
+"money you have to spend."
+msgstr ""
+
+#: LemonadeGui.py:275
+msgid ""
+"Above each item, in yellow, displays how much of\n"
+"that item is needed to make one cup of lemonade.\n"
+"\n"
+"Below each item, in black, displays how much it\n"
+"costs to buy a specific amount of that item.\n"
+"\n"
+"Also below the item, you can type how many of that\n"
+"item you would like to purchase and the color of the\n"
+"text will change from black to white.\n"
+"\n"
+"Use the arrow keys to switch between items."
+msgstr ""
+
+#: LemonadeGui.py:292
+msgid ""
+"Here displays the current day's information.\n"
+"To the left of the screen is your daily log.\n"
+"\n"
+"The daily log displays:\n"
+"- The current day you are on\n"
+"- The current day's weather\n"
+"- The total number of supplies you purchased\n"
+"- How much money you spent in the shop\n"
+"- The total number of cups of lemonade you sold\n"
+"- How much money you made from selling lemonade"
+msgstr ""
+
+#: LemonadeGui.py:308
+msgid ""
+"This is the profit mini game screen!\n"
+"\n"
+"If you made it to this screen, good job!\n"
+"That means you made a profit during the\n"
+"day and you need to figure out the\n"
+"smallest amount of change you can make\n"
+"out of your profit.\n"
+"\n"
+"The top right corner of the screen\n"
+"displays the amount of money you\n"
+"started with, the amount money after\n"
+"buying supplies and selling lemonade\n"
+"and how much profit you made."
+msgstr ""
+
+#: LemonadeGui.py:327
+msgid ""
+"You can switch between values by using\n"
+"the up and down arrow keys.\n"
+"\n"
+"The current type of money you have\n"
+"selected will be highlighted by a\n"
+"white box.  While selected, you can\n"
+"enter in a value you think is correct\n"
+"to create the smallest amount of change.\n"
+"\n"
+"In this case, 6 dollars and 1 dime would\n"
+"be the smallest amount of change to\n"
+"make $6.10 and then you would continue\n"
+"to the end of the day.\n"
+"\n"
+"You will not be able continue to the\n"
+"end of the day until you are correct."
+msgstr ""
+
+#: constants.py:61
+msgid "A cooler is used for storing any lemonades that"
+msgstr ""
+
+#: constants.py:62
+msgid "you have. This helps prevent lemons from decaying"
+msgstr ""
+
+#: constants.py:63
+msgid "as well as anything from getting to your lemons."
+msgstr ""
+
+#: constants.py:71
+msgid "A sugar jar is used for storing any sugar that"
+msgstr ""
+
+#: constants.py:72
+msgid "you have. This helps prevent ants or anything else"
+msgstr ""
+
+#: constants.py:73
+msgid "from getting to your sugar supply."
+msgstr ""
+
+#: constants.py:81
+msgid "A plastic container is used for storing plastic"
+msgstr ""
+
+#: constants.py:82
+msgid "cups that you have. This helps prevent wind from"
+msgstr ""
+
+#: constants.py:83
+msgid "blowing your cups away."
+msgstr ""
+
+#: constants.py:93
+msgid "A cooler is used for storing any ice cream"
+msgstr ""
+
+#: constants.py:94
+msgid "that you have. This helps prevent ice cream"
+msgstr ""
+
+#: constants.py:95
+msgid "from melting as well as anything from getting"
+msgstr ""
+
+#: constants.py:96
+msgid "to your ice cream supply."
+msgstr ""
+
+#: constants.py:101
+msgid "cup"
+msgstr ""
+
+#: constants.py:102
+msgid "plate"
+msgstr ""
+
+#: constants.py:103
+msgid "cone"
+msgstr ""
+
+#: constants.py:109
+msgid "Cup"
+msgstr ""
+
+#: constants.py:115
+msgid "Lemons"
+msgstr ""
+
+#: constants.py:121
+msgid "Sugar"
+msgstr ""
+
+#: constants.py:135
+msgid "Cone"
+msgstr ""
+
+#: constants.py:141
+msgid "Ice cream"
+msgstr ""
+
+#: constants.py:147
+msgid "Sprinkles"
+msgstr ""
+
+#: constants.py:166
+msgid "A small animal takes some lemons!"
+msgstr ""
+
+#: constants.py:171
+msgid "A strong wind blows away some of your cups!"
+msgstr ""
+
+#: constants.py:176
+msgid "Ants steal some of your supplies!"
+msgstr ""
+
+#: constants.py:183
+msgid "Your friend has eaten some of your lemons!"
+msgstr ""
+
+#: constants.py:188
+msgid "A batch of cups have cracked!"
+msgstr ""
+
+#: constants.py:193
+msgid "You sneeze and blow away some sugar!"
+msgstr ""
+
+#: constants.py:200
+msgid "You sat on some of your lemons!"
+msgstr ""
+
+#: constants.py:205
+msgid "You stepped on some cups!"
+msgstr ""
+
+#: constants.py:210
+msgid "Your sugar gets wet and ruined!"
+msgstr ""
+
+#: constants.py:217
+msgid "Some of your lemons are Lemonzilla eggs!"
+msgstr ""
+
+#: constants.py:222
+msgid "You mother takes some of your cups!"
+msgstr ""
+
+#: constants.py:227
+msgid "You used too much sugar in one cup!"
+msgstr ""
+
+#: constants.py:237
+msgid "You find a baby Lemonzilla!"
+msgstr ""
+
+#: constants.py:242
+msgid "You rub a cup and your wish for cups is granted!"
+msgstr ""
+
+#: constants.py:247
+msgid "A sugar farm would like to invest in your stand!"
+msgstr ""
+
+#: constants.py:254
+msgid "A lemon truck crashes in front of your stand!"
+msgstr ""
+
+#: constants.py:259
+msgid "It starts raining cups!"
+msgstr ""
+
+#: constants.py:264
+msgid "You find a bag of sugar on the side of the road!"
+msgstr ""
+
+#: constants.py:271
+msgid "Your parents give you some lemons!"
+msgstr ""
+
+#: constants.py:276
+msgid "A friendly neighbor gives you some cups!"
+msgstr ""
+
+#: constants.py:281
+msgid "A sugar salesman gives you some free samples!"
+msgstr ""
+
+#: constants.py:288
+msgid "You find extra lemons in your bag!"
+msgstr ""
+
+#: constants.py:293
+msgid "Something hits you in the back of the head!"
+msgstr ""
+
+#: constants.py:298
+msgid "Some customers didn't notice you forgot the sugar!"
+msgstr ""
+
+#: constants.py:342 constants.py:366
+msgid "basic"
+msgstr ""
+
+#: constants.py:349
+msgid "strawberry"
+msgstr ""
+
+#: constants.py:357 constants.py:373
+msgid "epic"
+msgstr ""

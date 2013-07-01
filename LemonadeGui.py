@@ -23,12 +23,14 @@
 
 import pygame
 from fortuneengine.GameEngineElement import GameEngineElement
-from constants import ITEMS, format_money, WEATHER, CURRENCY, DIFFICULTY, MENU
+from constants import ITEMS, format_money, WEATHER, CURRENCY, DIFFICULTY, \
+                        MENU, UPGRADES
 from gettext import gettext as _
 from pygame import Surface, transform, image
 from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB,\
                           K_DOWN, K_UP, K_LEFT, K_RIGHT, K_ESCAPE,\
-                          K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP8, K_KP9
+                          K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP8, \
+                          K_KP9, K_SPACE
 
 
 class LemonadeGui(GameEngineElement):
@@ -51,8 +53,8 @@ class LemonadeGui(GameEngineElement):
 
         self.__input_keys = [ITEMS[self.version].keys(), \
             ITEMS[self.version].keys(),CURRENCY.keys(), \
-            [None], MENU, DIFFICULTY, [None]]
-        self.__input_mode = [0, 0, 0, 0, 0, 0, 0]
+            [None], MENU, DIFFICULTY, [None], UPGRADES[self.version]]
+        self.__input_mode = [0, 0, 0, 0, 0, 0, 0, 0]
         self.__input_string = []
 
         for key in self.__input_keys:
@@ -253,90 +255,90 @@ class LemonadeGui(GameEngineElement):
 
         # Checks if the player is on the first tutorial sreen
         if self.screen_number == 0:
-            info = self._blit_to_block([
-                _("Welcome to Lemonade Stand!"),
-                _("Here you will get to run your own lemonade stand."),
-                _(""),
-                _("This is the shop where you will be spending money"),
-                _("to buy more supplies to make more lemonade."),
-                _(""),
-                _("The bottom right hand side of your screen displays"),
-                _("your current supplies of each item and how much"),
-                _("money you have to spend.")],
+            info = self._blit_to_block(
+                _("""Welcome to Lemonade Stand!
+Here you will get to run your own lemonade stand.
+
+This is the shop where you will be spending money
+to buy more supplies to make more lemonade.
+
+The bottom right hand side of your screen displays
+your current supplies of each item and how much
+money you have to spend."""),
                 (255, 255, 255),
                 (0, 0, 0))
 
         # Checks if the player is on the second tutorial screen
         elif self.screen_number == 1:
-            info = self._blit_to_block([
-               _("Above each item, in yellow, displays how much of"),
-               _("that item is needed to make one cup of lemonade."),
-               _(""),
-               _("Below each item, in black, displays how much it"),
-               _("costs to buy a specific amount of that item."),
-               _(""),
-               _("Also below the item, you can type how many of that"),
-               _("item you would like to purchase and the color of the"),
-               _("text will change from black to white."),
-               _(""),
-               _("Use the arrow keys to switch between items.")],
+            info = self._blit_to_block(
+               _("""Above each item, in yellow, displays how much of
+that item is needed to make one cup of lemonade.
+
+Below each item, in black, displays how much it
+costs to buy a specific amount of that item.
+
+Also below the item, you can type how many of that
+item you would like to purchase and the color of the
+text will change from black to white.
+
+Use the arrow keys to switch between items.""")
                (255, 255, 255),
                (0, 0, 0))
 
         # Checks if the player is on the third tutorial screen
         elif self.screen_number == 2:
-            info = self._blit_to_block([
-                _("Here displays the current day's information."),
-                _("To the left of the screen is your daily log."),
-                _(""),
-                _("The daily log displays:"),
-                _("- The current day you are on"),
-                _("- The current day's weather"),
-                _("- The total number of supplies you purchased"),
-                _("- How much money you spent in the shop"),
-                _("- The total number of cups of lemonade you sold"),
-                _("- How much money you made from selling lemonade")],
+            info = self._blit_to_block(
+                _("""Here displays the current day's information.
+To the left of the screen is your daily log.
+
+The daily log displays:
+- The current day you are on
+- The current day's weather
+- The total number of supplies you purchased
+- How much money you spent in the shop
+- The total number of cups of lemonade you sold
+- How much money you made from selling lemonade""")
                 (255, 255, 255),
                 (0, 0, 0))
 
         # Checks if the player is on the fourth tutorial screen
         elif self.screen_number == 3:
-            info = self._blit_to_block([
-                _("This is the profit mini game screen!"),
-                _(""),
-                _("If you made it to this screen, good job!"),
-                _("That means you made a profit during the"),
-                _("day and you need to figure out the"),
-                _("smallest amount of change you can make"),
-                _("out of your profit."),
-                _(""),
-                _("The top right corner of the screen"),
-                _("displays the amount of money you"),
-                _("started with, the amount money after"),
-                _("buying supplies and selling lemonade,"),
-                _("and how much profit you made.")],
+            info = self._blit_to_block(
+                _("""This is the profit mini game screen!
+
+If you made it to this screen, good job!
+That means you made a profit during the
+day and you need to figure out the
+smallest amount of change you can make
+out of your profit.
+
+The top right corner of the screen
+displays the amount of money you
+started with, the amount money after
+buying supplies and selling lemonade
+and how much profit you made."""),
                 (255, 255, 255),
                 (0, 0, 0))
 
         # Checks if the player is on the fifth tutorial screen
         elif self.screen_number == 4:
-            info = self._blit_to_block([
-                _("You can switch between values by using"),
-                _("the up and down arrow keys."),
-                _(""),
-                _("The current type of money you have"),
-                _("selected will be highlighted by a"),
-                _("white box.  While selected, you can"),
-                _("enter in a value you think is correct"),
-                _("to create the smallest amount of change."),
-                _(""),
-                _("In this case, 6 dollars and 1 dime would"),
-                _("be the smallest amount of change to"),
-                _("make $6.10 and then you would continue"),
-                _("to the end of the day."),
-                _(""),
-                _("You will not be able continue to the"),
-                _("end of the day until you are correct.")],
+            info = self._blit_to_block(
+                _("""You can switch between values by using
+the up and down arrow keys.
+
+The current type of money you have
+selected will be highlighted by a
+white box.  While selected, you can
+enter in a value you think is correct
+to create the smallest amount of change.
+
+In this case, 6 dollars and 1 dime would
+be the smallest amount of change to
+make $6.10 and then you would continue
+to the end of the day.
+
+You will not be able continue to the
+end of the day until you are correct."""),
                 (255, 255, 255),
                 (0, 0, 0))
 
@@ -383,6 +385,9 @@ class LemonadeGui(GameEngineElement):
 
             return
 
+        # Check if the player is in the upgrade shop
+        if self.game_mode == 7:
+            self.upgrade_screen()
         # Check if the player is at the shop
         if self.game_mode == 0:
             store = self.draw_store( \
@@ -670,11 +675,11 @@ class LemonadeGui(GameEngineElement):
 
         if event.type == KEYDOWN:
             if event.key in [K_RETURN, K_KP1]:
-                # Process Data
 
+                # Process Data
                 main = self.game_engine.get_object('main')
 
-                # Check if you are in the main menu
+                # Check if the player is in the main menu
                 if self.game_mode == 4:
 
                     # Check if the player chose 'Normal'
@@ -692,7 +697,7 @@ class LemonadeGui(GameEngineElement):
 
                     return
 
-                # Check if you are in the difficulty settings
+                # Check if the player is in the difficulty settings
                 if self.game_mode == 5:
                     main.populate_resources(self.__input_mode[self.game_mode])
                     self.game_mode = 0
@@ -716,37 +721,36 @@ class LemonadeGui(GameEngineElement):
                                 int(self.__input_string[self.game_mode][i])
                     self.__input_string[self.game_mode][i] = "0"
 
-                #Checks if you are leaving the shop to begin day
+                #Checks if the player is leaving the shop to begin day
                 if self.game_mode == 0:
                     self.game_mode = 1
                     main.update_day_log(item_list)
 
-                #Checks if you are at the beginning of the day
+                # Checks if the player is at the beginning of the day
                 elif self.game_mode == 1:
 
-                    #Checks if you made profit from the day
-                    #If you made profit, sends you to the mini game
+                    # Sends the player to the profit mini game if profit
                     if (main.process_day_logic()):
                         self.game_mode = 2
 
-                    #If you didn't make profit, sends you to end of the day
+                    # Sends the player to the end of the day if no profit
                     else:
                         self.game_mode = 3
                         main.process_day_end()
 
-                #Checks if you are doing the profit mini game
+                # Checks if the player is doing the profit mini game
                 elif self.game_mode == 2:
 
-                    #Checks if you gave the correct amount of change
+                    # Checks if the player gave the correct amount of change
                     if main.process_change(item_list):
                         self.game_mode = 3
                         main.process_day_end()
 
                     else:
                         self.failed = True
-                        self.fail_key = self.__input_mode[2]
+                        self.fail_key = self.__input_mode[self.game_mode]
 
-                #Checks if you completed your day, returns you to the shop
+                # Checks if the player completed the day, return to the shop
                 elif self.game_mode == 3:
                     if main.challenge_completed:
                         main.reset_game()
@@ -755,6 +759,15 @@ class LemonadeGui(GameEngineElement):
                     else:
                         self.game_mode = 0
                         main.day += 1
+
+                # Checks if the player is in the upgrade shop
+                elif self.game_mode == 7:
+                    if main.process_buy_upgrade(item_list):
+                        main.buy_upgrade(self.__input_mode[self.game_mode])
+
+            # Checks if the player hit space to enter the upgrade shop
+            elif event.key == K_SPACE and self.game_mode == 0:
+                self.game_mode = 7
 
             # Checks if the player hit the escape key to quit
             elif event.key == K_ESCAPE:
@@ -778,6 +791,10 @@ class LemonadeGui(GameEngineElement):
                 if self.game_mode > 4:
                     self.screen_number = 0
                     self.game_mode = 4
+
+                # Returns the player back to the shop from the upgrades shop
+                if self.game_mode == 7:
+                    self.game_mode = 0
 
             # Go to the next field
             elif event.key in [K_TAB, K_DOWN, K_RIGHT, K_KP2, K_KP6]:

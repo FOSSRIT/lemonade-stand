@@ -42,7 +42,7 @@ class LemonadeMain:
         self.splash = True
         self.__day = 1
         self.__difficulty = difficulty_level
-        self.version = "ice cream"
+        self.version = "lemonade"
         self.__resources = {
             'money': 0,
             'day_start_money': 0,
@@ -50,7 +50,8 @@ class LemonadeMain:
             'last_profit': 0,
             'last_spent': 0,
             'price': RECIPES[self.version]['basic']['cost'],
-            'recipe': RECIPES[self.version]['basic']
+            'recipe': RECIPES[self.version]['basic'],
+            'upgrades': []
         }
 
         # Populate resources with item keys
@@ -267,8 +268,8 @@ class LemonadeMain:
                 remove = itemcount
 
             # Create a message
-            msg = "    You lost {} {}".format(\
-                str(remove), event['item'])
+            msg = _("    You lost {} {}".format(\
+                str(remove), event['item']))
 
             # Remove the items from your inventory
             self.remove_item(event['item'], remove)
@@ -304,8 +305,8 @@ class LemonadeMain:
                 add = event['change']
 
             # Create a message
-            msg = "    You gained {} {}".format(\
-                str(add), event['item'])
+            msg = _("    You gained {} {}".format(\
+                str(add), event['item']))
 
             # Add your new supplies to your inventory
             self.add_item(event['item'], add)
@@ -379,16 +380,23 @@ class LemonadeMain:
         self.add_msg(_("Purchased:"))
         for item in items:
             total_bought = self.buy_item(item, items[item])
-            self.add_msg("{} {} for {}".format(\
-                total_bought,\
-                ITEMS[self.version][item]['name'],\
-                format_money(total_bought * \
-                ITEMS[self.version][item]['cost'][self.difficulty])))
+            if total_bought != 1:
+                self.add_msg("{} {}s for {}".format(\
+                    total_bought,\
+                    ITEMS[self.version][item]['name'],\
+                    format_money(total_bought * \
+                    ITEMS[self.version][item]['cost'][self.difficulty])))
+            else:
+                self.add_msg("{} {} for {}".format(\
+                    total_bought,\
+                    ITEMS[self.version][item]['name'],\
+                    format_money(total_bought * \
+                    ITEMS[self.version][item]['cost'][self.difficulty])))
 
             self.spent += total_bought * \
                 ITEMS[self.version][item]['cost'][self.difficulty]
 
-        self.add_msg(_("------------------------------"))
+        self.add_msg("------------------------------")
         self.add_msg(_("Total Spent: {}").format(format_money(self.spent)))
         self.add_msg("")
 
@@ -406,6 +414,7 @@ class LemonadeMain:
         max_sales = min(inventory_hold)
         sales = self.process_sales(max_sales)
 
+        # Calculates how much reputation you acquired today
         if sales > 0 and max_sales > sales:
             self.reputation[self.location] += \
                 REP_VALUES['gain'][self.difficulty]
@@ -430,7 +439,7 @@ class LemonadeMain:
             self.add_msg(_("{} {} of {} sold").format(\
                 sales, SERVING_ITEM[self.version], self.version))
         self.add_msg(_("    @ {} each").format(format_money(self.price)))
-        self.add_msg(_("------------------------------"))
+        self.add_msg("------------------------------")
         self.add_msg(_("Total Made: {}").format(format_money(self.income)))
 
         # Remove supplies required to make your number of sales
@@ -477,6 +486,9 @@ class LemonadeMain:
             self.add_msg(_("Time to get some rest."))
             self.add_msg(_("It looks like it will be {} tomorrow.").format(\
                             self.weather_name))
+
+    def buy_upgrade(self, key):
+        return False
 
     def buy_item(self, key, quanity):
         """
