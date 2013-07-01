@@ -53,7 +53,7 @@ class LemonadeGui(GameEngineElement):
 
         self.__input_keys = [ITEMS[self.version].keys(), \
             ITEMS[self.version].keys(),CURRENCY.keys(), \
-            [None], MENU, DIFFICULTY, [None], UPGRADES[self.version]]
+            [None], MENU, DIFFICULTY, [None], [None]]
         self.__input_mode = [0, 0, 0, 0, 0, 0, 0, 0]
         self.__input_string = []
 
@@ -120,6 +120,15 @@ class LemonadeGui(GameEngineElement):
             self.version, self.screen_number)).convert()
 
         self.__background = transform.scale(tutorial, (self.game_engine.width,
+                                                    self.game_engine.height))
+
+    def upgrade_screen(self):
+        """
+        Loads and changes the background image to the specfic upgrade screen
+        """
+
+        upgrade = image.load("images/{}/upgrades.png".format(self.version))
+        self.__backgorund = transform.scale(upgrade, (self.game_engine.width,
                                                     self.game_engine.height))
 
     def draw_difficulty(self, key, screen):
@@ -386,8 +395,11 @@ end of the day until you are correct."""),
             return
 
         # Check if the player is in the upgrade shop
-        if self.game_mode == 7:
+        if self.game_mode == 8:
             self.upgrade_screen()
+            screen.blit(self.__background, (0,0))
+            return
+
         # Check if the player is at the shop
         if self.game_mode == 0:
             store = self.draw_store( \
@@ -767,7 +779,7 @@ end of the day until you are correct."""),
 
             # Checks if the player hit space to enter the upgrade shop
             elif event.key == K_SPACE and self.game_mode == 0:
-                self.game_mode = 7
+                self.game_mode = 8
 
             # Checks if the player hit the escape key to quit
             elif event.key == K_ESCAPE:
