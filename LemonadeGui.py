@@ -779,7 +779,7 @@ end of the day until you are correct."""),
 
             # Checks if the player hit space to enter the upgrade shop
             elif event.key == K_SPACE and self.game_mode == 0:
-                self.game_mode = 8
+                self.game_mode = 7
 
             # Checks if the player hit the escape key to quit
             elif event.key == K_ESCAPE:
