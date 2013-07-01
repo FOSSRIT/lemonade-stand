@@ -58,9 +58,9 @@ UPGRADES = {
             'prevents_losing': 'lemons',
             'capacity': 20,
             'level': 1,
-            'info': [ _("A cooler is used for storing any lemonades that"),
-                    _("you have. This helps prevent lemons from decaying"),
-                    _("as well as anything from getting to your lemons.")]
+            'info': _("""A cooler is used for storing any lemonades that
+you have. This helps prevent lemons from decaying
+as well as anything from getting to your lemons.""")
         },
         {
             'name': 'Sugar Jar',
@@ -68,9 +68,9 @@ UPGRADES = {
             'prevents_losing': 'sugar',
             'capacity': 20,
             'level': 1,
-            'info': [ _("A sugar jar is used for storing any sugar that"),
-                    _("you have. This helps prevent ants or anything else"),
-                    _("from getting to your sugar supply.")]
+            'info': _("""A sugar jar is used for storing any sugar that
+you have. This helps prevent ants or anything else
+from getting to your sugar supply.""")
         },
         {
             'name': 'Plastic Container',
@@ -78,9 +78,9 @@ UPGRADES = {
             'prevents_losing': 'cups',
             'capacity': 20,
             'level': 1,
-            'info': [ _("A plastic container is used for storing plastic"),
-                    _("cups that you have. This helps prevent wind from"),
-                    _("blowing your cups away.")]
+            'info': _("""A plastic container is used for storing plastic
+cups that you have. This helps prevent wind from
+blowing your cups away.""")
         }
     ],
     'ice cream':[
@@ -90,10 +90,10 @@ UPGRADES = {
             'prevents_losing': 'ice cream',
             'capacity': 20,
             'level': 1,
-            'info': [ _("A cooler is used for storing any ice cream"),
-                    _("that you have. This helps prevent ice cream"),
-                    _("from melting as well as anything from getting"),
-                    _("to your ice cream supply.")]
+            'info': _("""A cooler is used for storing any ice cream
+that you have. This helps prevent ice cream
+from melting as well as anything from getting
+to your ice cream supply.""")
         }
     ]
 }
