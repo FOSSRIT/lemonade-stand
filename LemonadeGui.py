@@ -24,7 +24,7 @@
 import pygame
 from fortuneengine.GameEngineElement import GameEngineElement
 from constants import ITEMS, format_money, WEATHER, CURRENCY, DIFFICULTY, \
-                        MENU, UPGRADES
+                        MENU, UPGRADES, RECIPES
 from gettext import gettext as _
 from pygame import Surface, transform, image
 from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB,\
@@ -53,7 +53,8 @@ class LemonadeGui(GameEngineElement):
 
         self.__input_keys = [ITEMS[self.version].keys(), \
             ITEMS[self.version].keys(),CURRENCY.keys(), \
-            [None], MENU, DIFFICULTY, [None], [None]]
+            RECIPES[self.version].keys(), MENU, DIFFICULTY, \
+            [None], [None]]
         self.__input_mode = [0, 0, 0, 0, 0, 0, 0, 0]
         self.__input_string = []
 
@@ -214,12 +215,24 @@ class LemonadeGui(GameEngineElement):
         :type messages: list
         :param messages: The list of messages for the daily log
         """
-
+        
+        main = self.game_engine.get_object('main')
         text_array = []
 
         # Add day log to text
         for message in messages:
             text_array.append(message)
+
+        # Displays recipe selection at the end of the day
+        if self.game_mode == 3 and main.challenge_completed == False:
+            for i in range(0, len(self.__input_keys[self.game_mode])):
+                if i == self.__input_mode[self.game_mode]:
+                    t = "->"
+                else:
+                    t = "  "
+
+                text_array.append("{}{}".format(t, RECIPES[self.version][ \
+                     self.__input_keys[self.game_mode][i]]['name']))
 
         return self._blit_to_block(text_array, (0, 0, 0), (255, 255, 255), False)
 
@@ -763,12 +776,17 @@ end of the day until you are correct."""),
                         self.fail_key = self.__input_mode[self.game_mode]
 
                 # Checks if the player completed the day, return to the shop
+                # Saves recipe choice before returning to the shop
                 elif self.game_mode == 3:
                     if main.challenge_completed:
                         main.reset_game()
                         self.game_mode = 4
 
                     else:
+                        main.current_recipe = RECIPES[self.version][ \
+                            self.__input_keys[self.game_mode][ \
+                            self.__input_mode[self.game_mode]]]
+                        main.prices = main.current_recipe['cost']
                         self.game_mode = 0
                         main.day += 1
 

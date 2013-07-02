@@ -26,11 +26,11 @@ from gettext import gettext as _
 
 from operator import itemgetter
 
-from constants import STARTING_MONEY, B_EVENTS_DICT, MAX_MSG, ITEMS, \
-                      CURRENCY, RECIPES, DIFFICULTY, format_money, \
-                      WEATHER, GOOD_ODDS, BAD_ODDS, SCALE, EVENT_KEYS, \
-					  STARTING_ITEMS, G_EVENTS_DICT, B_EVENTS_DICT, \
-                      SERVING_ITEM, LOCATIONS, REP_VALUES
+from constants import STARTING_MONEY, MAX_MSG, ITEMS,  CURRENCY, RECIPES, \
+                      DIFFICULTY, format_money, WEATHER, GOOD_ODDS, \
+                      BAD_ODDS, SCALE, EVENT_KEYS, STARTING_ITEMS, \
+                      G_EVENTS_DICT, B_EVENTS_DICT, SERVING_ITEM, LOCATIONS, \
+                      REP_VALUES
 
 class LemonadeMain:
     """
@@ -62,7 +62,7 @@ class LemonadeMain:
         self.__msg_queue = []
         self.challenge_mode = False
         self.challenge_completed = False
-        self.reputation = {
+        self.__reputation = {
                 'neighborhood': 0
         }
         self.location = "neighborhood"
@@ -74,7 +74,7 @@ class LemonadeMain:
 
     @property
     def reputation(self):
-        return reputation
+        return self.__reputation
 
     @property
     def location(self):
@@ -108,6 +108,10 @@ class LemonadeMain:
     def spent(self):
         return self.__resources['spent']
 
+    @property
+    def prices(self):
+        return self.__resources['price']
+    
     @property
     def price(self):
         return self.__resources['price'][self.difficulty]
@@ -486,6 +490,8 @@ class LemonadeMain:
             self.add_msg(_("Time to get some rest."))
             self.add_msg(_("It looks like it will be {} tomorrow.").format(\
                             self.weather_name))
+            self.add_msg("")
+            self.add_msg(_("What flavor will you make tomorrow?"))
 
     def buy_upgrade(self, key):
         return False

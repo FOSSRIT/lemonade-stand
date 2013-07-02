@@ -123,12 +123,12 @@ ITEMS = {
             'decay': 0,
             'bulk': 1
         },
-    #    'strawberry': {
-    #        'name': _('Strawberry'),
-    #        'cost': 50,
-    #        'decay': 3,
-    #        'bulk': 5
-    #    }
+#        'strawberry': {
+#            'name': _('Strawberry'),
+#            'cost': 50,
+#            'decay': 3,
+#            'bulk': 5
+#        }
     },
     'ice cream': {
         'cone': {
@@ -291,7 +291,7 @@ G_EVENTS_DICT = {
             },
             {
             'text': _("Something hits you in the back of the head!"),
-            'item': 'cups',
+            'item': 'cup',
             'change': 5
             },
             {
@@ -345,14 +345,14 @@ RECIPES = {
             'sugar': 3,
             'cost': [100, 175, 250, 350]
         },
-        'strawberry': {
-            'name': _("strawberry"),
-            'cup': 1,
-            'lemon': 2,
-            'sugar': 2,
-            'strawberry': 1,
-            'cost': 225
-        },
+#        'strawberry': {
+#            'name': _("strawberry"),
+#            'cup': 1,
+#            'lemon': 2,
+#            'sugar': 2,
+#            'strawberry': 1,
+#            'cost': 225
+#        },
         'epic': {
             'name': _("epic"),
             'cup': 2,
