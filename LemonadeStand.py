@@ -4,6 +4,10 @@ from fortuneengine.GameEngine import GameEngine
 from LemonadeMain import LemonadeMain
 from LemonadeGui import LemonadeGui
 from optparse import OptionParser
+from gettext import gettext as _
+import gettext
+lang = gettext.translation('Lemonade', '/usr/share/locale/', languages = ['es'])
+_ = lang.ugettext
 
 from pygame import font
 parser = OptionParser()

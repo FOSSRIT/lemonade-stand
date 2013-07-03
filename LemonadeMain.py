@@ -21,9 +21,12 @@
 #     Justin Lewis <jlew.blackout@gmail.com>
 #     Nathaniel Case <Qalthos@gmail.com>
 
+from __future__ import unicode_literals
 from random import randint
 from gettext import gettext as _
-
+import gettext
+lang = gettext.translation('Lemonade', '/usr/share/locale/', languages = ['es'])
+_ = lang.ugettext
 from operator import itemgetter
 from constants import STARTING_MONEY, B_EVENTS_DICT, MAX_MSG, ITEMS, \
                       CURRENCY, RECIPES, DIFFICULTY, format_money, \
@@ -366,17 +369,17 @@ class LemonadeMain:
         self.clear_queue()
 
         # Show profit and expenses if the difficuly is less than impossible
-        if self.difficulty < DIFFICULTY.index("Impossible"):
-            self.add_msg("You spent {} on supplies".format(\
+        if self.difficulty < DIFFICULTY.index(_("Impossible")):
+            self.add_msg(_("You spent {} on supplies").format(\
                     format_money(self.spent)))
-            self.add_msg("and made {} in sales".format(\
+            self.add_msg(_("and made {} in sales").format(\
                     format_money(self.income)))
 
         # Check if any profit was made
         if self.profit > 0:
             # Show the net porfit if difficulty is less than normal
-            if self.difficulty < DIFFICULTY.index("Hard"):
-                self.add_msg("That comes to {} in profit".format(\
+            if self.difficulty < DIFFICULTY.index(_("Hard")):
+                self.add_msg(_("That comes to {} in profit").format(\
                     format_money(self.profit)))
             return True
 
@@ -423,17 +426,17 @@ class LemonadeMain:
         self.add_msg(_("Purchased:"))
         for item in items:
             total_bought = self.buy_item(item, items[item])
+            item_name = ITEMS[self.version][item]['name']
+            item_name = item_name.decode('utf8')
             if total_bought != 1:
-                self.add_msg("{} {}s for {}".format(\
-                    total_bought,\
-                    ITEMS[self.version][item]['name'],\
-                    format_money(total_bought * \
+                self.add_msg(_("{} {}s for {}").format(
+                    total_bought, item_name,
+                    format_money(total_bought * 
                     ITEMS[self.version][item]['cost'][self.difficulty])))
             else:
-                self.add_msg("{} {} for {}".format(\
-                    total_bought,\
-                    ITEMS[self.version][item]['name'],\
-                    format_money(total_bought * \
+                self.add_msg(_("{} {} for {}").format(
+                    total_bought, item_name,
+                    format_money(total_bought * 
                     ITEMS[self.version][item]['cost'][self.difficulty])))
 
             self.spent += total_bought * \
@@ -627,7 +630,7 @@ class LemonadeMain:
                     else:
                         new_list.append([item[0]-1, item[1]])
                 elif item[1] != 0:
-                    self.add_msg("{} {}s have gone bad".format(\
+                    self.add_msg(_("{} {}s have gone bad").format(\
                         item[1], item_key))
 
             # Place item back into resource list

@@ -20,7 +20,11 @@
 #     Justin Lewis <jlew.blackout@gmail.com>
 #     Nathaniel Case <Qalthos@gmail.com>
 
+from __future__ import unicode_literals
 from gettext import gettext as _
+import gettext
+lang = gettext.translation('Lemonade', '/usr/share/locale/', languages = ['es'])
+_ = lang.ugettext
 
 STARTING_MONEY = [1500, 1250, 1000, 750]
 STARTING_PRICE = 150
@@ -53,7 +57,7 @@ CHALLENGE_MODES = {
 UPGRADES = {
     'lemonade': [
         {
-            'name': 'Cooler',
+            'name': _('Cooler'),
             'cost': 2500,
             'capacity': 20,
             'level': 1,
@@ -67,7 +71,7 @@ UPGRADES = {
             ]
         },
         {
-            'name': 'Sugar Jar',
+            'name': _('Sugar Jar'),
             'cost': 3500,
             'capacity': 20,
             'level': 1,
@@ -81,7 +85,7 @@ UPGRADES = {
             ]
         },
         {
-            'name': 'Cup Container',
+            'name': _('Cup Container'),
             'cost': 1500,
             'capacity': 20,
             'level': 1,
@@ -97,7 +101,7 @@ UPGRADES = {
     ],
     'ice cream':[
         {
-            'name': 'Cooler',
+            'name': _('Cooler'),
             'cost': 2000,
             'prevents_losing': 'ice cream',
             'capacity': 20,
@@ -124,7 +128,7 @@ ITEMS = {
             'bulk': 1
         },
         'lemon': {
-            'name': _('Lemons'),
+            'name': _('Lemon'),
             'cost': [15, 35, 55, 105],
             'decay': 5,
             'bulk': 1
@@ -164,7 +168,7 @@ ITEMS = {
     }
 }
 
-WEATHER = ["cloudy", "nice", "hot"]
+WEATHER = [_("cloudy"), _("nice"), _("hot")]
 
 BAD_ODDS = [5, 12, 38, 45]
 GOOD_ODDS = [45, 38, 12, 5]
@@ -326,26 +330,26 @@ SCALE = [.2, .4, .6, .8]
 
 # List of difficulty types
 DIFFICULTY = [
-    "Easy",
-    "Normal",
-    "Hard",
-    "Impossible"
+    _("Easy"),
+    _("Normal"),
+    _("Hard"),
+    _("Impossible")
 ]
 
 # List of menu items
 MENU = [
-    "Play",
-    "Challenge",
-    "Tutorial"
+    _("Play"),
+    _("Challenge"),
+    _("Tutorial")
 ]
 
 # TODO: How to Localize data structures
 CURRENCY = {
-    'Dollars': 100,
-    'Quarters': 25,
-    'Dimes': 10,
-    'Nickels': 5,
-    'Pennies': 1
+    _('Dollars'): 100,
+    _('Quarters'): 25,
+    _('Dimes'): 10,
+    _('Nickels'): 5,
+    _('Pennies'): 1
 }
 
 RECIPES = {

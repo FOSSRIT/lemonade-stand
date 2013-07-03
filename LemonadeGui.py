@@ -26,6 +26,9 @@ from fortuneengine.GameEngineElement import GameEngineElement
 from constants import ITEMS, format_money, WEATHER, CURRENCY, DIFFICULTY, \
                         MENU, UPGRADES, RECIPES
 from gettext import gettext as _
+import gettext
+lang = gettext.translation('Lemonade', '/usr/share/locale/', languages = ['es'])
+_ = lang.ugettext
 from pygame import Surface, transform, image
 from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB,\
                           K_DOWN, K_UP, K_LEFT, K_RIGHT, K_ESCAPE,\
@@ -103,7 +106,7 @@ class LemonadeGui(GameEngineElement):
         """
 
         bg = image.load("images/{}/field/{}.gif".format(\
-            self.version, WEATHER[weather])).convert()
+            self.version, weather)).convert()
 
         stand = image.load("images/{}/booth.gif".format(\
             self.version)).convert()
@@ -252,8 +255,8 @@ class LemonadeGui(GameEngineElement):
         # Loop through and display all the difficulty settings
         for i in range(len(DIFFICULTY)):
 
-            play_difficulty = self.__menuFont.render(_("{}".format(\
-                DIFFICULTY[i])), True, (0, 0, 0))
+            play_difficulty = self.__menuFont.render(
+                DIFFICULTY[i], True, (0, 0, 0))
             fw, fh = play_difficulty.get_size()
             render_left = (self.game_engine.width / 2) - (fw / 2)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
@@ -289,8 +292,8 @@ class LemonadeGui(GameEngineElement):
         # Loop through and display all of the menu items
         for i in range(len(MENU)):
 
-            play_menu_item = self.__menuFont.render(_("{}".format(\
-                MENU[i])), True, (0, 0, 0))
+            play_menu_item = self.__menuFont.render(_("{}").format(\
+                MENU[i]), True, (0, 0, 0))
             fw, fh = play_menu_item.get_size()
             render_left = (self.game_engine.width / 2) - (fw / 2)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
@@ -628,7 +631,7 @@ end of the day until you are correct."""),
         color = (0, 0, 0)
 
         # Display current day in the log book
-        day_title = self.__shopFont.render("-- Day {} --".format(\
+        day_title = self.__shopFont.render(_("-- Day {} --").format(\
             main.day), 1, color)
         fw, fh = day_title.get_size()
         render_top = self.game_engine.height / 15
@@ -636,14 +639,14 @@ end of the day until you are correct."""),
         cashbox.blit(day_title, (render_left, render_top))
 
         # Display the current day's starting money
-        money_start = self.__shopFont.render("Start: {}".format(\
+        money_start = self.__shopFont.render(_("Start: {}").format(\
             format_money(main.start_money)), True, (0, 0, 0))
         render_top = self.game_engine.height / 5
         render_left = (self.game_engine.width * 2 / 3)
         cashbox.blit(money_start, (render_left, render_top))
 
         # Display the current day's ending money
-        money_end = self.__shopFont.render("End: {}".format(\
+        money_end = self.__shopFont.render(_("End: {}").format(\
             format_money(main.start_money + main.profit)), True, (0, 0, 0))
         render_top = (self.game_engine.height / 5) + fh + 5
         render_left = (self.game_engine.width * 2 / 3)
@@ -651,7 +654,7 @@ end of the day until you are correct."""),
 
         # Display the current day's total profit
         if main.difficulty < 2:
-            profit = self.__shopFont.render("Profit: {}".format(\
+            profit = self.__shopFont.render(_("Profit: {}").format(\
                 format_money(main.profit)), True, (0, 0, 0))
             render_top = (self.game_engine.height / 5) + (fh * 4) - 20
             render_left = (self.game_engine.width * 2 / 3)
@@ -660,14 +663,14 @@ end of the day until you are correct."""),
         # Display if the user passed or failed the mini game
         if self.failed == True:
             if self.__input_mode[2] == self.fail_key:
-                fail = self.__shopFont.render("Incorrect!", True, (255, 0, 0))
+                fail = self.__shopFont.render(_("Incorrect!"), True, (255, 0, 0))
                 fw, fh = fail.get_size()
                 render_top = (self.game_engine.height * 6 / 13)
                 render_left = (self.game_engine.width * 8 / 10)
                 cashbox.blit(fail, (render_left - (fw / 2), render_top))
 
                 try_again = self.__shopFont.render( \
-                    "Please try again.", True, (255, 0, 0))
+                    _("Please try again."), True, (255, 0, 0))
                 fw, fh = try_again.get_size()
                 cashbox.blit(try_again, (render_left - (fw / 2) , \
                     render_top + fh))
@@ -714,7 +717,7 @@ end of the day until you are correct."""),
             store.blit(outline, (j, icon_render_top))
 
             # Display pricing info under the item.
-            ren = self.__shopFont.render("{} for {}".format(\
+            ren = self.__shopFont.render(_("{} for {}").format(\
                 format_money(\
                 ITEMS[self.version][name]["cost"][main.difficulty] * \
                 ITEMS[self.version][name]["bulk"]),
@@ -747,14 +750,14 @@ end of the day until you are correct."""),
             j += icon_size + spacer
 
         # Title above recipe
-        ren = self.__shopNumFont.render("Ingredients for {} {}:".format(\
+        ren = self.__shopNumFont.render(_("Ingredients for {} {}:").format(\
             main.current_recipe['name'], self.version), 1, (255, 240, 0))
         render_left = 5
         render_top = self.game_engine.height / 11
         store.blit(ren, (render_left, render_top))
 
         # Title above inventory
-        ren = self.__shopNumFont.render("Current Supplies:", 1, (255, 240, 0))
+        ren = self.__shopNumFont.render(_("Current Supplies:"), 1, (255, 240, 0))
         render_left = self.game_engine.width * 8 / 15
         render_top = self.game_engine.height * .68
         store.blit(ren, (render_left, render_top))
@@ -772,6 +775,9 @@ end of the day until you are correct."""),
         rendered_text = []
         font_width = []
         font_height = []
+
+        if isinstance(text_array, basestring):
+            text_array = text_array.split('\n')
 
         for text in text_array:
             ren = self.__font.render(text, True, text_color)
