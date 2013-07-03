@@ -32,7 +32,8 @@ STARTING_ITEMS = {
     'lemonade': {
         'cup': [12, 10, 5, 0],
         'lemon': [18, 15, 5, 0],
-        'sugar': [20, 10, 5, 0]
+        'sugar': [20, 10, 5, 0],
+#        'strawberry': [18, 15, 5, 0]
     },
     'ice cream': {
         'cone': [12, 10, 5, 0],
@@ -137,7 +138,7 @@ ITEMS = {
         },
 #        'strawberry': {
 #            'name': _('Strawberry'),
-#            'cost': 50,
+#            'cost': [25, 50, 75, 150],
 #            'decay': 3,
 #            'bulk': 5
 #        }
@@ -357,14 +358,35 @@ RECIPES = {
             'sugar': 3,
             'cost': [100, 175, 250, 350]
         },
-#        'strawberry': {
-#            'name': _("strawberry"),
-#            'cup': 1,
-#            'lemon': 2,
-#            'sugar': 2,
-#            'strawberry': 1,
-#            'cost': 225
-#        },
+        'sweet': {
+            'name': _("sweet"),
+            'cup': 1,
+            'lemon': 1,
+            'sugar': 10,
+            'cost': [80, 175, 250, 356]
+        },
+        'fancy': {
+            'name': _("fancy"),
+            'cup': 3,
+            'lemon': 2,
+            'sugar': 1,
+            'cost': [130, 190, 272, 393]
+        },
+        'juice': {
+            'name': _("juice"),
+            'cup': 1,
+            'lemon': 5,
+            'sugar': 5,
+            'cost': [180, 380, 550, 800]
+        },
+ #       'strawberry': {
+ #           'name': _("strawberry"),
+ #           'cup': 1,
+ #           'lemon': 2,
+ #           'sugar': 2,
+ #           'strawberry': 1,
+ #           'cost': 225
+ #       },
         'epic': {
             'name': _("epic"),
             'cup': 2,
