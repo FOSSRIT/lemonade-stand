@@ -25,12 +25,11 @@ from random import randint
 from gettext import gettext as _
 
 from operator import itemgetter
-
-from constants import STARTING_MONEY, MAX_MSG, ITEMS,  CURRENCY, RECIPES, \
-                      DIFFICULTY, format_money, WEATHER, GOOD_ODDS, \
-                      BAD_ODDS, SCALE, EVENT_KEYS, STARTING_ITEMS, \
-                      G_EVENTS_DICT, B_EVENTS_DICT, SERVING_ITEM, LOCATIONS, \
-                      REP_VALUES
+from constants import STARTING_MONEY, B_EVENTS_DICT, MAX_MSG, ITEMS, \
+                      CURRENCY, RECIPES, DIFFICULTY, format_money, \
+                      WEATHER, GOOD_ODDS, BAD_ODDS, SCALE, EVENT_KEYS, \
+					  STARTING_ITEMS, G_EVENTS_DICT, B_EVENTS_DICT, \
+                      SERVING_ITEM, LOCATIONS, REP_VALUES, UPGRADES
 
 class LemonadeMain:
     """
@@ -51,12 +50,25 @@ class LemonadeMain:
             'last_spent': 0,
             'price': RECIPES[self.version]['basic']['cost'],
             'recipe': RECIPES[self.version]['basic'],
-            'upgrades': []
+            'upgrades': [0,
+                {
+                    'name': [],
+                    'level': [],
+                    'capacity': []
+                }
+            ]
         }
 
         # Populate resources with item keys
         for item_key in ITEMS[self.version].keys():
             self.__resources[item_key] = []
+
+        # Populate the upgrade resource
+        for i in range(0, len(UPGRADES[self.version])):
+            self.__resources['upgrades'][1]['name'].append(\
+                UPGRADES[self.version][i]['name'])
+            self.__resources['upgrades'][1]['level'].append(0)
+            self.__resources['upgrades'][1]['capacity'].append(0)
 
         self.__weather = 1
         self.__msg_queue = []
@@ -71,6 +83,10 @@ class LemonadeMain:
         self.weather_change()
 
         self.event_messages = []
+
+    @property
+    def upgrades(self):
+        return self.__resources['upgrades']
 
     @property
     def reputation(self):
@@ -160,6 +176,29 @@ class LemonadeMain:
     @property
     def messages(self):
         return self.__msg_queue
+
+    def process_buy_upgrade(self, info):
+        """
+        Checks to see if the player can afford a specific upgrade.
+
+        :type info: list
+        :param info: A list of information about the upgrade
+        """
+        name = info[0]
+        base_price = info[1]
+        base_capacity = info[2]
+
+        upgrade_index = self.upgrades[1]['name'].index(name)
+        price = base_price + base_price * 1.5 * \
+            self.upgrades[1]['level'][upgrade_index]
+
+        if self.money >= price:
+            self.money -= price
+            self.upgrades[1]['level'][upgrade_index] += 1
+            self.upgrades[1]['capacity'][upgrade_index] += base_capacity
+            return True
+
+        return False
 
     def reset_game(self):
         """
