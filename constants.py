@@ -55,32 +55,44 @@ UPGRADES = {
         {
             'name': 'Cooler',
             'cost': 2500,
-            'prevents_losing': 'lemons',
             'capacity': 20,
             'level': 1,
-            'info': _("""A cooler is used for storing any lemonades that
-you have. This helps prevent lemons from decaying
-as well as anything from getting to your lemons.""")
+            'info':
+            [
+                [
+                    _("Stores lemons."),
+                    _("Helps prevent lemons"),
+                    _("from decaying.")
+                ]
+            ]
         },
         {
             'name': 'Sugar Jar',
             'cost': 3500,
-            'prevents_losing': 'sugar',
             'capacity': 20,
             'level': 1,
-            'info': _("""A sugar jar is used for storing any sugar that
-you have. This helps prevent ants or anything else
-from getting to your sugar supply.""")
+            'info':
+            [
+                [
+                    _("Stores sugar."),
+                    _("Helps prevent ants"),
+                    _("from stealing sugar.")
+                ]
+            ]
         },
         {
-            'name': 'Plastic Container',
+            'name': 'Cup Container',
             'cost': 1500,
-            'prevents_losing': 'cups',
             'capacity': 20,
             'level': 1,
-            'info': _("""A plastic container is used for storing plastic
-cups that you have. This helps prevent wind from
-blowing your cups away.""")
+            'info':
+            [
+                [
+                    _("Stores cups."),
+                    _("Helps prevent wind"),
+                    _("from blowing cups.")
+                ]
+            ]
         }
     ],
     'ice cream':[
