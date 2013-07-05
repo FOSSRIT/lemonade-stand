@@ -693,8 +693,8 @@ end of the day until you are correct."""),
         (self.game_engine.width, self.game_engine.height))
 
         # Store item display.
-        spacer = self.game_engine.width / ((len(main.current_recipe) - 2) * 4)
-        icon_size = (self.game_engine.width - (len(main.current_recipe) - 2)* \
+        spacer = self.game_engine.width / ((len(ITEMS[self.version])) * 4)
+        icon_size = (self.game_engine.width - (len(ITEMS[self.version]))* \
             (3 * spacer) / 2) / (len(main.current_recipe) - 2)
         j = spacer
 
@@ -737,8 +737,12 @@ end of the day until you are correct."""),
             store.blit(ren, (render_left, self.game_engine.height *.58))
 
             # Put the amount of the item needed for the current recipe
-            ren = self.__shopNumFont.render("x{}".format(\
-                main.current_recipe[name]), 1, (255, 240, 0))
+            try:
+                ren = self.__shopNumFont.render("x{}".format(\
+                    main.current_recipe[name]), 1, (255, 240, 0))
+            except KeyError:
+                ren = self.__shopNumFont.render("x0", 1, (255, 240, 0))
+                main.current_recipe[name] = 0
             fw, fh = ren.get_size()
             render_left = j + (icon_size / 2) - (fw / 2)
             render_top = icon_render_top - fh

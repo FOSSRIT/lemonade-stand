@@ -33,7 +33,7 @@ STARTING_ITEMS = {
         'cup': [12, 10, 5, 0],
         'lemon': [18, 15, 5, 0],
         'sugar': [20, 10, 5, 0],
-#        'strawberry': [18, 15, 5, 0]
+        'strawberry': [18, 15, 5, 0]
     },
     'ice cream': {
         'cone': [12, 10, 5, 0],
@@ -136,12 +136,12 @@ ITEMS = {
             'decay': 0,
             'bulk': 1
         },
-#        'strawberry': {
-#            'name': _('Strawberry'),
-#            'cost': [25, 50, 75, 150],
-#            'decay': 3,
-#            'bulk': 5
-#        }
+        'strawberry': {
+            'name': _('Strawberry'),
+            'cost': [25, 50, 75, 150],
+            'decay': 3,
+            'bulk': 5
+        }
     },
     'ice cream': {
         'cone': {
@@ -379,14 +379,14 @@ RECIPES = {
             'sugar': 5,
             'cost': [180, 380, 550, 800]
         },
- #       'strawberry': {
- #           'name': _("strawberry"),
- #           'cup': 1,
- #           'lemon': 2,
- #           'sugar': 2,
- #           'strawberry': 1,
- #           'cost': 225
- #       },
+        'strawberry': {
+            'name': _("strawberry"),
+            'cup': 1,
+            'lemon': 2,
+            'sugar': 2,
+            'strawberry': 1,
+            'cost': 225
+        },
         'epic': {
             'name': _("epic"),
             'cup': 2,
