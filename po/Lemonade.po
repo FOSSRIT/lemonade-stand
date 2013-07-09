@@ -21,6 +21,22 @@ msgstr ""
 msgid "Lemonade"
 msgstr "Limonada"
 
+#: constants.py 380
+msgid "juice"
+msgstr "jugo"
+
+#: constants.py 366
+msgid "sweet"
+msgstr "dulce"
+
+#: constants.py 3373
+msgid "fancy"
+msgstr "lujosa"
+
+#: LemonadeGui.py 754
+msgid "lemonade"
+msgstr "limonada"
+
 #: LemonadeMain.py:316
 msgid "    You lost {} {}"
 msgstr "    que perdio"
@@ -533,7 +549,7 @@ msgstr ""
 
 #: LemonadeGui.py:634
 msgid "-- Day {} --"
-msgstr "-- Día {}"
+msgstr "-- Día {} --"
 
 #: LemonadeGui.py:642
 msgid "Start: {}"
@@ -553,15 +569,15 @@ msgstr "¡Incorrecto!"
 
 #: LemonadeGui.py:673
 msgid "Please try again."
-msgstr "Por favor, inténtalo de nuevo."
+msgstr "Inténtalo de nuevo."
 
 #: LemonadeGui.py:720
 msgid "{} for {}"
 msgstr "{} por {}"
 
 #: LemonadeGui.py:753
-msgid "Ingredients for {} {}:"
-msgstr "Ingredientes para {} {}:"
+msgid "Ingredients for "
+msgstr "Ingredientes para "
 
 #: LemonadeGui.py:760
 msgid "Current Supplies:"

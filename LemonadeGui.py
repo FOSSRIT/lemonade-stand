@@ -21,6 +21,7 @@
 #     Justin Lewis <jlew.blackout@gmail.com>
 #     Nathaniel Case <Qalthos@gmail.com>
 
+from __future__ import unicode_literals
 import pygame
 from fortuneengine.GameEngineElement import GameEngineElement
 from constants import ITEMS, format_money, WEATHER, CURRENCY, DIFFICULTY, \
@@ -256,7 +257,7 @@ class LemonadeGui(GameEngineElement):
         for i in range(len(DIFFICULTY)):
 
             play_difficulty = self.__menuFont.render(
-                DIFFICULTY[i], True, (0, 0, 0))
+                DIFFICULTY[i].decode('utf8'), True, (0, 0, 0))
             fw, fh = play_difficulty.get_size()
             render_left = (self.game_engine.width / 2) - (fw / 2)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
@@ -291,9 +292,9 @@ class LemonadeGui(GameEngineElement):
 
         # Loop through and display all of the menu items
         for i in range(len(MENU)):
-
-            play_menu_item = self.__menuFont.render(_("{}").format(\
-                MENU[i]), True, (0, 0, 0))
+            menu_item = MENU[i]
+            menu_item = menu_item.decode('utf8')
+            play_menu_item = self.__menuFont.render(menu_item, True, (0, 0, 0))
             fw, fh = play_menu_item.get_size()
             render_left = (self.game_engine.width / 2) - (fw / 2)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
@@ -631,7 +632,7 @@ end of the day until you are correct."""),
         color = (0, 0, 0)
 
         # Display current day in the log book
-        day_title = self.__shopFont.render(_("-- Day {} --").format(\
+        day_title = self.__shopFont.render(_("-- Day {} --").decode('utf8').format(\
             main.day), 1, color)
         fw, fh = day_title.get_size()
         render_top = self.game_engine.height / 15
@@ -639,14 +640,14 @@ end of the day until you are correct."""),
         cashbox.blit(day_title, (render_left, render_top))
 
         # Display the current day's starting money
-        money_start = self.__shopFont.render(_("Start: {}").format(\
+        money_start = self.__shopFont.render(_("Start: {}").decode('utf8').format(\
             format_money(main.start_money)), True, (0, 0, 0))
         render_top = self.game_engine.height / 5
         render_left = (self.game_engine.width * 2 / 3)
         cashbox.blit(money_start, (render_left, render_top))
 
         # Display the current day's ending money
-        money_end = self.__shopFont.render(_("End: {}").format(\
+        money_end = self.__shopFont.render(_("End: {}").decode('utf8').format(\
             format_money(main.start_money + main.profit)), True, (0, 0, 0))
         render_top = (self.game_engine.height / 5) + fh + 5
         render_left = (self.game_engine.width * 2 / 3)
@@ -654,7 +655,7 @@ end of the day until you are correct."""),
 
         # Display the current day's total profit
         if main.difficulty < 2:
-            profit = self.__shopFont.render(_("Profit: {}").format(\
+            profit = self.__shopFont.render(_("Profit: {}").decode('utf8').format(\
                 format_money(main.profit)), True, (0, 0, 0))
             render_top = (self.game_engine.height / 5) + (fh * 4) - 20
             render_left = (self.game_engine.width * 2 / 3)
@@ -663,14 +664,14 @@ end of the day until you are correct."""),
         # Display if the user passed or failed the mini game
         if self.failed == True:
             if self.__input_mode[2] == self.fail_key:
-                fail = self.__shopFont.render(_("Incorrect!"), True, (255, 0, 0))
+                fail = self.__shopFont.render(_("Incorrect!").decode('utf8'), True, (255, 0, 0))
                 fw, fh = fail.get_size()
                 render_top = (self.game_engine.height * 6 / 13)
                 render_left = (self.game_engine.width * 8 / 10)
                 cashbox.blit(fail, (render_left - (fw / 2), render_top))
 
                 try_again = self.__shopFont.render( \
-                    _("Please try again."), True, (255, 0, 0))
+                    _("Please try again.").decode('utf8'), True, (255, 0, 0))
                 fw, fh = try_again.get_size()
                 cashbox.blit(try_again, (render_left - (fw / 2) , \
                     render_top + fh))
@@ -750,8 +751,9 @@ end of the day until you are correct."""),
             j += icon_size + spacer
 
         # Title above recipe
-        ren = self.__shopNumFont.render(_("Ingredients for {} {}:").format(\
-            main.current_recipe['name'], self.version), 1, (255, 240, 0))
+        ren = self.__shopNumFont.render(_("Ingredients for ") + \
+            _("lemonade") + " " + main.current_recipe['name'].decode('utf8') \
+            + ":", 1, (255, 240, 0))
         render_left = 5
         render_top = self.game_engine.height / 11
         store.blit(ren, (render_left, render_top))
@@ -780,7 +782,10 @@ end of the day until you are correct."""),
             text_array = text_array.split('\n')
 
         for text in text_array:
-            ren = self.__font.render(text, True, text_color)
+            try:
+                ren = self.__font.render(text.decode('utf8'), True, text_color)
+            except UnicodeEncodeError:
+                ren = self.__font.render(text, True, text_color)
             rendered_text.append(ren)
             fw, fh = ren.get_size()
             font_width.append(fw)

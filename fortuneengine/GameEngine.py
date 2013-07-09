@@ -66,7 +66,8 @@ class GameEngine(object):
         self.__showfps = False
         self.__dirty = True
         self.__always_draw = always_draw
-        self.__font = pygame.font.Font(None, 17)
+        #self.__font = pygame.font.Font(None, 17)
+        self.__font = pygame.font.SysFont(pygame.font.get_default_font(), 17)
         self.__run_event = False
 
         # Variables to hold game engine elements and callbacks
