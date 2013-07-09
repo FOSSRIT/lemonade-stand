@@ -54,7 +54,8 @@ class LemonadeMain:
                 {
                     'name': [],
                     'level': [],
-                    'capacity': []
+                    'capacity': [],
+                    'saves': []
                 }
             ]
         }
@@ -69,6 +70,9 @@ class LemonadeMain:
                 UPGRADES[self.version][i]['name'])
             self.__resources['upgrades'][1]['level'].append(0)
             self.__resources['upgrades'][1]['capacity'].append(0)
+            self.__resources['upgrades'][1]['saves'].append(\
+                UPGRADES[self.version][i]['saves'])
+            self.__resources['upgrades'][0] += 1
 
         self.__weather = 1
         self.__msg_queue = []
@@ -127,7 +131,7 @@ class LemonadeMain:
     @property
     def prices(self):
         return self.__resources['price']
-    
+
     @property
     def price(self):
         return self.__resources['price'][self.difficulty]
@@ -247,6 +251,7 @@ class LemonadeMain:
         # It looks like its going to rain tomorrow
         if self.__weather <= 0:
             self.__weather = 0
+
         # Tomorrow looks to be very hot
         elif self.__weather >= 2:
             self.__weather = 2
@@ -295,6 +300,20 @@ class LemonadeMain:
             if itemcount == 0:
                 return
 
+            # Check if the player has an upgrade that prevents the event
+            upgrade_capacity = 0
+            for upgrade in range(0, self.upgrades[0]):
+                level = self.upgrades[1]['level'][upgrade]
+                saves = self.upgrades[1]['saves'][upgrade]
+                capacity = self.upgrades[1]['capacity'][upgrade]
+                if level > 0:
+                    if saves == event['item']:
+                        if level >= event['level']:
+                            chance = randint(0, event['level'] + level)
+                            if chance > event['level']:
+                                return
+                            else:
+                                upgrade_capacity = capacity
             # Check if event scales
             if event['change'] < 0:
 
@@ -310,9 +329,15 @@ class LemonadeMain:
             if itemcount < remove:
                 remove = itemcount
 
+            # Save some of the player's resources if the player has the
+            # appropriate upgrade available
+            remove -= upgrade_capacity
+            if remove <= 0:
+                return
+
             # Create a message
-            msg = _("    You lost {} {}".format(\
-                str(remove), event['item']))
+            msg = _("    You lost {} {}").format(\
+                str(remove), event['item'])
 
             # Remove the items from your inventory
             self.remove_item(event['item'], remove)
@@ -348,8 +373,8 @@ class LemonadeMain:
                 add = event['change']
 
             # Create a message
-            msg = _("    You gained {} {}".format(\
-                str(add), event['item']))
+            msg = _("    You gained {} {}").format(\
+                str(add), event['item'])
 
             # Add your new supplies to your inventory
             self.add_item(event['item'], add)
@@ -424,13 +449,13 @@ class LemonadeMain:
         for item in items:
             total_bought = self.buy_item(item, items[item])
             if total_bought != 1:
-                self.add_msg("{} {}s for {}".format(\
+                self.add_msg(_("{} {}s for {}").format(\
                     total_bought,\
                     ITEMS[self.version][item]['name'],\
                     format_money(total_bought * \
                     ITEMS[self.version][item]['cost'][self.difficulty])))
             else:
-                self.add_msg("{} {} for {}".format(\
+                self.add_msg(_("{} {} for {}").format(\
                     total_bought,\
                     ITEMS[self.version][item]['name'],\
                     format_money(total_bought * \
@@ -532,9 +557,6 @@ class LemonadeMain:
             self.add_msg("")
             self.add_msg(_("What flavor will you make tomorrow?"))
 
-    def buy_upgrade(self, key):
-        return False
-
     def buy_item(self, key, quanity):
         """
         Attempts to buy as many (up to max quantity) items from
@@ -627,7 +649,7 @@ class LemonadeMain:
                     else:
                         new_list.append([item[0]-1, item[1]])
                 elif item[1] != 0:
-                    self.add_msg("{} {}s have gone bad".format(\
+                    self.add_msg(_("{} {}s have gone bad").format(\
                         item[1], item_key))
 
             # Place item back into resource list
