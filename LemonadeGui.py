@@ -336,7 +336,7 @@ class LemonadeGui(GameEngineElement):
                     t = "  "
 
                 text_array.append("{}{}".format(t, RECIPES[self.version][ \
-                     self.__input_keys[self.game_mode][i]]['name']))
+                     self.__input_keys[self.game_mode][i]]['name'].decode('utf8')))
 
         return self._blit_to_block(text_array, (0, 0, 0), (255, 255, 255), False)
 
