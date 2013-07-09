@@ -55,43 +55,70 @@ UPGRADES = {
     'lemonade': [
         {
             'name': 'Cooler',
-            'cost': 2500,
+            'cost': 25,
             'capacity': 20,
             'level': 1,
+            'saves': 'lemon',
             'info':
             [
                 [
                     _("Stores lemons."),
                     _("Helps prevent lemons"),
                     _("from decaying.")
+                ],
+                [
+                    _("Stores more lemons."),
+                    _("Helps prevent animals"),
+                    _("from stealing.")
+                ],
+                [
+                    _("Stores more lemons.")
                 ]
             ]
         },
         {
             'name': 'Sugar Jar',
-            'cost': 3500,
+            'cost': 35,
             'capacity': 20,
             'level': 1,
+            'saves': 'sugar',
             'info':
             [
                 [
                     _("Stores sugar."),
                     _("Helps prevent ants"),
                     _("from stealing sugar.")
+                ],
+                [
+                    _("Stores more sugar."),
+                    _("Helps prevent sugar"),
+                    _("from getting wet.")
+                ],
+                [
+                    _("Stores more sugar.")
                 ]
             ]
         },
         {
             'name': 'Cup Container',
-            'cost': 1500,
+            'cost': 15,
             'capacity': 20,
             'level': 1,
+            'saves': 'cup',
             'info':
             [
                 [
                     _("Stores cups."),
                     _("Helps prevent wind"),
                     _("from blowing cups.")
+                ],
+                [
+                    _("Stores more cups."),
+                    _("Helps prevent cups"),
+                    _("from breaking.")
+                ],
+                [
+                    _("Stores more cups.")
                 ]
             ]
         }
@@ -100,9 +127,9 @@ UPGRADES = {
         {
             'name': 'Cooler',
             'cost': 2000,
-            'prevents_losing': 'ice cream',
             'capacity': 20,
             'level': 1,
+            'saves': 'ice cream',
             'info': _("""A cooler is used for storing any ice cream
 that you have. This helps prevent ice cream
 from melting as well as anything from getting
@@ -178,68 +205,80 @@ B_EVENTS_DICT = {
             {
             'text': _("A small animal takes some lemons!"),
             'item': 'lemon',
-            'change': -2
+            'change': -2,
+            'level': 2
             },
             {
             'text': _("A strong wind blows away some of your cups!"),
             'item': 'cup',
-            'change': -2
+            'change': -2,
+            'level': 1
             },
             {
             'text': _("Ants steal some of your supplies!"),
             'item': 'sugar',
-            'change': -2
+            'change': -2,
+            'level': 1
             }
         ],
     '50': [
             {
             'text': _("Your friend has eaten some of your lemons!"),
             'item': 'lemon',
-            'change': 10
+            'change': 10,
+            'level': 0
             },
             {
             'text': _("A batch of cups have cracked!"),
             'item': 'cup',
-            'change': 10
+            'change': 10,
+            'level': 2
             },
             {
             'text': _("You sneeze and blow away some sugar!"),
             'item': 'sugar',
-            'change': 10
+            'change': 10,
+            'level': 1
             }
         ],
     '80': [
             {
             'text': _("You sat on some of your lemons!"),
             'item': 'lemon',
-            'change': 5
+            'change': 5,
+            'level': 0
             },
             {
             'text': _("You stepped on some cups!"),
             'item': 'cup',
-            'change': 5
+            'change': 5,
+            'level': 2
             },
             {
             'text': _("Your sugar gets wet and ruined!"),
             'item': 'sugar',
-            'change': 5
+            'change': 5,
+            'level': 2
             }
         ],
     '100': [
             {
             'text': _("Some of your lemons are Lemonzilla eggs!"),
             'item': 'lemon',
-            'change': 2
+            'change': 2,
+            'level': 0
             },
             {
             'text': _("You mother takes some of your cups!"),
             'item': 'cup',
-            'change': 2
+            'change': 2,
+            'level': 0
             },
             {
             'text': _("You used too much sugar in one cup!"),
             'item': 'sugar',
-            'change': 2
+            'change': 2,
+            'level': 0
             }
         ]
 }
