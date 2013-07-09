@@ -23,6 +23,7 @@
 
 from random import randint
 from gettext import gettext as _
+from sugar.datastore import datastore
 
 from operator import itemgetter
 from constants import STARTING_MONEY, B_EVENTS_DICT, MAX_MSG, ITEMS, \
@@ -74,6 +75,7 @@ class LemonadeMain:
                 UPGRADES[self.version][i]['saves'])
             self.__resources['upgrades'][0] += 1
 
+        self.first_upgrade = True
         self.__weather = 1
         self.__msg_queue = []
         self.challenge_mode = False
@@ -87,6 +89,16 @@ class LemonadeMain:
         self.weather_change()
 
         self.event_messages = []
+
+        self.badges = datastore.create()
+        self.badges.metadata['title'] = 'Badges'
+        self.badges.metadata['badges'] = ''
+
+        datastore.write(self.badges)
+
+    @property
+    def badges(self):
+        return self.badges
 
     @property
     def upgrades(self):
@@ -200,6 +212,12 @@ class LemonadeMain:
             self.money -= price
             self.upgrades[1]['level'][upgrade_index] += 1
             self.upgrades[1]['capacity'][upgrade_index] += base_capacity
+
+            if self.first_upgrade:
+                self.badges.metadata['badges'] += 'First upgrade:'
+                datastore.write(self.badges)
+                self.first_upgrade = False
+
             return True
 
         return False
@@ -555,7 +573,7 @@ class LemonadeMain:
             self.add_msg(_("It looks like it will be {} tomorrow.").format(\
                             self.weather_name))
             self.add_msg("")
-            self.add_msg(_("What flavor will you make tomorrow?"))
+            #self.add_msg(_("What flavor will you make tomorrow?"))
 
     def buy_item(self, key, quanity):
         """

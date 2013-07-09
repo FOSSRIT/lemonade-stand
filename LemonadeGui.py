@@ -333,15 +333,15 @@ class LemonadeGui(GameEngineElement):
             text_array.append(message)
 
         # Displays recipe selection at the end of the day
-        if self.game_mode == 3 and main.challenge_completed == False:
-            for i in range(0, len(self.__input_keys[self.game_mode])):
-                if i == self.__input_mode[self.game_mode]:
-                    t = "->"
-                else:
-                    t = "  "
+        #if self.game_mode == 3 and main.challenge_completed == False:
+        #    for i in range(0, len(self.__input_keys[self.game_mode])):
+        #        if i == self.__input_mode[self.game_mode]:
+        #            t = "->"
+        #        else:
+        #            t = "  "
 
-                text_array.append("{}{}".format(t, RECIPES[self.version][ \
-                     self.__input_keys[self.game_mode][i]]['name']))
+        #        text_array.append("{}{}".format(t, RECIPES[self.version][ \
+        #             self.__input_keys[self.game_mode][i]]['name']))
 
         return self._blit_to_block(text_array, (0, 0, 0), (255, 255, 255), False)
 
@@ -816,6 +816,9 @@ end of the day until you are correct."""),
         rendered_text = []
         font_width = []
         font_height = []
+
+        if isinstance(text_array, basestring):
+            text_array = text_array.split('\n')
 
         for text in text_array:
             ren = self.__font.render(text, True, text_color)
