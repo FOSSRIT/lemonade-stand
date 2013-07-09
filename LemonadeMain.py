@@ -25,11 +25,11 @@ from random import randint
 from gettext import gettext as _
 
 from operator import itemgetter
-from constants import STARTING_MONEY, B_EVENTS_DICT, MAX_MSG, ITEMS, \
-                      CURRENCY, RECIPES, DIFFICULTY, format_money, \
-                      WEATHER, GOOD_ODDS, BAD_ODDS, SCALE, EVENT_KEYS, \
-					  STARTING_ITEMS, G_EVENTS_DICT, B_EVENTS_DICT, \
-                      SERVING_ITEM, LOCATIONS, REP_VALUES, UPGRADES
+from constants import STARTING_MONEY, MAX_MSG, ITEMS, CURRENCY, RECIPES, \
+                      DIFFICULTY, format_money, WEATHER, GOOD_ODDS, BAD_ODDS, \
+                      SCALE, EVENT_KEYS, STARTING_ITEMS, G_EVENTS_DICT, \
+                      B_EVENTS_DICT, SERVING_ITEM, LOCATIONS, REP_VALUES, \
+                      UPGRADES
 
 class LemonadeMain:
     """
@@ -130,7 +130,7 @@ class LemonadeMain:
     
     @property
     def price(self):
-        return self.__resources['price'][self.difficulty]
+        return self.prices[self.difficulty]
 
     @property
     def income(self):
@@ -171,7 +171,7 @@ class LemonadeMain:
         return resources
 
     def recipe(self, ingredient):
-        return self.__resources['recipe'].get(ingredient, 0)
+        return self.current_recipe.get(ingredient, 0)
 
     @property
     def messages(self):
