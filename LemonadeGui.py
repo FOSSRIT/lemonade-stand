@@ -54,8 +54,8 @@ class LemonadeGui(GameEngineElement):
         self.__input_keys = [ITEMS[self.version].keys(), \
             ITEMS[self.version].keys(),CURRENCY.keys(), \
             RECIPES[self.version].keys(), MENU, DIFFICULTY, \
-            [None], UPGRADES[self.version]]
-        self.__input_mode = [0, 0, 0, 0, 0, 0, 0, 0]
+            [None], UPGRADES[self.version], ITEMS[self.version].keys()]
+        self.__input_mode = [0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.__input_string = []
 
         for key in self.__input_keys:
@@ -520,6 +520,16 @@ end of the day until you are correct."""),
             screen.blit(block, (self.game_engine.width * 13 / 24,
                             self.game_engine.height * 27 / 36))
 
+        # Check if the player is crafting a recipe
+        elif self.game_mode == 8:
+            crafter = self.draw_crafter( \
+                self.__input_mode[self.game_mode], main)
+            screen.blit(crafter, (0, 0))
+
+            block = self.ingredient_count(main.resource_list, main.money)
+            screen.blit(block, (self.game_engine.width * 13 / 24,
+                            self.game_engine.height * 27 / 36))
+
         # Check if the player is at the beginning of the day
         elif self.game_mode == 1:
             self.change_background(main.weather)
@@ -676,6 +686,65 @@ end of the day until you are correct."""),
                 self.failed = False
 
         return cashbox
+    
+    def draw_crafter(self, key, main):
+        """
+        Displays the recipe crafter
+
+        :type key: int
+        :param key: the value of the selected item
+
+        :type main: LemonadeMain
+        :param main: the main class of Lemonade Stand that contains info
+        """
+        # Loads and Scales background
+        crafter = image.load("images/{}/store-outline.gif".format(\
+            self.version)).convert()
+        crafter = transform.scale(crafter,
+            (self.game_engine.width, self.game_engine.height))
+
+        # Crafter displaying items.
+        spacer = self.game_engine.width / (len(ITEMS[self.version]) * 4)
+        icon_size = (self.game_engine.width - len(ITEMS[self.version]) * \
+            (3 * spacer) / 2) / len(ITEMS[self.version])
+        j = spacer
+
+        # Draw Items
+        for num, name in enumerate(ITEMS[self.version]):
+            outline = Surface((icon_size, icon_size))
+            if num == key:
+                outline.fill((255, 255, 255))
+            else:
+                outline.fill((0, 0, 0))
+            icon = image.load("images/{}/icon/{}.gif".format(\
+                self.version, name)).convert()
+            icon = transform.scale(icon,
+                    (icon_size * 8 / 10, icon_size * 8 / 10))
+            icon_render_top = self.game_engine.height * .38 - (icon_size / 2)
+            outline.blit(icon, (icon_size / 10, icon_size / 10))
+            crafter.blit(outline, (j, icon_render_top))
+
+            # Display an item count under the icon.
+            if self.__input_string[0][num] != '0':
+                color = (255, 255, 255)
+            else:
+                color = (0, 0, 0)
+                 
+            ren = self.__shopNumFont.render("x{}".format(\
+                self.__input_string[0][num]), 1, color)
+
+            fw, fh = ren.get_size()
+            render_left = j + (icon_size / 2) - (fw / 2)
+            j += icon_size + spacer
+
+            crafter.blit(ren, (render_left, self.game_engine.height *.58))
+
+        # Title above recipe
+        ren = self.__shopNumFont.render(_("Craft Custom Recipe"),  
+                                        1, (255, 240, 0))
+        render_left = 5
+        return crafter
+
 
     def draw_store(self, key, main):
         """
@@ -690,12 +759,12 @@ end of the day until you are correct."""),
         store = image.load("images/{}/store-outline.gif".format(\
             self.version)).convert()
         store = transform.scale(store,
-        (self.game_engine.width, self.game_engine.height))
+            (self.game_engine.width, self.game_engine.height))
 
         # Store item display.
-        spacer = self.game_engine.width / ((len(ITEMS[self.version])) * 4)
-        icon_size = (self.game_engine.width - (len(ITEMS[self.version]))* \
-            (3 * spacer) / 2) / (len(main.current_recipe) - 2)
+        spacer = self.game_engine.width / (len(ITEMS[self.version]) * 4)
+        icon_size = (self.game_engine.width - len(ITEMS[self.version])* \
+            (3 * spacer) / 2) / len(ITEMS[self.version])
         j = spacer
 
         # Loop through all of the current items
@@ -737,12 +806,9 @@ end of the day until you are correct."""),
             store.blit(ren, (render_left, self.game_engine.height *.58))
 
             # Put the amount of the item needed for the current recipe
-            try:
-                ren = self.__shopNumFont.render("x{}".format(\
-                    main.current_recipe[name]), 1, (255, 240, 0))
-            except KeyError:
-                ren = self.__shopNumFont.render("x0", 1, (255, 240, 0))
-                main.current_recipe[name] = 0
+            ren = self.__shopNumFont.render("x{}".format(\
+                  main.current_recipe.get(name, 0)), 1, (255, 240, 0))
+
             fw, fh = ren.get_size()
             render_left = j + (icon_size / 2) - (fw / 2)
             render_top = icon_render_top - fh
@@ -884,6 +950,18 @@ end of the day until you are correct."""),
                         self.failed = True
                         self.fail_key = self.__input_mode[self.game_mode]
 
+                # Checks if the player is creating a recipe
+                elif self.game_mode == 8:
+                    for key in self.__input_keys[self.game_mode]: 
+                        cost = ITEMS[self.version][key]['cost']
+                        cost_e = main.current_recipe[key] * cost[0] 
+                        cost_m = main.current_recipe[key] * cost[1]
+                        cost_h = main.current_recipe[key] * cost[2]
+                        cost_i = main.current_recipe[key] * cost[3]
+                    main.prices = [cost_e * 2, cost_m * 1.82, \
+                                   cost_h * 1.67, cost_i * 1.25]
+                    self.game_mode = 0
+
                 # Checks if the player completed the day, return to the shop
                 # Saves recipe choice before returning to the shop
                 elif self.game_mode == 3:
@@ -896,7 +974,12 @@ end of the day until you are correct."""),
                             self.__input_keys[self.game_mode][ \
                             self.__input_mode[self.game_mode]]]
                         main.prices = main.current_recipe['cost']
-                        self.game_mode = 0
+                        print self.__input_keys[self.game_mode]
+                        if self.__input_keys[self.game_mode] \
+                            [self.__input_mode[self.game_mode]] == 'custom':
+                            self.game_mode = 8
+                        else: 
+                            self.game_mode = 0
                         main.day += 1
 
                 # Checks if the player is in the upgrade shop

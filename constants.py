@@ -123,7 +123,8 @@ ITEMS = {
             'name': _('Cup'),
             'cost': [5, 10, 15, 30],
             'decay': 0,
-            'bulk': 1
+            'bulk': 1,
+            'min': 1
         },
         'lemon': {
             'name': _('Lemons'),
@@ -155,7 +156,8 @@ ITEMS = {
             'name': _('Cone'),
             'cost': [5, 10, 15, 30],
             'decay': 0,
-            'bulk': 1
+            'bulk': 1,
+            'min': 1
         },
         'ice cream': {
             'name': _('Ice cream'),
@@ -491,6 +493,10 @@ RECIPES = {
             'lemon': 3,
             'sugar': 5,
             'cost': [130, 275, 400, 550]
+        },
+        'custom': {
+            'name': _("custom"),
+            'cost': [0, 0, 0, 0]
         }
     },
     'ice cream': {
