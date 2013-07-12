@@ -309,7 +309,6 @@ class LemonadeMain:
                         else:
                             return event_list[index]
                     else:
-                        print "Out of events"
                         return None
 
     def random_event(self):
@@ -332,8 +331,6 @@ class LemonadeMain:
             # Generate a bad event
             event = self.event_select(B_EVENTS_DICT)
             
-            print "There should be a bad event"
-
             # Checks if no event was found
             if event == None:
                 return
@@ -404,8 +401,6 @@ class LemonadeMain:
             # Generate a good event
             event = self.event_select(G_EVENTS_DICT)
 
-            print "There should be a Godd Event"
-            
             # Checks if no event was found
             if event == None:
                 return
