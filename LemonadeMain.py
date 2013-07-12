@@ -288,8 +288,29 @@ class LemonadeMain:
             # Once you found which weight value you are using,
             # return a random event with that weight
             if rand_num <= int(key):
-                index = randint(0, len(events[key]) - 1)
-                return events[key][index]
+                # Tries to get the list of events for the current version
+                event_list = events[key].get(self.version, None)
+
+                # Checks if a list was returned
+                if event_list == None:
+                    print str(self.version) + " was not found!"
+                    return None
+
+                # Loops for the lenght of all events in list
+                # if the event has is for a non-existing item it gets removed
+                # if the event has is for a existing itme it is returned
+                for i in range(0, len(event_list)):
+                    if len(event_list) > 0:
+                        index = randint(0, len(event_list) - 1)
+                        if ITEMS[self.version].get(event_list[index]['item'],
+                                                   None) == None:
+
+                            event_list.pop(index)
+                        else:
+                            return event_list[index]
+                    else:
+                        print "Out of events"
+                        return None
 
     def random_event(self):
         """
@@ -310,6 +331,12 @@ class LemonadeMain:
 
             # Generate a bad event
             event = self.event_select(B_EVENTS_DICT)
+            
+            print "There should be a bad event"
+
+            # Checks if no event was found
+            if event == None:
+                return
 
             # Get the amount of the item you have
             itemcount = self.count_item(event['item'])
@@ -376,6 +403,12 @@ class LemonadeMain:
 
             # Generate a good event
             event = self.event_select(G_EVENTS_DICT)
+
+            print "There should be a Godd Event"
+            
+            # Checks if no event was found
+            if event == None:
+                return
 
             # Checks if event scales
             if event['change'] < 0:
