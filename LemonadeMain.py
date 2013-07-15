@@ -76,6 +76,8 @@ class LemonadeMain:
             self.__resources['upgrades'][0] += 1
 
         self.first_upgrade = True
+        self.first_correct_change = True
+        self.first_ten_sales = True
         self.__weather = 1
         self.__msg_queue = []
         self.challenge_mode = False
@@ -91,8 +93,9 @@ class LemonadeMain:
         self.event_messages = []
 
         self.badges = datastore.create()
-        self.badges.metadata['title'] = 'Badges'
+        self.badges.metadata['title'] = 'badges_lemonadestand'
         self.badges.metadata['badges'] = ''
+        self.badges.metadata['info'] = ''
 
         datastore.write(self.badges)
 
@@ -214,7 +217,8 @@ class LemonadeMain:
             self.upgrades[1]['capacity'][upgrade_index] += base_capacity
 
             if self.first_upgrade:
-                self.badges.metadata['badges'] += 'First upgrade:'
+                self.badges.metadata['badges'] += 'First Upgrade:'
+                self.badges.metadata['info'] += 'Purchased first upgrade:'
                 datastore.write(self.badges)
                 self.first_upgrade = False
 
@@ -289,7 +293,7 @@ class LemonadeMain:
             # return a random event with that weight
             if rand_num <= int(key):
                 index = randint(0, len(events[key]) - 1)
-                return events[key][index]
+                return events[key][self.version][index]
 
     def random_event(self):
         """
@@ -445,6 +449,12 @@ class LemonadeMain:
         if sales > max_sales:
             sales = max_sales
 
+        if int(sales) >= 10 and self.first_ten_sales:
+            self.badges.metadata['badges'] += 'Double Digit Sales:'
+            self.badges.metadata['info'] += 'Sold 10 or more cups of lemonade:'
+            datastore.write(self.badges)
+            self.first_ten_sales = False
+
         return int(sales)
 
     def update_day_log(self, items):
@@ -546,6 +556,13 @@ class LemonadeMain:
         if self.profit > 0:
             mini_game_success = self.count_game(mini_game_key, self.profit)
             if mini_game_success:
+                if self.first_correct_change:
+                    self.badges.metadata['badges'] += 'Right on the Money:'
+                    self.badges.metadata['info'] += 'First correct amount \
+                    of change:'
+                    datastore.write(self.badges)
+                    self.first_correct_change = False
+                    _
                 # Give them the money if they added
                 self.money += self.profit
             else:
@@ -570,12 +587,14 @@ class LemonadeMain:
             self.add_msg(_("Summer is over!"))
             self.add_msg(_("You have successfully completed Lemonade Stand!"))
             self.challenge_completed = True
+            self.badges.metadata['badges'] += 'Summer Completed:'
+            self.badges.metadata['info'] += 'Completed the summer season:'
+            datastore.write(self.badges)
 
         else:
             self.add_msg(_("Time to get some rest."))
             self.add_msg(_("It looks like it will be {} tomorrow.").format(
                          self.weather_name))
-            self.add_msg("")
 
     def buy_item(self, key, quanity):
         """
@@ -669,8 +688,12 @@ class LemonadeMain:
                     else:
                         new_list.append([item[0]-1, item[1]])
                 elif item[1] != 0:
-                    self.add_msg(_("{} {}s have gone bad").format(
-                        item[1], item_key))
+                    index = self.upgrades[1]['saves'].index(item_key)
+                    remove = item[1]
+                    remove -= self.upgrades[1]['capacity'][index]
+                    if remove > 0:
+                        self.add_msg(_("{} {}s have gone bad").format(
+                            item[1], item_key))
 
             # Place item back into resource list
             self.__resources[item_key] = new_list
