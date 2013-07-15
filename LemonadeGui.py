@@ -725,13 +725,17 @@ end of the day until you are correct."""),
             crafter.blit(outline, (j, icon_render_top))
 
             # Display an item count under the icon.
-            if self.__input_string[0][num] != '0':
+            if self.__input_string[self.game_mode][num] != '0':
                 color = (255, 255, 255)
             else:
                 color = (0, 0, 0)
-                 
-            ren = self.__shopNumFont.render("x{}".format(\
-                self.__input_string[0][num]), 1, color)
+    
+            ren = self.__shopNumFont.render("x{}".format(
+                self.__input_string[self.game_mode][num]), 1, color)
+
+            # Updates the Recipe's ingredient count
+            main.current_recipe[name] = int(self.__input_string \
+                                        [self.game_mode][num])
 
             fw, fh = ren.get_size()
             render_left = j + (icon_size / 2) - (fw / 2)
@@ -743,6 +747,8 @@ end of the day until you are correct."""),
         ren = self.__shopNumFont.render(_("Craft Custom Recipe"),  
                                         1, (255, 240, 0))
         render_left = 5
+        render_top = self.game_engine.height / 11
+        crafter.blit(ren, (render_left, render_top))
         return crafter
 
 
@@ -914,7 +920,7 @@ end of the day until you are correct."""),
                             upgrade_info.append(UPGRADES[self.version][i]['name'])
                             upgrade_info.append(UPGRADES[self.version][i]['cost'])
                             upgrade_info.append(UPGRADES[self.version][i]['capacity'])
-                else:
+                elif self.game_mode != 8:
                     item_list = {}
                     for i in range(0, len(self.__input_keys[self.game_mode])):
                         item_list[self.__input_keys[self.game_mode][i]] = \
@@ -952,14 +958,25 @@ end of the day until you are correct."""),
 
                 # Checks if the player is creating a recipe
                 elif self.game_mode == 8:
+                    index = 0
+                    costs = [0, 0, 0, 0]
                     for key in self.__input_keys[self.game_mode]: 
+                        if main.current_recipe[key] < ITEMS[self.version] \
+                                                    [key].get('min', 0):
+                            print main.current_recipe[key]
+                            main.current_recipe[key] = ITEMS[self.version] \
+                                [key].get('min', 0)
+                        index += 1
                         cost = ITEMS[self.version][key]['cost']
-                        cost_e = main.current_recipe[key] * cost[0] 
-                        cost_m = main.current_recipe[key] * cost[1]
-                        cost_h = main.current_recipe[key] * cost[2]
-                        cost_i = main.current_recipe[key] * cost[3]
-                    main.prices = [cost_e * 2, cost_m * 1.82, \
-                                   cost_h * 1.67, cost_i * 1.25]
+                        print str(key) + ": " + str(ITEMS[self.version][key]['cost'])
+                        costs[0] += main.current_recipe[key] * cost[0] 
+                        costs[1] += main.current_recipe[key] * cost[1]
+                        costs[2] += main.current_recipe[key] * cost[2]
+                        costs[3] += main.current_recipe[key] * cost[3]
+                    main.prices = [int(costs[0] * 2), int(costs[1] * 1.82), \
+                                   int(costs[2] * 1.67), int(costs[3] * 1.25)]
+                    print main.prices
+                    print main.price
                     self.game_mode = 0
 
                 # Checks if the player completed the day, return to the shop
@@ -974,7 +991,8 @@ end of the day until you are correct."""),
                             self.__input_keys[self.game_mode][ \
                             self.__input_mode[self.game_mode]]]
                         main.prices = main.current_recipe['cost']
-                        print self.__input_keys[self.game_mode]
+                        print self.__input_keys[self.game_mode][
+                            self.__input_mode[self.game_mode]]
                         if self.__input_keys[self.game_mode] \
                             [self.__input_mode[self.game_mode]] == 'custom':
                             self.game_mode = 8
