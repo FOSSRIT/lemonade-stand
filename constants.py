@@ -399,6 +399,12 @@ LOCATIONS = {
 
 SCALE = [.2, .4, .6, .8]
 
+#List of languages
+LANGUAGE = [
+    "English",
+    "Espanol"
+]
+
 # List of difficulty types
 DIFFICULTY = [
     "Easy",
