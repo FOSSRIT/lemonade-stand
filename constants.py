@@ -33,8 +33,8 @@ STARTING_ITEMS = {
         'cup': [12, 10, 5, 0],
         'lemon': [18, 15, 5, 0],
         'sugar': [20, 10, 5, 0],
-        'strawberry': [18, 15, 5, 0],
-        'icecube': [60, 30, 15, 0]
+        'strawberry': [0, 0, 0, 0],
+        'icecube': [0, 0, 0, 0]
     },
     'ice cream': {
         'cone': [12, 10, 5, 0],

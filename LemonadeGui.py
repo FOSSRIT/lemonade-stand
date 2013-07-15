@@ -743,12 +743,20 @@ end of the day until you are correct."""),
 
             crafter.blit(ren, (render_left, self.game_engine.height *.58))
 
-        # Title above recipe
-        ren = self.__shopNumFont.render(_("Craft Custom Recipe"),  
+        # Instructions for crafter screen.
+        ren = self.__shopNumFont.render(_("Enter how many of each you want to use"),  
                                         1, (255, 240, 0))
         render_left = 5
         render_top = self.game_engine.height / 11
         crafter.blit(ren, (render_left, render_top))
+
+        ren = self.__shopNumFont.render(_("Per Cup."),  
+                                        1, (255, 240, 0))
+        fw, fh = ren.get_size()
+        render_left = 5
+        render_top = icon_render_top - fh
+        crafter.blit(ren, (render_left, render_top))
+
         return crafter
 
 
