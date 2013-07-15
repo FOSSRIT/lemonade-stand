@@ -23,7 +23,7 @@
 
 from fortuneengine.GameEngineElement import GameEngineElement
 from constants import ITEMS, format_money, WEATHER, CURRENCY, DIFFICULTY,\
-    MENU, UPGRADES, RECIPES
+    MENU, UPGRADES, RECIPES, LANGUAGE
 
 from gettext import gettext as _
 from pygame import Surface, transform, image
@@ -45,7 +45,7 @@ class LemonadeGui(GameEngineElement):
 
         self.main = self.game_engine.get_object('main')
 
-        self.game_mode = 4
+        self.game_mode = 8
         self.failed = False
         self.fail_key = 0
         self.screen_number = 0
@@ -54,8 +54,8 @@ class LemonadeGui(GameEngineElement):
         self.__input_keys = [ITEMS[self.version].keys(),
                              ITEMS[self.version].keys(), CURRENCY.keys(),
                              RECIPES[self.version].keys(), MENU, DIFFICULTY,
-                             [None], UPGRADES[self.version]]
-        self.__input_mode = [0, 0, 0, 0, 0, 0, 0, 0]
+                             [None], UPGRADES[self.version], LANGUAGE]
+        self.__input_mode = [0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.__input_string = []
 
         for key in self.__input_keys:
@@ -83,6 +83,17 @@ class LemonadeGui(GameEngineElement):
             self.version)).convert()
         self.__background = transform.scale(menu, (self.game_engine.width,
                                                    self.game_engine.height))
+
+    def language_screen(self):
+        """
+        Loads and changes the background image to the language screen
+        """
+
+        language = image.load("images/{}/ui/menu.gif".format(
+            self.version)).convert()
+        self.__background = transform.scale(language,
+                                            (self.game_engine.width,
+                                             self.game_engine.height))
 
     def difficulty_screen(self):
         """
@@ -243,6 +254,42 @@ class LemonadeGui(GameEngineElement):
         render_left = (self.game_engine.width * .15) - (fw / 2)
         render_top = (self.game_engine.height * .9) - (fh / 2)
         screen.blit(player_money, (render_left, render_top))
+
+    def draw_language(self, key, screen):
+        """
+        Displays the language screen.
+
+        :type key: int
+        :param key: The value of the current language setting selected
+
+        :type screen: Surface
+        :param screen: The surface to display language settings on
+        """
+
+        # Spacer is the space in between the different difficulty texts
+        # Interval is the interval that is added to the spacer after each word
+        interval = .1725
+        spacer = .3075
+
+        for i in range(len(LANGUAGE)):
+
+            language = self.__menuFont.render("{}".format(
+                LANGUAGE[i]), True, (0, 0, 0))
+            fw, fh = language.get_size()
+            render_left = (self.game_engine.width / 2) - (fw / 2)
+            render_top = (self.game_engine.width * spacer) - (fh / 2)
+            screen.blit(language, (render_left, render_top))
+
+            if key == i:
+                cup_icon = image.load("images/{}/cursor/cup.gif".format(
+                    self.version)).convert()
+                cup_icon = transform.scale(cup_icon, (
+                    self.game_engine.width / 10,
+                    self.game_engine.height / 10))
+                screen.blit(cup_icon, (self.game_engine.width / 15,
+                                       render_top - 10))
+
+            spacer += interval
 
     def draw_difficulty(self, key, screen):
         """
@@ -511,6 +558,12 @@ end of the day until you are correct."""),
             self.upgrade_screen()
             screen.blit(self.__background, (0, 0))
             self.draw_upgrade(self.__input_mode[self.game_mode], screen)
+
+        # Check if the player is in the language selection screen
+        elif self.game_mode == 8:
+            self.language_screen()
+            screen.blit(self.__background, (0, 0))
+            self.draw_language(self.__input_mode[self.game_mode], screen)
 
         # Check if the player is at the shop
         elif self.game_mode == 0:
@@ -940,6 +993,10 @@ end of the day until you are correct."""),
                 elif self.game_mode == 7:
                     if main.process_buy_upgrade(upgrade_info):
                         return
+
+                # Checks if the player is in language selection
+                elif self.game_mode == 8:
+                    self.game_mode = 4
 
             # Checks if the player hit space to enter the upgrade shop
             elif event.key == K_SPACE and self.game_mode == 0:
