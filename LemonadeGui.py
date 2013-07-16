@@ -980,20 +980,16 @@ end of the day until you are correct."""),
                     for key in self.__input_keys[self.game_mode]: 
                         if main.current_recipe[key] < ITEMS[self.version] \
                                                     [key].get('min', 0):
-                            print main.current_recipe[key]
                             main.current_recipe[key] = ITEMS[self.version] \
                                 [key].get('min', 0)
                         index += 1
                         cost = ITEMS[self.version][key]['cost']
-                        print str(key) + ": " + str(ITEMS[self.version][key]['cost'])
                         costs[0] += main.current_recipe[key] * cost[0] 
                         costs[1] += main.current_recipe[key] * cost[1]
                         costs[2] += main.current_recipe[key] * cost[2]
                         costs[3] += main.current_recipe[key] * cost[3]
                     main.prices = [int(costs[0] * 2), int(costs[1] * 1.82), \
                                    int(costs[2] * 1.67), int(costs[3] * 1.25)]
-                    print main.prices
-                    print main.price
                     self.game_mode = 0
 
                 # Checks if the player completed the day, return to the shop
@@ -1008,8 +1004,6 @@ end of the day until you are correct."""),
                             self.__input_keys[self.game_mode][ \
                             self.__input_mode[self.game_mode]]]
                         main.prices = main.current_recipe['cost']
-                        print self.__input_keys[self.game_mode][
-                            self.__input_mode[self.game_mode]]
                         if self.__input_keys[self.game_mode] \
                             [self.__input_mode[self.game_mode]] == 'custom':
                             self.game_mode = 8
