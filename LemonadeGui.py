@@ -54,7 +54,7 @@ class LemonadeGui(GameEngineElement):
         self.fail_key = 0
         self.screen_number = 0
         self.version = self.main.version
-
+        self.version_name = _(self.version)
         self.__input_keys = [ITEMS[self.version].keys(), \
             ITEMS[self.version].keys(),CURRENCY.keys(), \
             RECIPES[self.version].keys(), MENU, DIFFICULTY, \
@@ -132,7 +132,7 @@ class LemonadeGui(GameEngineElement):
         Loads and changes the background image to the specfic upgrade screen
         """
 
-        upgrade = image.load("images/{}/upgrades.png".format(\
+        upgrade = image.load("images/{}/upgrades/upgrades.png".format(\
             self.version)).convert()
         self.__background = transform.scale(upgrade, (self.game_engine.width,
                                                     self.game_engine.height))
@@ -156,27 +156,27 @@ class LemonadeGui(GameEngineElement):
         for i in range(len(self.__input_keys[self.game_mode])):
 
             # Draws the name of the upgrade
-            upgrade_name = self.__shopFont.render(_("{}".format(\
-                UPGRADES[self.version][i]['name'])), True, (0, 0, 0))
+            upgrade_name = self.__shopFont.render(_("{}").format(\
+                UPGRADES[self.version][i]['name']), True, (0, 0, 0))
             fw, fh = upgrade_name.get_size()
             render_left = (self.game_engine.width * .075)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
             screen.blit(upgrade_name, (render_left, render_top))
 
             # Draws the cost of the upgrade
-            upgrade_cost = self.__shopFont.render(_("{}".format(\
+            upgrade_cost = self.__shopFont.render(_("{}").format(\
                 format_money(UPGRADES[self.version][i]['cost'] + \
                     UPGRADES[self.version][i]['cost']  * 1.5 * \
-                    self.main.upgrades[1]['level'][i]))),
-                True, (0, 0, 0))
+                    self.main.upgrades[1]['level'][i])),
+                    True, (0, 0, 0))
             fw, fh = upgrade_cost.get_size()
             render_left = (self.game_engine.width * .375) - (fw / 2)
             screen.blit(upgrade_cost, (render_left, render_top))
 
             # Draws the level of the upgrade
-            upgrade_level = self.__shopFont.render(_("{}".format(\
+            upgrade_level = self.__shopFont.render(_("{}").format(\
                 UPGRADES[self.version][i]['level'] + \
-                self.main.upgrades[1]['level'][i])),
+                self.main.upgrades[1]['level'][i]),
                 True, (0, 0, 0))
             fw, fh = upgrade_level.get_size()
             render_left = (self.game_engine.width * .62) - (fw / 2)
@@ -194,12 +194,21 @@ class LemonadeGui(GameEngineElement):
                 screen.blit(lemon_icon, (render_left, render_top - (iw / 6)))
 
             # Draws the info for the upgrade
-            for line in UPGRADES[self.version][i]['info'][0]:
-                upgrade_info = self.__font.render(_("{}".format(\
-                    line)), True, (0, 0, 0))
+            level = self.main.upgrades[1]['level'][i]
+            if level > (len(self.main.upgrades[1]['level']) - 1):
+               level = len(self.main.upgrades[1]['level']) - 1
+
+            top_buffer = len(UPGRADES[self.version][i]['info'][level]) / 2
+            if top_buffer < 1:
+                top_buffer = 0
+
+            render_top = render_top - fw * top_buffer
+            for line in UPGRADES[self.version][i]['info'][level]:
+                upgrade_info = self.__font.render(_("{}").format(\
+                    line), True, (0, 0, 0))
                 fw, fh = upgrade_info.get_size()
                 render_left = (self.game_engine.width *.77)
-                screen.blit(upgrade_info, (render_left, render_top - fh))
+                screen.blit(upgrade_info, (render_left, render_top))
                 render_top += fh
 
             spacer += interval
@@ -328,15 +337,15 @@ class LemonadeGui(GameEngineElement):
             text_array.append(message)
 
         # Displays recipe selection at the end of the day
-        if self.game_mode == 3 and main.challenge_completed == False:
-            for i in range(0, len(self.__input_keys[self.game_mode])):
-                if i == self.__input_mode[self.game_mode]:
-                    t = "->"
-                else:
-                    t = "  "
+        #if self.game_mode == 3 and main.challenge_completed == False:
+        #    for i in range(0, len(self.__input_keys[self.game_mode])):
+        #        if i == self.__input_mode[self.game_mode]:
+        #            t = "->"
+        #        else:
+        #            t = "  "
 
-                text_array.append("{}{}".format(t, RECIPES[self.version][ \
-                     self.__input_keys[self.game_mode][i]]['name'].decode('utf8')))
+        #       text_array.append("{}{}".format(t, RECIPES[self.version][ \
+        #             self.__input_keys[self.game_mode][i]]['name'].decode('utf8')))
 
         return self._blit_to_block(text_array, (0, 0, 0), (255, 255, 255), False)
 
@@ -365,8 +374,8 @@ class LemonadeGui(GameEngineElement):
             ingredient_block.blit(ren, (render_left, render_top))
             j += icon_width
 
-        ren = self.__font.render(_("Money: {}".format(\
-            format_money(money))), True, (0, 0, 0))
+        ren = self.__font.render(_("Money: {}").format(\
+            format_money(money)), True, (0, 0, 0))
         fw, fh = ren.get_size()
         render_left = ingredient_block.get_width() / 2 - fw / 2
         render_top = (ingredient_block.get_height() - render_top) / 2 + render_top
@@ -741,7 +750,7 @@ end of the day until you are correct."""),
             store.blit(ren, (render_left, self.game_engine.height *.58))
 
             # Put the amount of the item needed for the current recipe
-            ren = self.__shopNumFont.render("x{}".format(\
+            ren = self.__shopNumFont.render(_("x{}").format(\
                 main.current_recipe[name]), 1, (255, 240, 0))
             fw, fh = ren.get_size()
             render_left = j + (icon_size / 2) - (fw / 2)
@@ -750,9 +759,44 @@ end of the day until you are correct."""),
 
             j += icon_size + spacer
 
+        # Draw the player's upgrades
+        spacer = .1
+        interval = .15
+
+        for index in range(0, self.main.upgrades[0]):
+            if self.main.upgrades[1]['level'][index] > 0:
+                icon_size = self.game_engine.width / 15
+                icon = image.load("images/{}/upgrades/{}.gif".format(\
+                    self.version,
+                    self.main.upgrades[1]['name'][index]))
+                icon = transform.scale(icon, (icon_size, icon_size))
+                render_left = self.game_engine.width * spacer - (icon_size / 2)
+                render_left_icon = render_left - (icon_size / 2)
+                render_top = self.game_engine.height * .7
+                store.blit(icon, (render_left_icon, render_top))
+
+                upgrade_level = self.__font.render(_("Level: {}".format(\
+                    self.main.upgrades[1]['level'][index])), True, (0, 0, 0))
+                fw, fh = upgrade_level.get_size()
+                render_left_level = render_left - (fw / 2)
+                render_top = render_top + icon_size
+                store.blit(upgrade_level, (render_left_level, render_top))
+
+                upgrade_capacity = self.__font.render(_("Capacity: {}".format(\
+                    self.main.upgrades[1]['capacity'][index])),
+                    True, (0, 0, 0))
+                fw, fh = upgrade_capacity.get_size()
+                render_left_capacity = render_left - (fw / 2)
+                render_top = render_top + (fh / 2) + 10
+                store.blit(upgrade_capacity,
+                    (render_left_capacity, render_top))
+
+                spacer += interval
+
         # Title above recipe
         ren = self.__shopNumFont.render(_("Ingredients for ") + \
-            _("lemonade") + " " + main.current_recipe['name'].decode('utf8') \
+            self.version_name + " " + \
+            main.current_recipe['name'].decode('utf8') \
             + ":", 1, (255, 240, 0))
         render_left = 5
         render_top = self.game_engine.height / 11

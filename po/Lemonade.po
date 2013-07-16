@@ -225,6 +225,10 @@ msgstr "Cono"
 msgid "Ice cream"
 msgstr "Helado"
 
+#: LemonadeGui.py:746
+msgid "ice cream"
+msgstr "helado"
+
 #: constants.py:162
 msgid "Sprinkles"
 msgstr "Asperja"

@@ -27,6 +27,7 @@ from gettext import gettext as _
 import gettext
 lang = gettext.translation('Lemonade', '/usr/share/locale/', languages = ['es'])
 _ = lang.ugettext
+from sugar.datastore import datastore
 from operator import itemgetter
 from constants import STARTING_MONEY, B_EVENTS_DICT, MAX_MSG, ITEMS, \
                       CURRENCY, RECIPES, DIFFICULTY, format_money, \
@@ -44,7 +45,8 @@ class LemonadeMain:
         self.splash = True
         self.__day = 1
         self.__difficulty = difficulty_level
-        self.version = "lemonade"
+        self.version = "ice cream"
+        self.version_name = _(self.version)
         self.__resources = {
             'money': 0,
             'day_start_money': 0,
@@ -57,7 +59,8 @@ class LemonadeMain:
                 {
                     'name': [],
                     'level': [],
-                    'capacity': []
+                    'capacity': [],
+                    'saves': []
                 }
             ]
         }
@@ -72,7 +75,11 @@ class LemonadeMain:
                 UPGRADES[self.version][i]['name'])
             self.__resources['upgrades'][1]['level'].append(0)
             self.__resources['upgrades'][1]['capacity'].append(0)
+            self.__resources['upgrades'][1]['saves'].append(\
+                UPGRADES[self.version][i]['saves'])
+            self.__resources['upgrades'][0] += 1
 
+        self.first_upgrade = True
         self.__weather = 1
         self.__msg_queue = []
         self.challenge_mode = False
@@ -86,6 +93,16 @@ class LemonadeMain:
         self.weather_change()
 
         self.event_messages = []
+
+        self.badges = datastore.create()
+        self.badges.metadata['title'] = 'Badges'
+        self.badges.metadata['badges'] = ''
+
+        datastore.write(self.badges)
+
+    @property
+    def badges(self):
+        return self.badges
 
     @property
     def upgrades(self):
@@ -130,7 +147,7 @@ class LemonadeMain:
     @property
     def prices(self):
         return self.__resources['price']
-    
+
     @property
     def price(self):
         return self.__resources['price'][self.difficulty]
@@ -199,6 +216,12 @@ class LemonadeMain:
             self.money -= price
             self.upgrades[1]['level'][upgrade_index] += 1
             self.upgrades[1]['capacity'][upgrade_index] += base_capacity
+
+            if self.first_upgrade:
+                self.badges.metadata['badges'] += 'First upgrade:'
+                datastore.write(self.badges)
+                self.first_upgrade = False
+
             return True
 
         return False
@@ -250,6 +273,7 @@ class LemonadeMain:
         # It looks like its going to rain tomorrow
         if self.__weather <= 0:
             self.__weather = 0
+
         # Tomorrow looks to be very hot
         elif self.__weather >= 2:
             self.__weather = 2
@@ -313,9 +337,15 @@ class LemonadeMain:
             if itemcount < remove:
                 remove = itemcount
 
+            # Save some of the player's resources if the player has the
+            # appropriate upgrade available
+            remove -= upgrade_capacity
+            if remove <= 0:
+                return
+
             # Create a message
-            msg = _("    You lost {} {}".format(\
-                str(remove), event['item']))
+            msg = _("    You lost {} {}").format(\
+                str(remove), event['item'])
 
             # Remove the items from your inventory
             self.remove_item(event['item'], remove)
@@ -351,8 +381,8 @@ class LemonadeMain:
                 add = event['change']
 
             # Create a message
-            msg = _("    You gained {} {}".format(\
-                str(add), event['item']))
+            msg = _("    You gained {} {}").format(\
+                str(add), event['item'])
 
             # Add your new supplies to your inventory
             self.add_item(event['item'], add)
@@ -480,10 +510,10 @@ class LemonadeMain:
         self.add_msg(_("Sales:"))
         if sales != 1:
             self.add_msg(_("{} {}s of {} sold").format(\
-                sales, SERVING_ITEM[self.version], self.version))
+                sales, SERVING_ITEM[self.version], self.version_name))
         else:
             self.add_msg(_("{} {} of {} sold").format(\
-                sales, SERVING_ITEM[self.version], self.version))
+                sales, SERVING_ITEM[self.version], self.version_name))
         self.add_msg(_("    @ {} each").format(format_money(self.price)))
         self.add_msg("------------------------------")
         self.add_msg(_("Total Made: {}").format(format_money(self.income)))
@@ -533,10 +563,7 @@ class LemonadeMain:
             self.add_msg(_("It looks like it will be {} tomorrow.").format(\
                             self.weather_name))
             self.add_msg("")
-            self.add_msg(_("What flavor will you make tomorrow?"))
-
-    def buy_upgrade(self, key):
-        return False
+            #self.add_msg(_("What flavor will you make tomorrow?"))
 
     def buy_item(self, key, quanity):
         """
