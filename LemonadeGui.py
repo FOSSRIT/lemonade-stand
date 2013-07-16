@@ -1045,7 +1045,7 @@ end of the day until you are correct."""),
 
                 # Returns you back to the main menu if you are currently in
                 # the tutorial, challegne screen, or difficulty selection
-                if self.game_mode > 4 and self.game_mode != 7:
+                if self.game_mode > 4 and self.game_mode < 7:
                     self.screen_number = 0
                     self.game_mode = 4
 
