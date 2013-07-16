@@ -783,6 +783,8 @@ end of the day until you are correct."""),
                 self.__input_keys[self.game_mode].append(item)
         # Adjust size for display
         length = len(self.__input_keys[self.game_mode])
+        if length < 3:
+            length = 3
         spacer = self.game_engine.width / (length * 4)
         icon_size = (self.game_engine.width - length* \
             (3 * spacer) / 2) / length
