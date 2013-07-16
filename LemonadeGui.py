@@ -776,13 +776,20 @@ end of the day until you are correct."""),
             (self.game_engine.width, self.game_engine.height))
 
         # Store item display.
-        spacer = self.game_engine.width / (len(ITEMS[self.version]) * 4)
-        icon_size = (self.game_engine.width - len(ITEMS[self.version])* \
-            (3 * spacer) / 2) / len(ITEMS[self.version])
+        # Calculate Items to buy
+        self.__input_keys[self.game_mode] = []
+        for item in ITEMS[self.version].keys():
+            if main.current_recipe.get(item, 0) > 0:
+                self.__input_keys[self.game_mode].append(item)
+        # Adjust size for display
+        length = len(self.__input_keys[self.game_mode])
+        spacer = self.game_engine.width / (length * 4)
+        icon_size = (self.game_engine.width - length* \
+            (3 * spacer) / 2) / length
         j = spacer
 
         # Loop through all of the current items
-        for num, name in enumerate(ITEMS[self.version]):
+        for num, name in enumerate(self.__input_keys[self.game_mode]):
             outline = Surface((icon_size, icon_size))
             if num == key:
                 outline.fill((255, 255, 255))
