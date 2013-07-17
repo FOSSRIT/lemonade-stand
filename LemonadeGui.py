@@ -55,8 +55,8 @@ class LemonadeGui(GameEngineElement):
         self.fail_key = 0
         self.screen_number = 0
         self.version = self.main.version
-		self.version_name = _(self.version)
-        self.__input_keys = [ITEMS[self.version].keys(),
+	self.version_name = _(self.version)
+        self.__input_keys = [ITEMS[self.version].keys(), 
                              ITEMS[self.version].keys(), CURRENCY.keys(),
                              RECIPES[self.version].keys(), MENU, DIFFICULTY,
                              [None], UPGRADES[self.version], LANGUAGE]
@@ -120,7 +120,7 @@ class LemonadeGui(GameEngineElement):
         """
 
         bg = image.load("images/{}/field/{}.gif".format(
-            self.version, WEATHER[weather])).convert()
+            self.version, weather)).convert()
 
         stand = image.load("images/{}/booth.gif".format(
             self.version)).convert()

@@ -133,6 +133,22 @@ msgstr "¿Qué sabor va a hacer mañana? "
 msgid "{} {}s have gone bad"
 msgstr "{} {}s han ido mal"
 
+#: constants.py:
+msgid "noodle soup"
+msgstr "sopa de fideos"
+
+#: constants.py
+msgid "Bowl"
+msgstr "Tazóne"
+
+#: constants.py
+msgid "Egg"
+msgstr "Huevo"
+
+#: constants.py
+msgid "Veggie"
+msgstr "Verdura"
+
 #: constants.py:59 constants.py:103
 msgid "Cooler"
 msgstr "Enfriador"

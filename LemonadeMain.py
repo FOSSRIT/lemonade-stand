@@ -48,7 +48,7 @@ class LemonadeMain:
         self.splash = True
         self.__day = 1
         self.__difficulty = difficulty_level
-        self.version = "ice cream"
+        self.version = "noodle soup"
         self.version_name = _(self.version)
         self.__resources = {
             'money': 0,
