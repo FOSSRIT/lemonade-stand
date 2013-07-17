@@ -22,8 +22,8 @@
 #     Nathaniel Case <Qalthos@gmail.com>
 
 from random import randint
-from gettext import gettext as _
 from sugar.datastore import datastore
+from gettext import gettext as _
 
 from operator import itemgetter
 from constants import STARTING_MONEY, MAX_MSG, ITEMS, \
@@ -43,7 +43,7 @@ class LemonadeMain:
         self.splash = True
         self.__day = 1
         self.__difficulty = difficulty_level
-        self.version = "lemonade"
+        self.version = "noodle soup"
         self.__resources = {
             'money': 0,
             'day_start_money': 0,
@@ -179,9 +179,6 @@ class LemonadeMain:
     def weather_name(self):
         return WEATHER[self.weather]
 
-    def get_resource(self, key):
-        return self.count_item(key)
-
     @property
     def resource_list(self):
         resources = {}
@@ -189,12 +186,15 @@ class LemonadeMain:
             resources[item_key] = self.count_item(item_key)
         return resources
 
-    def recipe(self, ingredient):
-        return self.__resources['recipe'].get(ingredient, 0)
-
     @property
     def messages(self):
         return self.__msg_queue
+
+    def recipe(self, ingredient):
+        return self.__resources['recipe'].get(ingredient, 0)
+
+    def get_resource(self, key):
+        return self.count_item(key)
 
     def process_buy_upgrade(self, info):
         """
@@ -465,7 +465,7 @@ class LemonadeMain:
         self.start_money = self.money
 
         # Display the current day
-        self.add_msg(_("--Day {} Log--").format(self.day))
+        self.add_msg(_("--Day {} Log--").decode('utf8').format(self.day))
         self.add_msg("")
 
         self.add_msg(_("Today's weather: {}").format(
