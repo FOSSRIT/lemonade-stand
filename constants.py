@@ -43,6 +43,11 @@ STARTING_ITEMS = {
         'cone': [12, 10, 5, 0],
         'ice cream': [18, 15, 2, 0],
         'sprinkles': [20, 10, 5, 0]
+    },
+    'noodle soup': {
+        'bowl': [12, 10, 5, 0],
+        'egg': [18, 15, 2, 0],
+        'veggie': [20, 10, 5, 0]
     }
 }
 
@@ -148,7 +153,7 @@ UPGRADES = {
             ]
         },
         {
-            'name': 'Sprinkle Jar',
+            'name': _('Sprinkle Jar'),
             'cost': 1500,
             'capacity': 20,
             'level': 1,
@@ -165,12 +170,50 @@ UPGRADES = {
                 ]
             ]
         }
+    ],
+    'noodle soup': [
+        {
+            'name': _('Cooler'),
+            'cost': 2000,
+            'capacity': 20,
+            'level': 1,
+            'saves': 'egg',
+            'info':
+            [
+                [
+                    _("Stores eggs."),
+                    _("Helps prevent eggs"),
+                    _("from going bad.")
+                ],
+                [
+                    _("Stores more eggs.")
+                ]
+            ]
+        },
+        {
+            'name': _('Veggie Jar'),
+            'cost': 1500,
+            'capacity': 20,
+            'level': 1,
+            'saves': 'veggie',
+            'info':
+            [
+                [
+                    _("Stores veggies,"),
+                    _("Helps prevent veggies"),
+                    _("from being stolen.")
+                ],
+                [
+                    _("Stores more veggies")
+                ]
+            ]
+        }
     ]
 }
 
 SERVING_ITEM = {
     'lemonade': _('cup'),
-    'hamburgers': _('plate'),
+    'noodle soup': _('bowl'),
     'ice cream': _('cone')
 }
 
@@ -216,6 +259,26 @@ ITEMS = {
         },
         'sprinkles': {
             'name': _('Sprinkle'),
+            'cost': [2, 5, 8, 15],
+            'decay': 0,
+            'bulk': 1
+        }
+    },
+    'noodle soup': {
+        'bowl': {
+            'name': _('Bowl'),
+            'cost': [5, 10, 15, 30],
+            'decay': 0,
+            'bulk': 1
+        },
+        'egg': {
+            'name': _('Egg'),
+            'cost': [15, 35, 55, 105],
+            'decay': 5,
+            'bulk': 1
+        },
+        'veggie': {
+            'name': _('Veggie'),
             'cost': [2, 5, 8, 15],
             'decay': 0,
             'bulk': 1
@@ -486,6 +549,15 @@ RECIPES = {
             'ice cream': 3,
             'sprinkles': 5,
             'cost': [130, 275, 400, 550]
+        }
+    },
+    'noodle soup': {
+        'basic': {
+            'name': _("basic"),
+            'bowl': 1,
+            'egg': 2,
+            'veggie': 3,
+            'cost': [100, 175, 250, 350]
         }
     }
 }

@@ -94,7 +94,7 @@ class LemonadeGui(GameEngineElement):
         Loads and changes the background image to the language screen
         """
 
-        language = image.load("images/{}/ui/menu.gif".format(
+        language = image.load("images/{}/ui/language.gif".format(
             self.version)).convert()
         self.__background = transform.scale(language,
                                             (self.game_engine.width,
@@ -271,30 +271,40 @@ class LemonadeGui(GameEngineElement):
         :param screen: The surface to display language settings on
         """
 
-        # Spacer is the space in between the different difficulty texts
-        # Interval is the interval that is added to the spacer after each word
-        interval = .1725
-        spacer = .3075
+        tab = image.load("images/tab.gif").convert()
+        tab_width = int(self.game_engine.width * .68)
+        tab_height = int(self.game_engine.height * .14)
+        tab = transform.scale(tab, (tab_width, tab_height))
+        tab_render_left = (self.game_engine.width / 2) - (tab_width / 2)
 
+        space_between = self.game_engine.height / 10
+        space_between += tab_height / 2
+        start_top = (self.game_engine.height / 2) - (len(LANGUAGE)) * \
+            (tab_height / 2)
+        spacer = start_top
+
+        # Loop through and display all of the languages available
         for i in range(len(LANGUAGE)):
+
+            screen.blit(tab, (tab_render_left, spacer))
 
             language = self.__menuFont.render("{}".format(
                 LANGUAGE[i]), True, (0, 0, 0))
             fw, fh = language.get_size()
             render_left = (self.game_engine.width / 2) - (fw / 2)
-            render_top = (self.game_engine.width * spacer) - (fh / 2)
+            render_top = spacer + (fh / 2.5)
             screen.blit(language, (render_left, render_top))
 
             if key == i:
-                cup_icon = image.load("images/{}/cursor/cup.gif".format(
+                icon = image.load("images/{0}/cursor/{0}_menu.gif".format(
                     self.version)).convert()
-                cup_icon = transform.scale(cup_icon, (
-                    self.game_engine.width / 10,
-                    self.game_engine.height / 10))
-                screen.blit(cup_icon, (self.game_engine.width / 15,
-                                       render_top - 10))
+                icon_width = self.game_engine.width / 12
+                icon_height = self.game_engine.height / 10
+                icon = transform.scale(icon, (icon_width, icon_height))
+                screen.blit(icon, (tab_render_left - icon_width,
+                                   spacer + (tab_height / 8)))
 
-            spacer += interval
+            spacer += space_between
 
     def draw_difficulty(self, key, screen):
         """
@@ -323,13 +333,14 @@ class LemonadeGui(GameEngineElement):
             screen.blit(play_difficulty, (render_left, render_top))
 
             if key == i:
-                cup_icon = image.load("images/{}/cursor/cup.gif".format(
+                icon = image.load(
+                    "images/{0}/cursor/{0}_difficulty.gif".format(
                     self.version)).convert()
-                cup_icon = transform.scale(cup_icon, (
-                    self.game_engine.width / 10,
-                    self.game_engine.height / 10))
-                screen.blit(cup_icon, (self.game_engine.width / 15,
-                                       render_top - 10))
+                icon_width = self.game_engine.width / 12
+                icon_height = self.game_engine.height / 10
+                icon = transform.scale(icon, (icon_width, icon_height))
+                screen.blit(icon, (self.game_engine.width / 17,
+                                   render_top - 10))
 
             spacer += interval
 
@@ -361,13 +372,13 @@ class LemonadeGui(GameEngineElement):
 
             # Check if this item is currently selected
             if key == i:
-                lemon_icon = image.load("images/{}/cursor/lemon.gif".format(
+                icon = image.load("images/{0}/cursor/{0}_menu.gif".format(
                     self.version)).convert()
-                lemon_icon = transform.scale(lemon_icon, (
-                    self.game_engine.width / 12,
-                    self.game_engine.height / 10))
-                screen.blit(lemon_icon, (self.game_engine.width / 17,
-                                         render_top - 10))
+                icon_width = self.game_engine.width / 12
+                icon_height = self.game_engine.height / 10
+                icon = transform.scale(icon, (icon_width, icon_height))
+                screen.blit(icon, (self.game_engine.width / 17,
+                                   render_top - 10))
 
             spacer += interval
 
@@ -692,8 +703,8 @@ end of the day until you are correct."""),
         color = (0, 0, 0)
 
         # Display current day in the log book
-        day_title = self.__shopFont.render(_("-- Day {} --").format(
-            main.day), 1, color)
+        day_title = self.__shopFont.render(_("-- Day {} --").decode(
+            'utf8').format(main.day), 1, color)
         fw, fh = day_title.get_size()
         render_top = self.game_engine.height / 15
         render_left = (self.game_engine.width * 8 / 10) - (fw / 2)
@@ -934,7 +945,6 @@ end of the day until you are correct."""),
 
                 # Check if the player is watching the tutorial
                 if self.game_mode == 6:
-
                     self.screen_number += 1
 
                     # Check if the player is done with the tutorial
@@ -944,6 +954,7 @@ end of the day until you are correct."""),
 
                     return
 
+                # Check if the player is in the upgrade shop
                 if self.game_mode == 7:
                     upgrade_info = []
                     for i in range(0, len(self.__input_keys[self.game_mode])):

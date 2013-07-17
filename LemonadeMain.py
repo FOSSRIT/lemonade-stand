@@ -23,6 +23,7 @@
 
 from __future__ import unicode_literals
 from random import randint
+from sugar.datastore import datastore
 from gettext import gettext as _
 import gettext
 lang = gettext.translation('Lemonade', '/usr/share/locale/', languages = ['es'])
@@ -200,6 +201,12 @@ class LemonadeMain:
     @property
     def messages(self):
         return self.__msg_queue
+
+    def recipe(self, ingredient):
+        return self.__resources['recipe'].get(ingredient, 0)
+
+    def get_resource(self, key):
+        return self.count_item(key)
 
     def process_buy_upgrade(self, info):
         """
@@ -470,7 +477,7 @@ class LemonadeMain:
         self.start_money = self.money
 
         # Display the current day
-        self.add_msg(_("--Day {} Log--").format(self.day))
+        self.add_msg(_("--Day {} Log--").decode('utf8').format(self.day))
         self.add_msg("")
 
         self.add_msg(_("Today's weather: {}").format(
