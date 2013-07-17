@@ -21,16 +21,16 @@
 #     Justin Lewis <jlew.blackout@gmail.com>
 #     Nathaniel Case <Qalthos@gmail.com>
 
-import pygame
 from fortuneengine.GameEngineElement import GameEngineElement
-from constants import ITEMS, format_money, WEATHER, CURRENCY, DIFFICULTY, \
-                        MENU, UPGRADES, RECIPES
+from constants import ITEMS, format_money, WEATHER, CURRENCY, DIFFICULTY,\
+    MENU, UPGRADES, RECIPES, LANGUAGE
+
 from gettext import gettext as _
 from pygame import Surface, transform, image
-from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB,\
-                          K_DOWN, K_UP, K_LEFT, K_RIGHT, K_ESCAPE,\
-                          K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP8, \
-                          K_KP9, K_SPACE
+from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB, \
+    K_DOWN, K_UP, K_LEFT, K_RIGHT, K_ESCAPE, \
+    K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP8, \
+    K_KP9, K_SPACE
 
 
 class LemonadeGui(GameEngineElement):
@@ -40,22 +40,23 @@ class LemonadeGui(GameEngineElement):
         self.__font = self.game_engine.get_object('font')
         self.__shopFont = self.game_engine.get_object('shopFont')
         self.__shopNumFont = self.game_engine.get_object('shopNumFont')
-        self.__menuFont= self.game_engine.get_object('menuFont')
+        self.__menuFont = self.game_engine.get_object('menuFont')
         self.add_to_engine()
 
         self.main = self.game_engine.get_object('main')
 
-        self.game_mode = 4
+        self.game_mode = 8
         self.failed = False
         self.fail_key = 0
         self.screen_number = 0
         self.version = self.main.version
 
-        self.__input_keys = [ITEMS[self.version].keys(), \
-            ITEMS[self.version].keys(),CURRENCY.keys(), \
-            RECIPES[self.version].keys(), MENU, DIFFICULTY, \
-            [None], UPGRADES[self.version], ITEMS[self.version].keys()]
-        self.__input_mode = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.__input_keys = [ITEMS[self.version].keys(),
+                             ITEMS[self.version].keys(), CURRENCY.keys(),
+                             RECIPES[self.version].keys(), MENU, DIFFICULTY,
+                             [None], UPGRADES[self.version], LANGUAGE,
+                             ITEMS[self.version].keys()]
+        self.__input_mode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.__input_string = []
 
         for key in self.__input_keys:
@@ -79,20 +80,32 @@ class LemonadeGui(GameEngineElement):
         Loads and changes the background image to the menu screen
         """
 
-        menu = image.load("images/{}/ui/menu.gif".format(\
-                self.version)).convert()
+        menu = image.load("images/{}/ui/menu.gif".format(
+            self.version)).convert()
         self.__background = transform.scale(menu, (self.game_engine.width,
-                                                    self.game_engine.height))
+                                                   self.game_engine.height))
+
+    def language_screen(self):
+        """
+        Loads and changes the background image to the language screen
+        """
+
+        language = image.load("images/{}/ui/menu.gif".format(
+            self.version)).convert()
+        self.__background = transform.scale(language,
+                                            (self.game_engine.width,
+                                             self.game_engine.height))
 
     def difficulty_screen(self):
         """
         Loads and changes the background image to the difficulty screen
         """
 
-        difficulty = image.load("images/{}/ui/difficulty.gif".format(\
-                self.version)).convert()
-        self.__background = transform.scale(difficulty, (self.game_engine.width,
-                                                    self.game_engine.height))
+        difficulty = image.load("images/{}/ui/difficulty.gif".format(
+            self.version)).convert()
+        self.__background = transform.scale(difficulty,
+                                            (self.game_engine.width,
+                                             self.game_engine.height))
 
     def change_background(self, weather):
         """
@@ -102,10 +115,10 @@ class LemonadeGui(GameEngineElement):
         :param weather: The current weather in game
         """
 
-        bg = image.load("images/{}/field/{}.gif".format(\
+        bg = image.load("images/{}/field/{}.gif".format(
             self.version, WEATHER[weather])).convert()
 
-        stand = image.load("images/{}/booth.gif".format(\
+        stand = image.load("images/{}/booth.gif".format(
             self.version)).convert()
 
         bg.blit(stand, (850, 315))
@@ -117,21 +130,22 @@ class LemonadeGui(GameEngineElement):
         Loads and changes the background image to the specific tutorial screen
         """
 
-        tutorial = image.load("images/{}/tutorial/{}.png".format(\
+        tutorial = image.load("images/{}/tutorial/{}.png".format(
             self.version, self.screen_number)).convert()
 
-        self.__background = transform.scale(tutorial, (self.game_engine.width,
-                                                    self.game_engine.height))
+        self.__background = transform.scale(tutorial,
+                                            (self.game_engine.width,
+                                             self.game_engine.height))
 
     def upgrade_screen(self):
         """
         Loads and changes the background image to the specfic upgrade screen
         """
 
-        upgrade = image.load("images/{}/upgrades.png".format(\
+        upgrade = image.load("images/{}/upgrades/upgrades.png".format(
             self.version)).convert()
         self.__background = transform.scale(upgrade, (self.game_engine.width,
-                                                    self.game_engine.height))
+                                                      self.game_engine.height))
 
     def draw_upgrade(self, key, screen):
         """
@@ -152,27 +166,27 @@ class LemonadeGui(GameEngineElement):
         for i in range(len(self.__input_keys[self.game_mode])):
 
             # Draws the name of the upgrade
-            upgrade_name = self.__shopFont.render(_("{}".format(\
-                UPGRADES[self.version][i]['name'])), True, (0, 0, 0))
+            upgrade_name = self.__shopFont.render(_("{}").format(
+                UPGRADES[self.version][i]['name']), True, (0, 0, 0))
             fw, fh = upgrade_name.get_size()
             render_left = (self.game_engine.width * .075)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
             screen.blit(upgrade_name, (render_left, render_top))
 
             # Draws the cost of the upgrade
-            upgrade_cost = self.__shopFont.render(_("{}".format(\
-                format_money(UPGRADES[self.version][i]['cost'] + \
-                    UPGRADES[self.version][i]['cost']  * 1.5 * \
-                    self.main.upgrades[1]['level'][i]))),
+            upgrade_cost = self.__shopFont.render(_("{}").format(
+                format_money(UPGRADES[self.version][i]['cost'] +
+                             UPGRADES[self.version][i]['cost'] * 1.5 *
+                             self.main.upgrades[1]['level'][i])),
                 True, (0, 0, 0))
             fw, fh = upgrade_cost.get_size()
             render_left = (self.game_engine.width * .375) - (fw / 2)
             screen.blit(upgrade_cost, (render_left, render_top))
 
             # Draws the level of the upgrade
-            upgrade_level = self.__shopFont.render(_("{}".format(\
-                UPGRADES[self.version][i]['level'] + \
-                self.main.upgrades[1]['level'][i])),
+            upgrade_level = self.__shopFont.render(_("{}").format(
+                UPGRADES[self.version][i]['level'] +
+                self.main.upgrades[1]['level'][i]),
                 True, (0, 0, 0))
             fw, fh = upgrade_level.get_size()
             render_left = (self.game_engine.width * .62) - (fw / 2)
@@ -180,7 +194,7 @@ class LemonadeGui(GameEngineElement):
 
             # Displays a cursor next to the selected upgrade
             if key == i:
-                lemon_icon = image.load("images/{}/cursor/lemon.gif".format(\
+                lemon_icon = image.load("images/{}/cursor/lemon.gif".format(
                     self.version)).convert()
                 lemon_icon = transform.scale(lemon_icon, (
                     self.game_engine.width / 17,
@@ -190,12 +204,21 @@ class LemonadeGui(GameEngineElement):
                 screen.blit(lemon_icon, (render_left, render_top - (iw / 6)))
 
             # Draws the info for the upgrade
-            for line in UPGRADES[self.version][i]['info'][0]:
-                upgrade_info = self.__font.render(_("{}".format(\
-                    line)), True, (0, 0, 0))
+            level = self.main.upgrades[1]['level'][i]
+            if level > (len(self.main.upgrades[1]['level']) - 1):
+                level = len(self.main.upgrades[1]['level']) - 1
+
+            top_buffer = len(UPGRADES[self.version][i]['info'][level]) / 2
+            if top_buffer < 1:
+                top_buffer = 0
+
+            render_top = render_top - fw * top_buffer
+            for line in UPGRADES[self.version][i]['info'][level]:
+                upgrade_info = self.__font.render(_("{}").format(
+                    line), True, (0, 0, 0))
                 fw, fh = upgrade_info.get_size()
-                render_left = (self.game_engine.width *.77)
-                screen.blit(upgrade_info, (render_left, render_top - fh))
+                render_left = (self.game_engine.width * .77)
+                screen.blit(upgrade_info, (render_left, render_top))
                 render_top += fh
 
             spacer += interval
@@ -226,12 +249,48 @@ class LemonadeGui(GameEngineElement):
         screen.blit(item_info, (render_left, render_top))
 
         # Draw the player's money
-        player_money = self.__shopFont.render(_("Money: {}".format(\
+        player_money = self.__shopFont.render(_("Money: {}".format(
             format_money(self.main.money))), True, (0, 0, 0))
         fw, fh = player_money.get_size()
         render_left = (self.game_engine.width * .15) - (fw / 2)
         render_top = (self.game_engine.height * .9) - (fh / 2)
         screen.blit(player_money, (render_left, render_top))
+
+    def draw_language(self, key, screen):
+        """
+        Displays the language screen.
+
+        :type key: int
+        :param key: The value of the current language setting selected
+
+        :type screen: Surface
+        :param screen: The surface to display language settings on
+        """
+
+        # Spacer is the space in between the different difficulty texts
+        # Interval is the interval that is added to the spacer after each word
+        interval = .1725
+        spacer = .3075
+
+        for i in range(len(LANGUAGE)):
+
+            language = self.__menuFont.render("{}".format(
+                LANGUAGE[i]), True, (0, 0, 0))
+            fw, fh = language.get_size()
+            render_left = (self.game_engine.width / 2) - (fw / 2)
+            render_top = (self.game_engine.width * spacer) - (fh / 2)
+            screen.blit(language, (render_left, render_top))
+
+            if key == i:
+                cup_icon = image.load("images/{}/cursor/cup.gif".format(
+                    self.version)).convert()
+                cup_icon = transform.scale(cup_icon, (
+                    self.game_engine.width / 10,
+                    self.game_engine.height / 10))
+                screen.blit(cup_icon, (self.game_engine.width / 15,
+                                       render_top - 10))
+
+            spacer += interval
 
     def draw_difficulty(self, key, screen):
         """
@@ -252,21 +311,21 @@ class LemonadeGui(GameEngineElement):
         # Loop through and display all the difficulty settings
         for i in range(len(DIFFICULTY)):
 
-            play_difficulty = self.__menuFont.render(_("{}".format(\
-                DIFFICULTY[i])), True, (0, 0, 0))
+            play_difficulty = self.__menuFont.render(_("{}").format(
+                DIFFICULTY[i]), True, (0, 0, 0))
             fw, fh = play_difficulty.get_size()
             render_left = (self.game_engine.width / 2) - (fw / 2)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
             screen.blit(play_difficulty, (render_left, render_top))
 
             if key == i:
-                cup_icon = image.load("images/{}/cursor/cup.gif".format(\
+                cup_icon = image.load("images/{}/cursor/cup.gif".format(
                     self.version)).convert()
                 cup_icon = transform.scale(cup_icon, (
                     self.game_engine.width / 10,
                     self.game_engine.height / 10))
                 screen.blit(cup_icon, (self.game_engine.width / 15,
-                                        render_top - 10))
+                                       render_top - 10))
 
             spacer += interval
 
@@ -289,8 +348,8 @@ class LemonadeGui(GameEngineElement):
         # Loop through and display all of the menu items
         for i in range(len(MENU)):
 
-            play_menu_item = self.__menuFont.render(_("{}".format(\
-                MENU[i])), True, (0, 0, 0))
+            play_menu_item = self.__menuFont.render(_("{}").format(
+                MENU[i]), True, (0, 0, 0))
             fw, fh = play_menu_item.get_size()
             render_left = (self.game_engine.width / 2) - (fw / 2)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
@@ -298,13 +357,13 @@ class LemonadeGui(GameEngineElement):
 
             # Check if this item is currently selected
             if key == i:
-                lemon_icon = image.load("images/{}/cursor/lemon.gif".format(\
+                lemon_icon = image.load("images/{}/cursor/lemon.gif".format(
                     self.version)).convert()
                 lemon_icon = transform.scale(lemon_icon, (
                     self.game_engine.width / 12,
                     self.game_engine.height / 10))
                 screen.blit(lemon_icon, (self.game_engine.width / 17,
-                                            render_top - 10))
+                                         render_top - 10))
 
             spacer += interval
 
@@ -349,7 +408,7 @@ class LemonadeGui(GameEngineElement):
         j = icon_size / 3
         render_top = 15 + icon_size
         for name, count in reversed(items.items()):
-            icon = image.load("images/{}/icon/{}.gif".format(\
+            icon = image.load("images/{}/icon/{}.gif".format(
                 self.version, name)).convert()
             icon = transform.scale(icon, (icon_size, icon_size))
             ingredient_block.blit(icon, (j, 10))
@@ -361,11 +420,12 @@ class LemonadeGui(GameEngineElement):
             ingredient_block.blit(ren, (render_left, render_top))
             j += icon_width
 
-        ren = self.__font.render(_("Money: {}".format(\
-            format_money(money))), True, (0, 0, 0))
+        ren = self.__font.render(_("Money: {}").format(
+            format_money(money)), True, (0, 0, 0))
         fw, fh = ren.get_size()
         render_left = ingredient_block.get_width() / 2 - fw / 2
-        render_top = (ingredient_block.get_height() - render_top) / 2 + render_top
+        render_top = (ingredient_block.get_height() -
+                      render_top) / 2 + render_top
         ingredient_block.blit(ren, (render_left, render_top))
 
         return ingredient_block
@@ -393,7 +453,7 @@ money you have to spend."""),
         # Checks if the player is on the second tutorial screen
         elif self.screen_number == 1:
             info = self._blit_to_block(
-               _("""Above each item, in yellow, displays how much of
+                _("""Above each item, in yellow, displays how much of
 that item is needed to make one cup of lemonade.
 
 Below each item, in black, displays how much it
@@ -404,8 +464,8 @@ item you would like to purchase and the color of the
 text will change from black to white.
 
 Use the arrow keys to switch between items."""),
-               (255, 255, 255),
-               (0, 0, 0))
+                (255, 255, 255),
+                (0, 0, 0))
 
         # Checks if the player is on the third tutorial screen
         elif self.screen_number == 2:
@@ -470,7 +530,6 @@ end of the day until you are correct."""),
 
         main = self.game_engine.get_object('main')
 
-
         # Check if the user is at the menu screen
         if self.game_mode == 4:
             self.menu_screen()
@@ -507,28 +566,34 @@ end of the day until you are correct."""),
         # Check if the player is in the upgrade shop
         elif self.game_mode == 7:
             self.upgrade_screen()
-            screen.blit(self.__background, (0,0))
+            screen.blit(self.__background, (0, 0))
             self.draw_upgrade(self.__input_mode[self.game_mode], screen)
+
+        # Check if the player is in the language selection screen
+        elif self.game_mode == 8:
+            self.language_screen()
+            screen.blit(self.__background, (0, 0))
+            self.draw_language(self.__input_mode[self.game_mode], screen)
 
         # Check if the player is at the shop
         elif self.game_mode == 0:
-            store = self.draw_store( \
+            store = self.draw_store(
                 self.__input_mode[self.game_mode], main)
             screen.blit(store, (0, 0))
 
             block = self.ingredient_count(main.resource_list, main.money)
             screen.blit(block, (self.game_engine.width * 13 / 24,
-                            self.game_engine.height * 27 / 36))
+                                self.game_engine.height * 27 / 36))
 
         # Check if the player is crafting a recipe
-        elif self.game_mode == 8:
+        elif self.game_mode == 9:
             crafter = self.draw_crafter( \
                 self.__input_mode[self.game_mode], main)
             screen.blit(crafter, (0, 0))
 
             block = self.ingredient_count(main.resource_list, main.money)
             screen.blit(block, (self.game_engine.width * 13 / 24,
-                            self.game_engine.height * 27 / 36))
+                                self.game_engine.height * 27 / 36))
 
         # Check if the player is at the beginning of the day
         elif self.game_mode == 1:
@@ -540,7 +605,7 @@ end of the day until you are correct."""),
 
             block = self.ingredient_count(main.resource_list, main.money)
             screen.blit(block, (self.game_engine.width * 13 / 24,
-                            self.game_engine.height * 27 / 36))
+                                self.game_engine.height * 27 / 36))
 
             # Check if there was a random event
             if main.event_messages != []:
@@ -549,7 +614,7 @@ end of the day until you are correct."""),
 
         # Check if the player is at the mini game screen
         elif self.game_mode == 2:
-            cashbox = self.draw_mini_game( \
+            cashbox = self.draw_mini_game(
                 self.__input_mode[self.game_mode], main)
             screen.blit(cashbox, (0, 0))
 
@@ -562,7 +627,7 @@ end of the day until you are correct."""),
 
             block = self.ingredient_count(main.resource_list, main.money)
             screen.blit(block, (self.game_engine.width * 13 / 24,
-                            self.game_engine.height * 27 / 36))
+                                self.game_engine.height * 27 / 36))
 
     def draw_random_event_log(self, messages):
 
@@ -585,22 +650,23 @@ end of the day until you are correct."""),
         """
 
         # Load in the cash box image, covert it, and scale it
-        cashbox = image.load("images/{}/cash-box.gif".format(\
+        cashbox = image.load("images/{}/cash-box.gif".format(
             self.version)).convert()
         cashbox = transform.scale(cashbox,
-        (self.game_engine.width, self.game_engine.height))
+                                  (self.game_engine.width,
+                                   self.game_engine.height))
 
         # Create the spacing and the height and width for
         # the boxs that are used to selecting a value
-        spacer = self.game_engine.height / ((len(CURRENCY) - 1)  * 3)
+        spacer = self.game_engine.height / ((len(CURRENCY) - 1) * 3)
         box_width = (self.game_engine.width / 3) - 10
-        box_height = (self.game_engine.height - (len(CURRENCY) + 1) * \
-            (spacer)) / (len(CURRENCY))
+        box_height = (self.game_engine.height - (len(CURRENCY) + 1) *
+                      (spacer)) / (len(CURRENCY))
 
         space_between = spacer + (self.game_engine.height / 7) - 20
 
         # Loop through all of the currency values
-        for i in range (0, len(CURRENCY)):
+        for i in range(0, len(CURRENCY)):
 
             # Create the box
             outline = Surface((box_width, box_height))
@@ -613,7 +679,7 @@ end of the day until you are correct."""),
 
             outline.fill(color)
             cashbox.blit(outline, ((self.game_engine.width / 4) + 8,
-                                    space_between))
+                         space_between))
 
             # Display the name of the currency next to its box
             name = self.__shopFont.render(self.currency(i), 1, (0, 0, 0))
@@ -629,16 +695,16 @@ end of the day until you are correct."""),
             # Display the amount of the currency within the box
             amount = self.__shopNumFont.render(self.input[2][i], 1, color)
             fw, fh = amount.get_size()
-            render_left = ((self.game_engine.width / 4) + 8) + \
-                (box_width / 2) - (fw / 2)
-            cashbox.blit(amount, (render_left, space_between + 10))
+            render_left = (((self.game_engine.width / 4) + 8) +
+                           (box_width / 2) - (fw / 2))
 
+            cashbox.blit(amount, (render_left, space_between + 10))
             space_between += (box_height / 2) + spacer
 
         color = (0, 0, 0)
 
         # Display current day in the log book
-        day_title = self.__shopFont.render("-- Day {} --".format(\
+        day_title = self.__shopFont.render(_("-- Day {} --").format(
             main.day), 1, color)
         fw, fh = day_title.get_size()
         render_top = self.game_engine.height / 15
@@ -646,14 +712,14 @@ end of the day until you are correct."""),
         cashbox.blit(day_title, (render_left, render_top))
 
         # Display the current day's starting money
-        money_start = self.__shopFont.render("Start: {}".format(\
+        money_start = self.__shopFont.render(_("Start: {}").format(
             format_money(main.start_money)), True, (0, 0, 0))
         render_top = self.game_engine.height / 5
         render_left = (self.game_engine.width * 2 / 3)
         cashbox.blit(money_start, (render_left, render_top))
 
         # Display the current day's ending money
-        money_end = self.__shopFont.render("End: {}".format(\
+        money_end = self.__shopFont.render(_("End: {}").format(
             format_money(main.start_money + main.profit)), True, (0, 0, 0))
         render_top = (self.game_engine.height / 5) + fh + 5
         render_left = (self.game_engine.width * 2 / 3)
@@ -661,26 +727,27 @@ end of the day until you are correct."""),
 
         # Display the current day's total profit
         if main.difficulty < 2:
-            profit = self.__shopFont.render("Profit: {}".format(\
+            profit = self.__shopFont.render(_("Profit: {}").format(
                 format_money(main.profit)), True, (0, 0, 0))
             render_top = (self.game_engine.height / 5) + (fh * 4) - 20
             render_left = (self.game_engine.width * 2 / 3)
             cashbox.blit(profit, (render_left, render_top))
 
         # Display if the user passed or failed the mini game
-        if self.failed == True:
+        if self.failed:
             if self.__input_mode[2] == self.fail_key:
-                fail = self.__shopFont.render("Incorrect!", True, (255, 0, 0))
+                fail = self.__shopFont.render(
+                    _("Incorrect!"), True, (255, 0, 0))
                 fw, fh = fail.get_size()
                 render_top = (self.game_engine.height * 6 / 13)
                 render_left = (self.game_engine.width * 8 / 10)
                 cashbox.blit(fail, (render_left - (fw / 2), render_top))
 
-                try_again = self.__shopFont.render( \
-                    "Please try again.", True, (255, 0, 0))
+                try_again = self.__shopFont.render(
+                    _("Please try again."), True, (255, 0, 0))
                 fw, fh = try_again.get_size()
-                cashbox.blit(try_again, (render_left - (fw / 2) , \
-                    render_top + fh))
+                cashbox.blit(try_again, (render_left - (fw / 2),
+                                         render_top + fh))
 
             else:
                 self.failed = False
@@ -770,10 +837,11 @@ end of the day until you are correct."""),
         :type main: LemonadeMain
         :param main: The main class of Lemonade Stand that contains info
         """
-        store = image.load("images/{}/store-outline.gif".format(\
+        store = image.load("images/{}/store-outline.gif".format(
             self.version)).convert()
         store = transform.scale(store,
-            (self.game_engine.width, self.game_engine.height))
+                                (self.game_engine.width,
+                                self.game_engine.height))
 
         # Store item display.
         # Calculate Items to buy
@@ -797,19 +865,19 @@ end of the day until you are correct."""),
                 outline.fill((255, 255, 255))
             else:
                 outline.fill((0, 0, 0))
-            icon = image.load("images/{}/icon/{}.gif".format(\
+            icon = image.load("images/{}/icon/{}.gif".format(
                 self.version, name)).convert()
             icon = transform.scale(icon,
-                    (icon_size * 8 / 10, icon_size * 8 / 10))
+                                   (icon_size * 8 / 10, icon_size * 8 / 10))
             icon_render_top = self.game_engine.height * .38 - (icon_size / 2)
             outline.blit(icon, (icon_size / 10, icon_size / 10))
             store.blit(outline, (j, icon_render_top))
 
             # Display pricing info under the item.
-            ren = self.__shopFont.render("{} for {}".format(\
-                format_money(\
-                ITEMS[self.version][name]["cost"][main.difficulty] * \
-                ITEMS[self.version][name]["bulk"]),
+            ren = self.__shopFont.render(_("{} for {}").format(
+                format_money(
+                    ITEMS[self.version][name]["cost"][main.difficulty] *
+                    ITEMS[self.version][name]["bulk"]),
                 ITEMS[self.version][name]["bulk"]), True, (0, 0, 0))
             fw, fh = ren.get_size()
             render_left = j + (icon_size / 2) - (fw / 2)
@@ -829,9 +897,8 @@ end of the day until you are correct."""),
             store.blit(ren, (render_left, self.game_engine.height *.58))
 
             # Put the amount of the item needed for the current recipe
-            ren = self.__shopNumFont.render("x{}".format(\
-                  main.current_recipe.get(name, 0)), 1, (255, 240, 0))
-
+            ren = self.__shopNumFont.render(_("x{}").format(
+                main.current_recipe.get(name, 0)), 1, (255, 240, 0))
             fw, fh = ren.get_size()
             render_left = j + (icon_size / 2) - (fw / 2)
             render_top = icon_render_top - fh
@@ -839,15 +906,50 @@ end of the day until you are correct."""),
 
             j += icon_size + spacer
 
+        # Draw the player's upgrades
+        spacer = .1
+        interval = .15
+
+        for index in range(0, self.main.upgrades[0]):
+            if self.main.upgrades[1]['level'][index] > 0:
+                icon_size = self.game_engine.width / 15
+                icon = image.load("images/{}/upgrades/{}.gif".format(
+                    self.version,
+                    self.main.upgrades[1]['name'][index]))
+                icon = transform.scale(icon, (icon_size, icon_size))
+                render_left = self.game_engine.width * spacer - (icon_size / 2)
+                render_left_icon = render_left - (icon_size / 2)
+                render_top = self.game_engine.height * .7
+                store.blit(icon, (render_left_icon, render_top))
+
+                upgrade_level = self.__font.render(_("Level: {}".format(
+                    self.main.upgrades[1]['level'][index])), True, (0, 0, 0))
+                fw, fh = upgrade_level.get_size()
+                render_left_level = render_left - (fw / 2)
+                render_top = render_top + icon_size
+                store.blit(upgrade_level, (render_left_level, render_top))
+
+                upgrade_capacity = self.__font.render(_("Capacity: {}".format(
+                    self.main.upgrades[1]['capacity'][index])),
+                    True, (0, 0, 0))
+                fw, fh = upgrade_capacity.get_size()
+                render_left_capacity = render_left - (fw / 2)
+                render_top = render_top + (fh / 2) + 10
+                store.blit(upgrade_capacity,
+                           (render_left_capacity, render_top))
+
+                spacer += interval
+
         # Title above recipe
-        ren = self.__shopNumFont.render("Ingredients for {} {}:".format(\
+        ren = self.__shopNumFont.render(_("Ingredients for {} {}:").format(
             main.current_recipe['name'], self.version), 1, (255, 240, 0))
         render_left = 5
         render_top = self.game_engine.height / 11
         store.blit(ren, (render_left, render_top))
 
         # Title above inventory
-        ren = self.__shopNumFont.render("Current Supplies:", 1, (255, 240, 0))
+        ren = self.__shopNumFont.render(_("Current Supplies:"), 1,
+                                        (255, 240, 0))
         render_left = self.game_engine.width * 8 / 15
         render_top = self.game_engine.height * .68
         store.blit(ren, (render_left, render_top))
@@ -855,7 +957,7 @@ end of the day until you are correct."""),
         return store
 
     def _blit_to_block(self, text_array, text_color=(0, 0, 0),
-                       block_color=(255, 255 ,255), fill_block=True):
+                       block_color=(255, 255, 255), fill_block=True):
         """
         Takes an array of strings with optional text and background colors,
         creates a Surface to house them, blits the text and returns the
@@ -865,6 +967,9 @@ end of the day until you are correct."""),
         rendered_text = []
         font_width = []
         font_height = []
+
+        if isinstance(text_array, basestring):
+            text_array = text_array.split('\n')
 
         for text in text_array:
             ren = self.__font.render(text, True, text_color)
@@ -934,14 +1039,17 @@ end of the day until you are correct."""),
                     upgrade_info = []
                     for i in range(0, len(self.__input_keys[self.game_mode])):
                         if i == self.__input_mode[self.game_mode]:
-                            upgrade_info.append(UPGRADES[self.version][i]['name'])
-                            upgrade_info.append(UPGRADES[self.version][i]['cost'])
-                            upgrade_info.append(UPGRADES[self.version][i]['capacity'])
-                elif self.game_mode != 8:
+                            upgrade_info.append(UPGRADES
+                                                [self.version][i]['name'])
+                            upgrade_info.append(UPGRADES
+                                                [self.version][i]['cost'])
+                            upgrade_info.append(UPGRADES
+                                                [self.version][i]['capacity'])
+                elif self.game_mode!= 9
                     item_list = {}
                     for i in range(0, len(self.__input_keys[self.game_mode])):
                         item_list[self.__input_keys[self.game_mode][i]] = \
-                                    int(self.__input_string[self.game_mode][i])
+                            int(self.__input_string[self.game_mode][i])
                         self.__input_string[self.game_mode][i] = "0"
 
                 #Checks if the player is leaving the shop to begin day
@@ -974,7 +1082,7 @@ end of the day until you are correct."""),
                         self.fail_key = self.__input_mode[self.game_mode]
 
                 # Checks if the player is creating a recipe
-                elif self.game_mode == 8:
+                elif self.game_mode == 9:
                     index = 0
                     costs = [0, 0, 0, 0]
                     for key in self.__input_keys[self.game_mode]: 
@@ -1006,7 +1114,7 @@ end of the day until you are correct."""),
                         main.prices = main.current_recipe['cost']
                         if self.__input_keys[self.game_mode] \
                             [self.__input_mode[self.game_mode]] == 'custom':
-                            self.game_mode = 8
+                            self.game_mode = 9
                         else: 
                             self.game_mode = 0
                         main.day += 1
@@ -1015,6 +1123,10 @@ end of the day until you are correct."""),
                 elif self.game_mode == 7:
                     if main.process_buy_upgrade(upgrade_info):
                         return
+
+                # Checks if the player is in language selection
+                elif self.game_mode == 8:
+                    self.game_mode = 4
 
             # Checks if the player hit space to enter the upgrade shop
             elif event.key == K_SPACE and self.game_mode == 0:
@@ -1026,16 +1138,17 @@ end of the day until you are correct."""),
 
             # Checks if the player hit the backspace key
             elif event.key == K_BACKSPACE:
-                handle = self.__input_string[self.game_mode]\
-                            [self.__input_mode[self.game_mode]]
+                handle = self.__input_string[
+                    self.game_mode][
+                        self.__input_mode[self.game_mode]]
 
                 if len(handle) == 1:
                     handle = "0"
                 else:
                     handle = handle[0:-1]
 
-                self.__input_string[self.game_mode][self.__input_mode[\
-                                    self.game_mode]] = handle
+                self.__input_string[
+                    self.game_mode][self.__input_mode[self.game_mode]] = handle
 
                 # Returns you back to the main menu if you are currently in
                 # the tutorial, challegne screen, or difficulty selection
@@ -1050,51 +1163,52 @@ end of the day until you are correct."""),
             # Go to the next field
             elif event.key in [K_TAB, K_DOWN, K_RIGHT, K_KP2, K_KP6]:
                 self.__input_mode[self.game_mode] = \
-                    (self.__input_mode[self.game_mode] + 1) %\
-                        len(self.__input_keys[self.game_mode])
+                    ((self.__input_mode[self.game_mode] + 1) %
+                     len(self.__input_keys[self.game_mode]))
 
             # Go up to previous field
             elif event.key in [K_UP, K_LEFT, K_KP4, K_KP8]:
                 self.__input_mode[self.game_mode] = \
-                    (self.__input_mode[self.game_mode] - 1) %\
-                        len(self.__input_keys[self.game_mode])
+                    ((self.__input_mode[self.game_mode] - 1) %
+                     len(self.__input_keys[self.game_mode]))
 
             # Text input, only handles numbers (ascii 48 - 58)
             elif event.key >= 48 and event.key <= 58:
                 key = str(event.unicode)
 
-                handle = self.__input_string[self.game_mode]\
-                    [self.__input_mode[self.game_mode]]
+                handle = self.__input_string[
+                    self.game_mode][self.__input_mode[self.game_mode]]
 
                 if handle == "0":
                     handle = key
                 else:
                     handle = "{}{}".format(handle, key)
 
-                self.__input_string[self.game_mode][self.__input_mode[\
-                    self.game_mode]] = handle
+                self.__input_string[
+                    self.game_mode][self.__input_mode[self.game_mode]] = handle
 
             # Increment
             elif event.key == K_KP9:
 
-                handle = int(self.__input_string[self.game_mode]\
-                    [self.__input_mode[self.game_mode]])
+                handle = int(self.__input_string[self.game_mode]
+                             [self.__input_mode[self.game_mode]])
 
                 handle += 1
 
-                self.__input_string[self.game_mode][self.__input_mode[\
-                    self.game_mode]] = "{}".format(handle)
+                self.__input_string
+                [self.game_mode]
+                [self.__input_mode[self.game_mode]] = "{}".format(handle)
 
             # Decrement
             elif event.key == K_KP3:
 
-                handle = int(self.__input_string[self.game_mode]\
-                    [self.__input_mode[self.game_mode]])
+                handle = int(self.__input_string[self.game_mode]
+                             [self.__input_mode[self.game_mode]])
 
                 if handle > 0:
                     handle -= 1
 
-                self.__input_string[self.game_mode][self.__input_mode[\
+                self.__input_string[self.game_mode][self.__input_mode[
                     self.game_mode]] = "{}".format(handle)
 
         self.game_engine.set_dirty()

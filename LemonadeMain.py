@@ -23,13 +23,15 @@
 
 from random import randint
 from gettext import gettext as _
+from sugar.datastore import datastore
 
 from operator import itemgetter
-from constants import STARTING_MONEY, MAX_MSG, ITEMS, CURRENCY, RECIPES, \
-                      DIFFICULTY, format_money, WEATHER, GOOD_ODDS, BAD_ODDS, \
-                      SCALE, EVENT_KEYS, STARTING_ITEMS, G_EVENTS_DICT, \
-                      B_EVENTS_DICT, SERVING_ITEM, LOCATIONS, REP_VALUES, \
-                      UPGRADES
+from constants import STARTING_MONEY, MAX_MSG, ITEMS, \
+    CURRENCY, RECIPES, DIFFICULTY, format_money, \
+    WEATHER, GOOD_ODDS, BAD_ODDS, SCALE, EVENT_KEYS, \
+    STARTING_ITEMS, G_EVENTS_DICT, B_EVENTS_DICT, \
+    SERVING_ITEM, LOCATIONS, REP_VALUES, UPGRADES
+
 
 class LemonadeMain:
     """
@@ -51,12 +53,12 @@ class LemonadeMain:
             'price': RECIPES[self.version]['basic']['cost'],
             'recipe': RECIPES[self.version]['basic'],
             'upgrades': [0,
-                {
-                    'name': [],
-                    'level': [],
-                    'capacity': []
-                }
-            ]
+                           {
+                               'name': [],
+                               'level': [],
+                               'capacity': [],
+                               'saves': []
+                           }]
         }
 
         # Populate resources with item keys
@@ -65,17 +67,23 @@ class LemonadeMain:
 
         # Populate the upgrade resource
         for i in range(0, len(UPGRADES[self.version])):
-            self.__resources['upgrades'][1]['name'].append(\
+            self.__resources['upgrades'][1]['name'].append(
                 UPGRADES[self.version][i]['name'])
             self.__resources['upgrades'][1]['level'].append(0)
             self.__resources['upgrades'][1]['capacity'].append(0)
+            self.__resources['upgrades'][1]['saves'].append(
+                UPGRADES[self.version][i]['saves'])
+            self.__resources['upgrades'][0] += 1
 
+        self.first_upgrade = True
+        self.first_correct_change = True
+        self.first_ten_sales = True
         self.__weather = 1
         self.__msg_queue = []
         self.challenge_mode = False
         self.challenge_completed = False
         self.__reputation = {
-                'neighborhood': 0
+            'neighborhood': 0
         }
         self.location = "neighborhood"
 
@@ -83,6 +91,17 @@ class LemonadeMain:
         self.weather_change()
 
         self.event_messages = []
+
+        self.badges = datastore.create()
+        self.badges.metadata['title'] = 'badges_lemonadestand'
+        self.badges.metadata['badges'] = ''
+        self.badges.metadata['info'] = ''
+
+        datastore.write(self.badges)
+
+    @property
+    def badges(self):
+        return self.badges
 
     @property
     def upgrades(self):
@@ -127,7 +146,7 @@ class LemonadeMain:
     @property
     def prices(self):
         return self.__resources['price']
-    
+
     @property
     def price(self):
         return self.prices[self.difficulty]
@@ -196,6 +215,13 @@ class LemonadeMain:
             self.money -= price
             self.upgrades[1]['level'][upgrade_index] += 1
             self.upgrades[1]['capacity'][upgrade_index] += base_capacity
+
+            if self.first_upgrade:
+                self.badges.metadata['badges'] += 'First Upgrade:'
+                self.badges.metadata['info'] += 'Purchased first upgrade:'
+                datastore.write(self.badges)
+                self.first_upgrade = False
+
             return True
 
         return False
@@ -223,7 +249,7 @@ class LemonadeMain:
         # items for this specific difficulty
         for item_key in ITEMS[self.version].keys():
             self.add_item(item_key,
-                STARTING_ITEMS[self.version][item_key][difficulty])
+                          STARTING_ITEMS[self.version][item_key][difficulty])
 
         # Give the player starting money depending on the difficulty
         self.money = STARTING_MONEY[difficulty]
@@ -247,6 +273,7 @@ class LemonadeMain:
         # It looks like its going to rain tomorrow
         if self.__weather <= 0:
             self.__weather = 0
+
         # Tomorrow looks to be very hot
         elif self.__weather >= 2:
             self.__weather = 2
@@ -257,7 +284,7 @@ class LemonadeMain:
         """
 
         # Generate a random value
-        rand_num = randint(1,100)
+        rand_num = randint(1, 100)
 
         # Loop through all the weights starting with the lowest
         for key in EVENT_KEYS:
@@ -266,7 +293,7 @@ class LemonadeMain:
             # return a random event with that weight
             if rand_num <= int(key):
                 index = randint(0, len(events[key]) - 1)
-                return events[key][index]
+                return events[key][self.version][index]
 
     def random_event(self):
         """
@@ -295,11 +322,25 @@ class LemonadeMain:
             if itemcount == 0:
                 return
 
+            # Check if the player has an upgrade that prevents the event
+            upgrade_capacity = 0
+            for upgrade in range(0, self.upgrades[0]):
+                level = self.upgrades[1]['level'][upgrade]
+                saves = self.upgrades[1]['saves'][upgrade]
+                capacity = self.upgrades[1]['capacity'][upgrade]
+                if level > 0:
+                    if saves == event['item']:
+                        if level >= event['level']:
+                            chance = randint(0, event['level'] + level)
+                            if chance > event['level']:
+                                return
+                            else:
+                                upgrade_capacity = capacity
             # Check if event scales
             if event['change'] < 0:
 
                 # Find the amount of items to remove based on the scale
-                remove = int(abs(event['change']) + \
+                remove = int(abs(event['change']) +
                              (itemcount * SCALE[self.difficulty]))
 
             # Else remove a flat amount
@@ -310,16 +351,22 @@ class LemonadeMain:
             if itemcount < remove:
                 remove = itemcount
 
+            # Save some of the player's resources if the player has the
+            # appropriate upgrade available
+            remove -= upgrade_capacity
+            if remove <= 0:
+                return
+
             # Create a message
-            msg = _("    You lost {} {}".format(\
-                str(remove), event['item']))
+            msg = _("    You lost {} {}").format(
+                str(remove), event['item'])
 
             # Remove the items from your inventory
             self.remove_item(event['item'], remove)
 
             # Adds s to pluralise nouns that need it
-            if (event['item'] == 'cup' or event['item'] == 'lemon')\
-               and itemcount > 1:
+            if (event['item'] == 'cup' or event['item'] == 'lemon') \
+                    and itemcount > 1:
                 msg += "s"
 
             # Add the messages to the event message list
@@ -327,9 +374,9 @@ class LemonadeMain:
             self.event_messages.append(msg)
 
         # Check if you got a good event
-        elif event_num > BAD_ODDS[self.difficulty] and \
-             event_num <= (GOOD_ODDS[self.difficulty] + \
-             BAD_ODDS[self.difficulty]):
+        elif event_num > BAD_ODDS[self.difficulty] \
+            and event_num <= (GOOD_ODDS[self.difficulty] +
+                              BAD_ODDS[self.difficulty]):
 
             # Generate a good event
             event = self.event_select(G_EVENTS_DICT)
@@ -340,7 +387,7 @@ class LemonadeMain:
                 itemcount = self.count_item(event['item'])
 
                 # Find the amount of items to add based on the scale
-                add = int(abs(event['change']) +\
+                add = int(abs(event['change']) +
                           (itemcount * SCALE[3 - self.difficulty]))
 
             # Else add a flat amount
@@ -348,8 +395,8 @@ class LemonadeMain:
                 add = event['change']
 
             # Create a message
-            msg = _("    You gained {} {}".format(\
-                str(add), event['item']))
+            msg = _("    You gained {} {}").format(
+                str(add), event['item'])
 
             # Add your new supplies to your inventory
             self.add_item(event['item'], add)
@@ -367,16 +414,16 @@ class LemonadeMain:
 
         # Show profit and expenses if the difficuly is less than impossible
         if self.difficulty < DIFFICULTY.index("Impossible"):
-            self.add_msg("You spent {} on supplies".format(\
-                    format_money(self.spent)))
-            self.add_msg("and made {} in sales".format(\
-                    format_money(self.income)))
+            self.add_msg("You spent {} on supplies".format(
+                format_money(self.spent)))
+            self.add_msg("and made {} in sales".format(
+                format_money(self.income)))
 
         # Check if any profit was made
         if self.profit > 0:
             # Show the net porfit if difficulty is less than normal
             if self.difficulty < DIFFICULTY.index("Hard"):
-                self.add_msg("That comes to {} in profit".format(\
+                self.add_msg("That comes to {} in profit".format(
                     format_money(self.profit)))
             return True
 
@@ -395,12 +442,18 @@ class LemonadeMain:
 
         if self.reputation != 100:
             if self.weather == 0:
-               sales *= .5
+                sales *= .5
             elif self.weather == 1:
                 sales *= .75
 
         if sales > max_sales:
             sales = max_sales
+
+        if int(sales) >= 10 and self.first_ten_sales:
+            self.badges.metadata['badges'] += 'Double Digit Sales:'
+            self.badges.metadata['info'] += 'Sold 10 or more cups of lemonade:'
+            datastore.write(self.badges)
+            self.first_ten_sales = False
 
         return int(sales)
 
@@ -415,7 +468,7 @@ class LemonadeMain:
         self.add_msg(_("--Day {} Log--").format(self.day))
         self.add_msg("")
 
-        self.add_msg(_("Today's weather: {}").format(\
+        self.add_msg(_("Today's weather: {}").format(
             self.weather_name.upper()))
         self.add_msg("")
 
@@ -424,17 +477,19 @@ class LemonadeMain:
         for item in items:
             total_bought = self.buy_item(item, items[item])
             if total_bought != 1:
-                self.add_msg("{} {}s for {}".format(\
-                    total_bought,\
-                    ITEMS[self.version][item]['name'],\
-                    format_money(total_bought * \
-                    ITEMS[self.version][item]['cost'][self.difficulty])))
+                self.add_msg(_("{} {}s for {}").format(
+                             total_bought,
+                             ITEMS[self.version][item]['name'],
+                             format_money(total_bought *
+                             ITEMS[self.version][
+                                 item]['cost'][self.difficulty])))
             else:
-                self.add_msg("{} {} for {}".format(\
-                    total_bought,\
-                    ITEMS[self.version][item]['name'],\
-                    format_money(total_bought * \
-                    ITEMS[self.version][item]['cost'][self.difficulty])))
+                self.add_msg(_("{} {} for {}").format(
+                             total_bought,
+                             ITEMS[self.version][item]['name'],
+                             format_money(total_bought *
+                             ITEMS[self.version][
+                                 item]['cost'][self.difficulty])))
 
             self.spent += total_bought * \
                 ITEMS[self.version][item]['cost'][self.difficulty]
@@ -451,7 +506,7 @@ class LemonadeMain:
         for item_key in ITEMS[self.version].keys():
             if self.recipe(item_key) == 0:
                 continue
-            inventory_hold.append(\
+            inventory_hold.append(
                 self.count_item(item_key) / self.recipe(item_key))
 
         max_sales = min(inventory_hold)
@@ -461,7 +516,7 @@ class LemonadeMain:
         if sales > 0 and max_sales > sales:
             self.reputation[self.location] += \
                 REP_VALUES['gain'][self.difficulty]
-            if self.reputation[self.location]  > 100:
+            if self.reputation[self.location] > 100:
                 self.reputation[self.location] = 100
         else:
             self.reputation[self.location] -= \
@@ -476,10 +531,10 @@ class LemonadeMain:
         # total amount of money that you made
         self.add_msg(_("Sales:"))
         if sales != 1:
-            self.add_msg(_("{} {}s of {} sold").format(\
+            self.add_msg(_("{} {}s of {} sold").format(
                 sales, SERVING_ITEM[self.version], self.version))
         else:
-            self.add_msg(_("{} {} of {} sold").format(\
+            self.add_msg(_("{} {} of {} sold").format(
                 sales, SERVING_ITEM[self.version], self.version))
         self.add_msg(_("    @ {} each").format(format_money(self.price)))
         self.add_msg("------------------------------")
@@ -501,10 +556,18 @@ class LemonadeMain:
         if self.profit > 0:
             mini_game_success = self.count_game(mini_game_key, self.profit)
             if mini_game_success:
+                if self.first_correct_change:
+                    self.badges.metadata['badges'] += 'Right on the Money:'
+                    self.badges.metadata['info'] += 'First correct amount \
+                    of change:'
+                    datastore.write(self.badges)
+                    self.first_correct_change = False
+                    _
                 # Give them the money if they added
                 self.money += self.profit
             else:
-                self.add_msg(_("That is the incorrect amount of money. Try again."))
+                self.add_msg(
+                    _("That is the incorrect amount of money. Try again."))
                 return False
         return True
 
@@ -520,20 +583,20 @@ class LemonadeMain:
         # Weather
         self.weather_change()
 
-        if self.challenge and self.day ==  90:
-           self.add_msg(_("Summer is over!"))
-           self.add_msg(_("You have successfully completed Lemonade Stand!"))
-           self.challenge_completed = True
+        if self.challenge and self.day == 90:
+            self.add_msg(_("Summer is over!"))
+            self.add_msg(_("You have successfully completed Lemonade Stand!"))
+            self.challenge_completed = True
+            self.badges.metadata['badges'] += 'Summer Completed:'
+            self.badges.metadata['info'] += 'Completed the summer season:'
+            datastore.write(self.badges)
 
         else:
             self.add_msg(_("Time to get some rest."))
-            self.add_msg(_("It looks like it will be {} tomorrow.").format(\
-                            self.weather_name))
+            self.add_msg(_("It looks like it will be {} tomorrow.").format(
+                         self.weather_name))
             self.add_msg("")
             self.add_msg(_("What flavor will you make tomorrow?"))
-
-    def buy_upgrade(self, key):
-        return False
 
     def buy_item(self, key, quanity):
         """
@@ -627,8 +690,12 @@ class LemonadeMain:
                     else:
                         new_list.append([item[0]-1, item[1]])
                 elif item[1] != 0:
-                    self.add_msg("{} {}s have gone bad".format(\
-                        item[1], item_key))
+                    index = self.upgrades[1]['saves'].index(item_key)
+                    remove = item[1]
+                    remove -= self.upgrades[1]['capacity'][index]
+                    if remove > 0:
+                        self.add_msg(_("{} {}s have gone bad").format(
+                            item[1], item_key))
 
             # Place item back into resource list
             self.__resources[item_key] = new_list
@@ -660,7 +727,7 @@ class LemonadeMain:
 
         # Set previous_value to target so it always accepts the first key
         previous_value = target
-        for key, value in  currency_values:
+        for key, value in currency_values:
             cal_val = (value * values[key])
             if cal_val > previous_value:
                 return False
