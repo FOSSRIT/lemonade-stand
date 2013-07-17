@@ -47,8 +47,8 @@ STARTING_ITEMS = {
 }
 
 REP_VALUES = {
-    'gain': [ 4, 3, 2, 1 ],
-    'lose': [ 1, 1, 2, 2 ]
+    'gain': [4, 3, 2, 1],
+    'lose': [1, 1, 2, 2]
 }
 
 CHALLENGE_MODES = {
@@ -127,7 +127,7 @@ UPGRADES = {
             ]
         }
     ],
-    'ice cream':[
+    'ice cream': [
         {
             'name': _('Cooler'),
             'cost': 2000,
@@ -135,13 +135,39 @@ UPGRADES = {
             'capacity': 20,
             'level': 1,
             'saves': 'ice cream',
-            'info': _("""A cooler is used for storing any ice cream
-that you have. This helps prevent ice cream
-from melting as well as anything from getting
-to your ice cream supply.""")
+            'info':
+            [
+                [
+                    _("Stores ice cream."),
+                    _("Helps prevent ice"),
+                    _("cream from melting")
+                ],
+                [
+                    _("Stores more ice cream.")
+                ]
+            ]
+        },
+        {
+            'name': 'Sprinkle Jar',
+            'cost': 1500,
+            'capacity': 20,
+            'level': 1,
+            'saves': 'sprinkles',
+            'info':
+            [
+                [
+                    _("Stores sprinkles,"),
+                    _("Helps prevent sprinkles"),
+                    _("from being stolen.")
+                ],
+                [
+                    _("Stores more sprinkles")
+                ]
+            ]
         }
     ]
 }
+
 SERVING_ITEM = {
     'lemonade': _('cup'),
     'hamburgers': _('plate'),
@@ -189,7 +215,7 @@ ITEMS = {
             'bulk': 1
         },
         'sprinkles': {
-            'name': _('Sprinkles'),
+            'name': _('Sprinkle'),
             'cost': [2, 5, 8, 15],
             'decay': 0,
             'bulk': 1
@@ -206,157 +232,166 @@ GOOD_ODDS = [45, 38, 12, 5]
 EVENT_KEYS = ['20', '50', '80', '100']
 
 B_EVENTS_DICT = {
-    '20': [
+    '20': {
+        'lemonade': [
             {
-            'text': _("A small animal takes some lemons!"),
-            'item': 'lemon',
-            'change': -2,
-            'level': 2
+                'text': _("A small animal takes some lemons!"),
+                'item': 'lemon',
+                'change': -2,
+                'level': 2
             },
             {
-            'text': _("A strong wind blows away some of your cups!"),
-            'item': 'cup',
-            'change': -2,
-            'level': 1
+                'text': _("A strong wind blows away some of your cups!"),
+                'item': 'cup',
+                'change': -2,
+                'level': 1
             },
             {
-            'text': _("Ants steal some of your supplies!"),
-            'item': 'sugar',
-            'change': -2,
-            'level': 1
+                'text': _("Ants steal some of your supplies!"),
+                'item': 'sugar',
+                'change': -2,
+                'level': 1
             }
-        ],
-    '50': [
+        ]},
+    '50': {
+        'lemonade': [
             {
-            'text': _("Your friend has eaten some of your lemons!"),
-            'item': 'lemon',
-            'change': 10,
-            'level': 0
+                'text': _("Your friend has eaten some of your lemons!"),
+                'item': 'lemon',
+                'change': 10,
+                'level': 0
             },
             {
-            'text': _("A batch of cups have cracked!"),
-            'item': 'cup',
-            'change': 10,
-            'level': 2
+                'text': _("A batch of cups have cracked!"),
+                'item': 'cup',
+                'change': 10,
+                'level': 2
             },
             {
-            'text': _("You sneeze and blow away some sugar!"),
-            'item': 'sugar',
-            'change': 10,
-            'level': 1
+                'text': _("You sneeze and blow away some sugar!"),
+                'item': 'sugar',
+                'change': 10,
+                'level': 1
             }
-        ],
-    '80': [
+        ]},
+    '80': {
+        'lemonade': [
             {
-            'text': _("You sat on some of your lemons!"),
-            'item': 'lemon',
-            'change': 5,
-            'level': 0
+                'text': _("You sat on some of your lemons!"),
+                'item': 'lemon',
+                'change': 5,
+                'level': 0
             },
             {
-            'text': _("You stepped on some cups!"),
-            'item': 'cup',
-            'change': 5,
-            'level': 2
+                'text': _("You stepped on some cups!"),
+                'item': 'cup',
+                'change': 5,
+                'level': 2
             },
             {
-            'text': _("Your sugar gets wet and ruined!"),
-            'item': 'sugar',
-            'change': 5,
-            'level': 2
+                'text': _("Your sugar gets wet and ruined!"),
+                'item': 'sugar',
+                'change': 5,
+                'level': 2
             }
-        ],
-    '100': [
+        ]},
+    '100': {
+        'lemonade': [
             {
-            'text': _("Some of your lemons are Lemonzilla eggs!"),
-            'item': 'lemon',
-            'change': 2,
-            'level': 0
+                'text': _("Some of your lemons are Lemonzilla eggs!"),
+                'item': 'lemon',
+                'change': 2,
+                'level': 0
             },
             {
-            'text': _("You mother takes some of your cups!"),
-            'item': 'cup',
-            'change': 2,
-            'level': 0
+                'text': _("You mother takes some of your cups!"),
+                'item': 'cup',
+                'change': 2,
+                'level': 0
             },
             {
-            'text': _("You used too much sugar in one cup!"),
-            'item': 'sugar',
-            'change': 2,
-            'level': 0
+                'text': _("You used too much sugar in one cup!"),
+                'item': 'sugar',
+                'change': 2,
+                'level': 0
             }
-        ]
+        ]}
 }
 
 G_EVENTS_DICT = {
-    '20': [
+    '20': {
+        'lemonade': [
             {
-            'text': _("You find a baby Lemonzilla!"),
-            'item': 'lemon',
-            'change': -5
+                'text': _("You find a baby Lemonzilla!"),
+                'item': 'lemon',
+                'change': -5
             },
             {
-            'text': _("You rub a cup and your wish for cups is granted!"),
-            'item':'cup',
-            'change': -5
+                'text': _("You rub a cup and your wish for cups is granted!"),
+                'item': 'cup',
+                'change': -5
             },
             {
-            'text': _("A sugar farm would like to invest in your stand!"),
-            'item': 'sugar',
-            'change': -5
+                'text': _("A sugar farm would like to invest in your stand!"),
+                'item': 'sugar',
+                'change': -5
             }
-        ],
-    '50': [
+        ]},
+    '50': {
+        'lemonade': [
             {
-            'text': _("A lemon truck crashes in front of your stand!"),
-            'item': 'lemon',
-            'change': 100
+                'text': _("A lemon truck crashes in front of your stand!"),
+                'item': 'lemon',
+                'change': 100
             },
             {
-            'text': _("It starts raining cups!"),
-            'item': 'cup',
-            'change': 100
+                'text': _("It starts raining cups!"),
+                'item': 'cup',
+                'change': 100
             },
             {
-            'text': _("You find a bag of sugar on the side of the road!"),
-            'item': 'sugar',
-            'change': 100
+                'text': _("You find a bag of sugar on the side of the road!"),
+                'item': 'sugar',
+                'change': 100
             }
-        ],
-    '80': [
+        ]},
+    '80': {
+        'lemonade': [
             {
-            'text': _("Your parents give you some lemons!"),
-            'item': 'lemon',
-            'change': 10
+                'text': _("Your parents give you some lemons!"),
+                'item': 'lemon',
+                'change': 10
             },
             {
-            'text': _("A friendly neighbor gives you some cups!"),
-            'item': 'cup',
-            'change': 10
+                'text': _("A friendly neighbor gives you some cups!"),
+                'item': 'cup',
+                'change': 10
             },
             {
-            'text': _("A sugar salesman gives you some free samples!"),
-            'item': 'sugar',
-            'change': 10
+                'text': _("A sugar salesman gives you some free samples!"),
+                'item': 'sugar',
+                'change': 10
             }
-        ],
-    '100': [
+        ]},
+    '100': {
+        'lemonade': [
             {
-            'text': _("You find extra lemons in your bag!"),
-            'item': 'lemon',
-            'change': 5
+                'text': _("You find extra lemons in your bag!"),
+                'item': 'lemon',
+                'change': 5
             },
             {
-            'text': _("Something hits you in the back of the head!"),
-            'item': 'cup',
-            'change': 5
+                'text': _("Something hits you in the back of the head!"),
+                'item': 'cup',
+                'change': 5
             },
             {
-            'text': _("Some customers didn't notice you forgot the sugar!"),
-            'item': 'sugar',
-            'change': 5
+                'text':
+                _("Some customers didn't notice you forgot the sugar!"),
+                'item': 'sugar',
+                'change': 5
             }
-           ]
+        ]}
 }
 
 LOCATIONS = {
@@ -368,6 +403,12 @@ LOCATIONS = {
 }
 
 SCALE = [.2, .4, .6, .8]
+
+#List of languages
+LANGUAGE = [
+    "English",
+    "Espanol"
+]
 
 # List of difficulty types
 DIFFICULTY = [
@@ -423,14 +464,6 @@ RECIPES = {
             'sugar': 5,
             'cost': [180, 380, 550, 800]
         },
- #       'strawberry': {
- #           'name': _("strawberry"),
- #           'cup': 1,
- #           'lemon': 2,
- #           'sugar': 2,
- #           'strawberry': 1,
- #           'cost': 225
- #       },
         'epic': {
             'name': _("epic"),
             'cup': 2,
@@ -459,6 +492,7 @@ RECIPES = {
 
 import locale
 locale.setlocale(locale.LC_ALL, '')
-def format_money(value):
-    return locale.currency( value / 100.0, grouping=True )
 
+
+def format_money(value):
+    return locale.currency(value / 100.0, grouping=True)
