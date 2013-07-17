@@ -59,7 +59,7 @@ CHALLENGE_MODES = {
 UPGRADES = {
     'lemonade': [
         {
-            'name': 'Cooler',
+            'name': _('Cooler'),
             'cost': 25,
             'capacity': 20,
             'level': 1,
@@ -82,7 +82,7 @@ UPGRADES = {
             ]
         },
         {
-            'name': 'Sugar Jar',
+            'name': _('Sugar Jar'),
             'cost': 35,
             'capacity': 20,
             'level': 1,
@@ -105,7 +105,7 @@ UPGRADES = {
             ]
         },
         {
-            'name': 'Cup Container',
+            'name': _('Cup Container'),
             'cost': 15,
             'capacity': 20,
             'level': 1,
@@ -130,7 +130,7 @@ UPGRADES = {
     ],
     'ice cream': [
         {
-            'name': 'Cooler',
+            'name': _('Cooler'),
             'cost': 2000,
             'capacity': 20,
             'level': 1,
@@ -148,7 +148,7 @@ UPGRADES = {
             ]
         },
         {
-            'name': 'Sprinkle Jar',
+            'name': _('Sprinkle Jar'),
             'cost': 1500,
             'capacity': 20,
             'level': 1,
@@ -168,7 +168,7 @@ UPGRADES = {
     ],
     'noodle soup': [
         {
-            'name': 'Cooler',
+            'name': _('Cooler'),
             'cost': 2000,
             'capacity': 20,
             'level': 1,
@@ -186,7 +186,7 @@ UPGRADES = {
             ]
         },
         {
-            'name': 'Veggie Jar',
+            'name': _('Veggie Jar'),
             'cost': 1500,
             'capacity': 20,
             'level': 1,
@@ -470,26 +470,26 @@ LANGUAGE = [
 
 # List of difficulty types
 DIFFICULTY = [
-    "Easy",
-    "Normal",
-    "Hard",
-    "Impossible"
+    _("Easy"),
+    _("Normal"),
+    _("Hard"),
+    _("Impossible")
 ]
 
 # List of menu items
 MENU = [
-    "Play",
-    "Challenge",
-    "Tutorial"
+    _("Play"),
+    _("Challenge"),
+    _("Tutorial")
 ]
 
 # TODO: How to Localize data structures
 CURRENCY = {
-    'Dollars': 100,
-    'Quarters': 25,
-    'Dimes': 10,
-    'Nickels': 5,
-    'Pennies': 1
+    _('Dollars'): 100,
+    _('Quarters'): 25,
+    _('Dimes'): 10,
+    _('Nickels'): 5,
+    _('Pennies'): 1
 }
 
 RECIPES = {
