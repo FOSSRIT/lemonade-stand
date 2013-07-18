@@ -22,6 +22,15 @@
 
 from gettext import gettext as _
 
+#import gettext
+
+#lang = gettext.translation(
+#    'Lemonade',
+#    '/usr/share/locale/',
+#    languages=['e'])
+
+#_ = lang.ugettext
+
 STARTING_MONEY = [1500, 1250, 1000, 750]
 STARTING_PRICE = 150
 MAX_MSG = 18
@@ -207,27 +216,27 @@ UPGRADES = {
 }
 
 SERVING_ITEM = {
-    'lemonade': _('cup'),
-    'noodle soup': _('bowl'),
-    'ice cream': _('cone')
+    'lemonade': _('cup').decode('utf8'),
+    'noodle soup': _('bowl').decode('utf8'),
+    'ice cream': _('cone').decode('utf8')
 }
 
 ITEMS = {
     'lemonade': {
         'cup': {
-            'name': _('Cup'),
+            'name': _('Cup').decode('utf8'),
             'cost': [5, 10, 15, 30],
             'decay': 0,
             'bulk': 1
         },
         'lemon': {
-            'name': _('Lemons'),
+            'name': _('Lemon').decode('utf8'),
             'cost': [15, 35, 55, 105],
             'decay': 5,
             'bulk': 1
         },
         'sugar': {
-            'name': _('Sugar'),
+            'name': _('Sugar').decode('utf8'),
             'cost': [2, 5, 8, 15],
             'decay': 0,
             'bulk': 1
@@ -241,19 +250,19 @@ ITEMS = {
     },
     'ice cream': {
         'cone': {
-            'name': _('Cone'),
+            'name': _('Cone').decode('utf8'),
             'cost': [5, 10, 15, 30],
             'decay': 0,
             'bulk': 1
         },
         'ice cream': {
-            'name': _('Ice cream'),
+            'name': _('Ice cream').decode('utf8'),
             'cost': [15, 35, 55, 105],
             'decay': 5,
             'bulk': 1
         },
         'sprinkles': {
-            'name': _('Sprinkle'),
+            'name': _('Sprinkle').decode('utf8'),
             'cost': [2, 5, 8, 15],
             'decay': 0,
             'bulk': 1
@@ -261,19 +270,19 @@ ITEMS = {
     },
     'noodle soup': {
         'bowl': {
-            'name': _('Bowl'),
+            'name': _('Bowl').decode('utf8'),
             'cost': [5, 10, 15, 30],
             'decay': 0,
             'bulk': 1
         },
         'egg': {
-            'name': _('Egg'),
+            'name': _('Egg').decode('utf8'),
             'cost': [15, 35, 55, 105],
             'decay': 5,
             'bulk': 1
         },
         'veggie': {
-            'name': _('Veggie'),
+            'name': _('Veggie').decode('utf8'),
             'cost': [2, 5, 8, 15],
             'decay': 0,
             'bulk': 1
@@ -470,17 +479,17 @@ LANGUAGE = [
 
 # List of difficulty types
 DIFFICULTY = [
-    _("Easy"),
-    _("Normal"),
-    _("Hard"),
-    _("Impossible")
+    _("Easy").decode('utf8'),
+    _("Normal").decode('utf8'),
+    _("Hard").decode('utf8'),
+    _("Impossible").decode('utf8')
 ]
 
 # List of menu items
 MENU = [
     _("Play"),
-    _("Challenge"),
-    _("Tutorial")
+    _("Challenge").decode('utf8'),
+    _("Tutorial").decode('utf8')
 ]
 
 # TODO: How to Localize data structures
@@ -495,7 +504,7 @@ CURRENCY = {
 RECIPES = {
     'lemonade': {
         'basic': {
-            'name': _("basic"),
+            'name': _("basic").decode('utf8'),
             'cup': 1,
             'lemon': 2,
             'sugar': 3,
