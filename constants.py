@@ -33,8 +33,8 @@ STARTING_ITEMS = {
         'cup': [12, 10, 5, 0],
         'lemon': [18, 15, 5, 0],
         'sugar': [20, 10, 5, 0],
-        'strawberry': [0, 0, 0, 0],
-        'icecube': [0, 0, 0, 0]
+#        'strawberry': [0, 0, 0, 0],
+#        'icecube': [0, 0, 0, 0]
     },
     'ice cream': {
         'cone': [12, 10, 5, 0],
@@ -191,18 +191,18 @@ ITEMS = {
             'cost': [2, 5, 8, 15],
             'decay': 0,
             'bulk': 1
-        },
-        'strawberry': {
-            'name': _('Strawberry'),
-            'cost': [25, 50, 75, 150],
-            'decay': 3,
-            'bulk': 1
-        },
-        'icecube': {
-            'name': _('Ice Cube'),
-            'cost': [1, 2, 5, 10],
-            'decay': 0,
-            'bulk': 1
+#        },
+#        'strawberry': {
+#            'name': _('Strawberry'),
+#            'cost': [25, 50, 75, 150],
+#            'decay': 3,
+#            'bulk': 1
+#        },
+#        'icecube': {
+#            'name': _('Ice Cube'),
+#            'cost': [1, 2, 5, 10],
+#            'decay': 0,
+#            'bulk': 1
         }
     },
     'ice cream': {
@@ -252,20 +252,20 @@ B_EVENTS_DICT = {
                 'level': 1
             },
             {
-            	'text': _("Ants steal some of your supplies!"),
-            	'item': 'sugar',
-            	'change': -2,
-				'level': 1
-            },
-            {
-            	'text': _("Your strawberries are infested!"),
-            	'item': 'strawberry',
-            	'change': -2
-            },
-            {
-            	'text': _("Your ice melts!"),
-            	'item': 'icecube',
-            	'change': -2
+                'text': _("Ants steal some of your supplies!"),
+                'item': 'sugar',
+                'change': -2,
+                'level': 1
+#            },
+#            {
+#                'text': _("Your strawberries are infested!"),
+#                'item': 'strawberry',
+#                'change': -2
+#            },
+#            {
+#                'text': _("Your ice melts!"),
+#                'item': 'icecube',
+#                'change': -2
             }
         ]},
     '50': {
@@ -283,20 +283,20 @@ B_EVENTS_DICT = {
                 'level': 2
             },
             {
-            	'text': _("You sneeze and blow away some sugar!"),
-            	'item': 'sugar',
-            	'change': 10,
-				'level': 1
-            },
-            {
-            	'text': _("A bird takes your strawberries!"),
-            	'item': 'strawberry',
-            	'change': 10
-            },
-            {
-            	'text': _("Your ice is contaminated!"),
-            	'item': 'icecube',
-            	'change': 10
+                'text': _("You sneeze and blow away some sugar!"),
+                'item': 'sugar',
+                'change': 10,
+                'level': 1
+#            },
+#            {
+#                'text': _("A bird takes your strawberries!"),
+#                'item': 'strawberry',
+#                'change': 10
+#            },
+#            {
+#                'text': _("Your ice is contaminated!"),
+#                'item': 'icecube',
+#                'change': 10
             }
         ]},
     '80': {
@@ -314,20 +314,20 @@ B_EVENTS_DICT = {
                 'level': 2
             },
             {
-            	'text': _("Your sugar gets wet and ruined!"),
-            	'item': 'sugar',
-            	'change': 5,
-				'level': 2
-            },
-            {
-            	'text': _("Your straberrys got trampled!"),
-            	'item': 'strawberry',
-            	'change': 5
-            },
-            {
-            	'text': _("Your friend eats some of your ice!"),
-            	'item': 'icecube',
-            	'change': 5
+                'text': _("Your sugar gets wet and ruined!"),
+                'item': 'sugar',
+                'change': 5,
+                'level': 2
+#            },
+#            {
+#                'text': _("Your straberrys got trampled!"),
+#                'item': 'strawberry',
+#                'change': 5
+#            },
+#            {
+#                'text': _("Your friend eats some of your ice!"),
+#                'item': 'icecube',
+#                'change': 5
             }
         ]},
     '100': {
@@ -345,20 +345,20 @@ B_EVENTS_DICT = {
                 'level': 0
             },
             {
-            	'text': _("You used too much sugar in one cup!"),
-            	'item': 'sugar',
-            	'change': 2,
-				'level': 0
-            },
-            {
-            	'text': _("Your friend eats some of your strawberries!"),
-            	'item': 'strawberry',
-            	'change': 2
-            },
-            {
-            	'text': _("Some ice cubes dissapeared!"),
-            	'item': 'icecube',
-            	'change': 2
+                'text': _("You used too much sugar in one cup!"),
+                'item': 'sugar',
+                'change': 2,
+                'level': 0
+#            },
+#            {
+#                'text': _("Your friend eats some of your strawberries!"),
+#                'item': 'strawberry',
+#                'change': 2
+#            },
+#            {
+#                'text': _("Some ice cubes dissapeared!"),
+#                'item': 'icecube',
+#                'change': 2
             }
         ]}
 }
@@ -377,19 +377,19 @@ G_EVENTS_DICT = {
                 'change': -5
             },
             {
-            	'text': _("A sugar farm would like to invest in your stand!"),
-            	'item': 'sugar',
-            	'change': -5
-            },
-            {
-            	'text': _("A happy customer give you a gift!"),
-            	'item': 'strawberry',
-            	'change': -5
-            },
-            {
-            	'text': _("It begins to hail!"),
-            	'item': 'icecube',
-            	'change': -5
+                'text': _("A sugar farm would like to invest in your stand!"),
+                'item': 'sugar',
+                'change': -5
+#            },
+#            {
+#                'text': _("A happy customer give you a gift!"),
+#                'item': 'strawberry',
+#                'change': -5
+#            },
+#            {
+#                'text': _("It begins to hail!"),
+#                'item': 'icecube',
+#                'change': -5
             }
         ]},
     '50': {
@@ -405,19 +405,19 @@ G_EVENTS_DICT = {
                 'change': 100
             },
             {
-            	'text': _("You find a bag of sugar on the side of the road!"),
-            	'item': 'sugar',
-            	'change': 100
-            },
-            {
-            	'text': _("You find a strawberry bush!"),
-            	'item': 'strawberry',
-            	'change': 100
-            },
-            {
-            	'text': _("A resturante wants to support you!"),
-            	'item': 'icecube',
-            	'change': 100
+                'text': _("You find a bag of sugar on the side of the road!"),
+                'item': 'sugar',
+                'change': 100
+#            },
+#            {
+#                'text': _("You find a strawberry bush!"),
+#                'item': 'strawberry',
+#                'change': 100
+#            },
+#            {
+#                'text': _("A resturante wants to support you!"),
+#                'item': 'icecube',
+#                'change': 100
             }
         ]},
     '80': {
@@ -433,19 +433,19 @@ G_EVENTS_DICT = {
                 'change': 10
             },
             {
-            	'text': _("A sugar salesman gives you some free samples!"),
-            	'item': 'sugar',
-            	'change': 10
-            },
-            {
-            	'text': _("Your friend brings you a gift to make up!"),
-            	'item': 'strawberry',
-            	'change': 10
-            },
-            {
-            	'text': _("You break your icecubs into smaller pieces!"),
-            	'item': 'icecube',
-            	'change': 10
+                'text': _("A sugar salesman gives you some free samples!"),
+                'item': 'sugar',
+                'change': 10
+#            },
+#            {
+#                'text': _("Your friend brings you a gift to make up!"),
+#                'item': 'strawberry',
+#                'change': 10
+#            },
+#            {
+#                'text': _("You break your icecubs into smaller pieces!"),
+#                'item': 'icecube',
+#                'change': 10
             }
         ]},
     '100': {
@@ -461,19 +461,20 @@ G_EVENTS_DICT = {
                 'change': 5
             },
             {
-            	'text': _("Some customers didn't notice you forgot the sugar!"),
-            	'item': 'sugar',
-            	'change': 5
-            },
-            {
-            	'text':_("Free give away at the farm!"),
-            	'item': 'strawberry',
-            	'change': 5
-            },
-            {
-            	'text': _("A upset customer throws ice at you!"),
-            	'item': 'icecube',
-            	'change': 5
+                'text': _("Some customers didn't notice you forgot the \
+                        sugar!"),
+                'item': 'sugar',
+                'change': 5
+#            },
+#            {
+#                'text': _("Free give away at the farm!"),
+#                'item': 'strawberry',
+#                'change': 5
+#            },
+#            {
+#                'text': _("A upset customer throws ice at you!"),
+#                'item': 'icecube',
+#                'change': 5
             }
         ]}
 }
@@ -594,10 +595,10 @@ RECIPES = {
             'sprinkles': 5,
             'cost': [130, 275, 400, 550]
         },
-		'custom': {
-			'name': _("custom"),
-			'cost': [0, 0, 0, 0]
-		}
+        'custom': {
+            'name': _("custom"),
+            'cost': [0, 0, 0, 0]
+        }
     }
 }
 
