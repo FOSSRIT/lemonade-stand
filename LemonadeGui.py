@@ -25,7 +25,7 @@ from fortuneengine.GameEngineElement import GameEngineElement
 from constants import ITEMS, format_money, WEATHER, CURRENCY, DIFFICULTY,\
     MENU, UPGRADES, RECIPES, LANGUAGE
 
-from gettext import gettext as _
+import gettext
 from pygame import Surface, transform, image
 from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB, \
     K_DOWN, K_UP, K_LEFT, K_RIGHT, K_ESCAPE, \
@@ -156,6 +156,12 @@ class LemonadeGui(GameEngineElement):
         :type screen: Surface
         :param screen: The surface to display the ugrades on
         """
+
+        lang = gettext.translation(
+            'Lemonade',
+            '/usr/share/locale/',
+            languages=[self.main.language])
+        _ = lang.ugettext
 
         # Spacer is the space in between the different difficulty texts
         # Interval is the interval that is added to the spacer after each word
@@ -312,6 +318,12 @@ class LemonadeGui(GameEngineElement):
         :param screen: The surface to display difficutly settings on
         """
 
+        lang = gettext.translation(
+            'Lemonade',
+            '/usr/share/locale/',
+            languages=[self.main.language])
+        _ = lang.ugettext
+
         # Spacer is the space in between the different difficulty texts
         # Interval is the interval that is added to the spacer after each word
         interval = .1725
@@ -320,8 +332,8 @@ class LemonadeGui(GameEngineElement):
         # Loop through and display all the difficulty settings
         for i in range(len(DIFFICULTY)):
 
-            play_difficulty = self.__menuFont.render(_("{}").format(
-                DIFFICULTY[i]), True, (0, 0, 0))
+            play_difficulty = self.__menuFont.render(
+                _("{}").decode('utf8').format(DIFFICULTY[i]), True, (0, 0, 0))
             fw, fh = play_difficulty.get_size()
             render_left = (self.game_engine.width / 2) - (fw / 2)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
@@ -350,6 +362,12 @@ class LemonadeGui(GameEngineElement):
         :param screen: The surface to display menu items on
         """
 
+        lang = gettext.translation(
+            'Lemonade',
+            '/usr/share/locale/',
+            languages=[self.main.language])
+        _ = lang.ugettext
+
         # Spacer is the space in between the different difficulty texts
         # Interval is the interval that is added to the spacer after each word
         interval = .17
@@ -358,8 +376,8 @@ class LemonadeGui(GameEngineElement):
         # Loop through and display all of the menu items
         for i in range(len(MENU)):
 
-            play_menu_item = self.__menuFont.render(_("{}").format(
-                MENU[i]), True, (0, 0, 0))
+            play_menu_item = self.__menuFont.render(
+                _("{}").decode('utf8').format(MENU[i]), True, (0, 0, 0))
             fw, fh = play_menu_item.get_size()
             render_left = (self.game_engine.width / 2) - (fw / 2)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
@@ -400,6 +418,13 @@ class LemonadeGui(GameEngineElement):
         # sides are at 650 and 675
         #            /1200    /900
         #            13/24   27/36
+
+        lang = gettext.translation(
+            'Lemonade',
+            '/usr/share/locale/',
+            languages=[self.main.language])
+        _ = lang.ugettext
+
         ingredient_block = Surface((self.game_engine.width * 11/24,
                                     self.game_engine.height * 9/36))
         ingredient_block.fill((255, 255, 255))
@@ -436,6 +461,12 @@ class LemonadeGui(GameEngineElement):
         Displays the help text on the tutorial screens.
         """
 
+        lang = gettext.translation(
+            'Lemonade',
+            '/usr/share/locale/',
+            languages=[self.main.language])
+        _ = lang.ugettext
+
         # Checks if the player is on the first tutorial sreen
         if self.screen_number == 0:
             info = self._blit_to_block(
@@ -447,7 +478,7 @@ to buy more supplies to make more lemonade.
 
 The bottom right hand side of your screen displays
 your current supplies of each item and how much
-money you have to spend."""),
+money you have to spend.""").decode('utf8'),
                 (255, 255, 255),
                 (0, 0, 0))
 
@@ -464,7 +495,7 @@ Also below the item, you can type how many of that
 item you would like to purchase and the color of the
 text will change from black to white.
 
-Use the arrow keys to switch between items."""),
+Use the arrow keys to switch between items.""").decode('utf8'),
                 (255, 255, 255),
                 (0, 0, 0))
 
@@ -480,7 +511,7 @@ The daily log displays:
 - The total number of supplies you purchased
 - How much money you spent in the shop
 - The total number of cups of lemonade you sold
-- How much money you made from selling lemonade"""),
+- How much money you made from selling lemonade""").decode('utf8'),
                 (255, 255, 255),
                 (0, 0, 0))
 
@@ -499,7 +530,7 @@ The top right corner of the screen
 displays the amount of money you
 started with, the amount money after
 buying supplies and selling lemonade
-and how much profit you made."""),
+and how much profit you made.""").decode('utf8'),
                 (255, 255, 255),
                 (0, 0, 0))
 
@@ -521,7 +552,7 @@ make $6.10 and then you would continue
 to the end of the day.
 
 You will not be able continue to the
-end of the day until you are correct."""),
+end of the day until you are correct.""").decode('utf8'),
                 (255, 255, 255),
                 (0, 0, 0))
 
@@ -640,6 +671,12 @@ end of the day until you are correct."""),
         :param main: The main class of Lemonade Stand that contains info
         """
 
+        lang = gettext.translation(
+            'Lemonade',
+            '/usr/share/locale/',
+            languages=[self.main.language])
+        _ = lang.ugettext
+
         # Load in the cash box image, covert it, and scale it
         cashbox = image.load("images/{}/cash-box.gif".format(
             self.version)).convert()
@@ -755,6 +792,13 @@ end of the day until you are correct."""),
         :type main: LemonadeMain
         :param main: The main class of Lemonade Stand that contains info
         """
+
+        lang = gettext.translation(
+            'Lemonade',
+            '/usr/share/locale/',
+            languages=[self.main.language])
+        _ = lang.ugettext
+
         store = image.load("images/{}/store-outline.gif".format(
             self.version)).convert()
         store = transform.scale(store,
@@ -850,8 +894,9 @@ end of the day until you are correct."""),
                 spacer += interval
 
         # Title above recipe
-        ren = self.__shopNumFont.render(_("Ingredients for {} {}:").format(
-            main.current_recipe['name'], self.version), 1, (255, 240, 0))
+        ren = self.__shopNumFont.render(
+            _("Ingredients for {} {}:").decode('utf8').format(
+                main.current_recipe['name'], self.version), 1, (255, 240, 0))
         render_left = 5
         render_top = self.game_engine.height / 11
         store.blit(ren, (render_left, render_top))
@@ -1007,6 +1052,10 @@ end of the day until you are correct."""),
 
                 # Checks if the player is in language selection
                 elif self.game_mode == 8:
+                    if self.__input_mode[self.game_mode] == 0:
+                        self.main.language = 'en'
+                    if self.__input_mode[self.game_mode] == 1:
+                        self.main.language = 'es'
                     self.game_mode = 4
 
             # Checks if the player hit space to enter the upgrade shop
