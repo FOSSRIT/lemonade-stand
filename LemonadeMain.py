@@ -22,12 +22,12 @@
 #     Nathaniel Case <Qalthos@gmail.com>
 
 from random import randint
-from gettext import gettext as _
 from sugar.datastore import datastore
+import gettext
 
 from operator import itemgetter
 from constants import STARTING_MONEY, MAX_MSG, ITEMS, \
-    CURRENCY, RECIPES, DIFFICULTY, format_money, \
+    CURRENCY, RECIPES, format_money, \
     WEATHER, GOOD_ODDS, BAD_ODDS, SCALE, EVENT_KEYS, \
     STARTING_ITEMS, G_EVENTS_DICT, B_EVENTS_DICT, \
     SERVING_ITEM, LOCATIONS, REP_VALUES, UPGRADES
@@ -44,6 +44,7 @@ class LemonadeMain:
         self.__day = 1
         self.__difficulty = difficulty_level
         self.version = "lemonade"
+        self.language = 'es'
         self.__resources = {
             'money': 0,
             'day_start_money': 0,
@@ -98,6 +99,10 @@ class LemonadeMain:
         self.badges.metadata['info'] = ''
 
         datastore.write(self.badges)
+
+    @property
+    def language(self):
+        return self.language
 
     @property
     def badges(self):
@@ -179,9 +184,6 @@ class LemonadeMain:
     def weather_name(self):
         return WEATHER[self.weather]
 
-    def get_resource(self, key):
-        return self.count_item(key)
-
     @property
     def resource_list(self):
         resources = {}
@@ -189,12 +191,15 @@ class LemonadeMain:
             resources[item_key] = self.count_item(item_key)
         return resources
 
-    def recipe(self, ingredient):
-        return self.current_recipe.get(ingredient, 0)
-
     @property
     def messages(self):
         return self.__msg_queue
+
+    def recipe(self, ingredient):
+        return self.current_recipe.get(ingredient, 0)
+
+    def get_resource(self, key):
+        return self.count_item(key)
 
     def process_buy_upgrade(self, info):
         """
@@ -316,6 +321,12 @@ class LemonadeMain:
         Attempt to run random events
         """
 
+        lang = gettext.translation(
+            'Lemonade',
+            '/usr/share/locale/',
+            languages=[self.language])
+        _ = lang.ugettext
+
         # Adds a event free buffer for the first few days
         if self.day < 5:
             return
@@ -435,19 +446,8 @@ class LemonadeMain:
     def process_day_logic(self):
         self.clear_queue()
 
-        # Show profit and expenses if the difficuly is less than impossible
-        if self.difficulty < DIFFICULTY.index("Impossible"):
-            self.add_msg("You spent {} on supplies".format(
-                format_money(self.spent)))
-            self.add_msg("and made {} in sales".format(
-                format_money(self.income)))
-
         # Check if any profit was made
         if self.profit > 0:
-            # Show the net porfit if difficulty is less than normal
-            if self.difficulty < DIFFICULTY.index("Hard"):
-                self.add_msg("That comes to {} in profit".format(
-                    format_money(self.profit)))
             return True
 
         # If no profit is made, go to the end of the day
@@ -482,13 +482,19 @@ class LemonadeMain:
 
     def update_day_log(self, items):
 
+        lang = gettext.translation(
+            'Lemonade',
+            '/usr/share/locale/',
+            languages=[self.language])
+        _ = lang.ugettext
+
         self.clear_queue()
         self.spent = 0
 
         self.start_money = self.money
 
         # Display the current day
-        self.add_msg(_("--Day {} Log--").format(self.day))
+        self.add_msg(_("--Day {} Log--").decode('utf8').format(self.day))
         self.add_msg("")
 
         self.add_msg(_("Today's weather: {}").format(
@@ -500,14 +506,14 @@ class LemonadeMain:
         for item in items:
             total_bought = self.buy_item(item, items[item])
             if total_bought != 1:
-                self.add_msg(_("{} {}s for {}").format(
+                self.add_msg(_("{} {}s for {}").decode('utf8').format(
                              total_bought,
                              ITEMS[self.version][item]['name'],
                              format_money(total_bought *
                              ITEMS[self.version][
                                  item]['cost'][self.difficulty])))
             else:
-                self.add_msg(_("{} {} for {}").format(
+                self.add_msg(_("{} {} for {}").decode('utf8').format(
                              total_bought,
                              ITEMS[self.version][item]['name'],
                              format_money(total_bought *
@@ -518,7 +524,8 @@ class LemonadeMain:
                 ITEMS[self.version][item]['cost'][self.difficulty]
 
         self.add_msg("------------------------------")
-        self.add_msg(_("Total Spent: {}").format(format_money(self.spent)))
+        self.add_msg(_("Total Spent: {}").decode('utf8').format(
+            format_money(self.spent)))
         self.add_msg("")
 
         # Chance of a random event to occur
@@ -576,6 +583,13 @@ class LemonadeMain:
         @param mini_game_key:    A dictionary of keys and values of the
                                  mini game
         """
+
+        lang = gettext.translation(
+            'Lemonade',
+            '/usr/share/locale/',
+            languages=[self.language])
+        _ = lang.ugettext
+
         if self.profit > 0:
             mini_game_success = self.count_game(mini_game_key, self.profit)
             if mini_game_success:
@@ -598,6 +612,13 @@ class LemonadeMain:
         """
         Processes the end of the day events.
         """
+
+        lang = gettext.translation(
+            'Lemonade',
+            '/usr/share/locale/',
+            languages=[self.language])
+        _ = lang.ugettext
+
         self.clear_queue()
 
         # Decay items
@@ -616,8 +637,9 @@ class LemonadeMain:
 
         else:
             self.add_msg(_("Time to get some rest."))
-            self.add_msg(_("It looks like it will be {} tomorrow.").format(
-                         self.weather_name))
+            self.add_msg(
+                _("It looks like it will be {} tomorrow.").decode(
+                    'utf8').format(self.weather_name))
 
     def buy_item(self, key, quanity):
         """
@@ -696,6 +718,13 @@ class LemonadeMain:
         """
         Decays items and removes expired items.
         """
+
+        lang = gettext.translation(
+            'Lemonade',
+            '/usr/share/locale/',
+            languages=[self.language])
+        _ = lang.ugettext
+
         # Loop through all items
         for item_key in ITEMS[self.version].keys():
             new_list = []
