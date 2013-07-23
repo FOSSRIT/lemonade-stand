@@ -21,9 +21,10 @@
 #     Justin Lewis <jlew.blackout@gmail.com>
 #     Nathaniel Case <Qalthos@gmail.com>
 
+from constants import constants
 from fortuneengine.GameEngineElement import GameEngineElement
-from constants import ITEMS, format_money, WEATHER, CURRENCY, DIFFICULTY,\
-    MENU, UPGRADES, RECIPES, LANGUAGE
+from constants import format_money
+from constants import CURRENCY
 
 import gettext
 from pygame import Surface, transform, image
@@ -46,16 +47,17 @@ class LemonadeGui(GameEngineElement):
         self.main = self.game_engine.get_object('main')
 
         self.game_mode = 8
+        self.constants = self.main.constants
         self.failed = False
         self.fail_key = 0
         self.screen_number = 0
         self.version = self.main.version
 
-        self.__input_keys = [ITEMS[self.version].keys(),
-                             ITEMS[self.version].keys(), CURRENCY.keys(),
-                             RECIPES[self.version].keys(), MENU, DIFFICULTY,
-                             [None], UPGRADES[self.version], LANGUAGE,
-                             ITEMS[self.version].keys()]
+        self.__input_keys = [self.constants.items[self.version].keys(),
+                             self.constants.items[self.version].keys(), self.constants.currency.keys(),
+                             self.constants.recipes[self.version].keys(), self.constants.menu, self.constants.difficulty,
+                             [None], self.constants.upgrades[self.version], self.constants.language,
+                             self.constants.items[self.version].keys()]
         self.__input_mode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.__input_string = []
 
@@ -116,7 +118,7 @@ class LemonadeGui(GameEngineElement):
         """
 
         bg = image.load("images/{}/field/{}.gif".format(
-            self.version, WEATHER[weather])).convert()
+            self.version, self.constants.weather[weather])).convert()
 
         stand = image.load("images/{}/booth.gif".format(
             self.version)).convert()
@@ -159,8 +161,8 @@ class LemonadeGui(GameEngineElement):
         """
 
         lang = gettext.translation(
-            'Lemonade',
-            '/usr/share/locale/',
+            'org.laptop.community.lemonade',
+            'locale/',
             languages=[self.main.language])
         _ = lang.ugettext
 
@@ -173,7 +175,7 @@ class LemonadeGui(GameEngineElement):
 
             # Draws the name of the upgrade
             upgrade_name = self.__shopFont.render(_("{}").format(
-                UPGRADES[self.version][i]['name']), True, (0, 0, 0))
+                [self.version][i]['name']), True, (0, 0, 0))
             fw, fh = upgrade_name.get_size()
             render_left = (self.game_engine.width * .075)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
@@ -181,8 +183,8 @@ class LemonadeGui(GameEngineElement):
 
             # Draws the cost of the upgrade
             upgrade_cost = self.__shopFont.render(_("{}").format(
-                format_money(UPGRADES[self.version][i]['cost'] +
-                             UPGRADES[self.version][i]['cost'] * 1.5 *
+                format_money(self.constants.upgrades[self.version][i]['cost'] +
+                             self.constants.upgrades[self.version][i]['cost'] * 1.5 *
                              self.main.upgrades[1]['level'][i])),
                 True, (0, 0, 0))
             fw, fh = upgrade_cost.get_size()
@@ -191,7 +193,7 @@ class LemonadeGui(GameEngineElement):
 
             # Draws the level of the upgrade
             upgrade_level = self.__shopFont.render(_("{}").format(
-                UPGRADES[self.version][i]['level'] +
+                self.constants.upgrades[self.version][i]['level'] +
                 self.main.upgrades[1]['level'][i]),
                 True, (0, 0, 0))
             fw, fh = upgrade_level.get_size()
@@ -215,12 +217,12 @@ class LemonadeGui(GameEngineElement):
             if level > (len(self.main.upgrades[1]['level']) - 1):
                 level = len(self.main.upgrades[1]['level']) - 1
 
-            top_buffer = len(UPGRADES[self.version][i]['info'][level]) / 2
+            top_buffer = len(self.constants.upgrades[self.version][i]['info'][level]) / 2
             if top_buffer < 1:
                 top_buffer = 0
 
             render_top = render_top - fw * top_buffer
-            for line in UPGRADES[self.version][i]['info'][level]:
+            for line in self.constants.upgrades[self.version][i]['info'][level]:
                 upgrade_info = self.__font.render(_("{}").format(
                     line), True, (0, 0, 0))
                 fw, fh = upgrade_info.get_size()
@@ -282,17 +284,17 @@ class LemonadeGui(GameEngineElement):
 
         space_between = self.game_engine.height / 10
         space_between += tab_height / 2
-        start_top = (self.game_engine.height / 2) - (len(LANGUAGE)) * \
+        start_top = (self.game_engine.height / 2) - (len(self.constants.language)) * \
             (tab_height / 2)
         spacer = start_top
 
         # Loop through and display all of the languages available
-        for i in range(len(LANGUAGE)):
+        for i in range(len(self.constants.language)):
 
             screen.blit(tab, (tab_render_left, spacer))
 
             language = self.__menuFont.render("{}".format(
-                LANGUAGE[i]), True, (0, 0, 0))
+                self.constants.language[i]), True, (0, 0, 0))
             fw, fh = language.get_size()
             render_left = (self.game_engine.width / 2) - (fw / 2)
             render_top = spacer + (fh / 2.5)
@@ -321,8 +323,8 @@ class LemonadeGui(GameEngineElement):
         """
 
         lang = gettext.translation(
-            'Lemonade',
-            '/usr/share/locale/',
+            'org.laptop.community.lemonade',
+            'locale/',
             languages=[self.main.language])
         _ = lang.ugettext
 
@@ -332,10 +334,10 @@ class LemonadeGui(GameEngineElement):
         spacer = .3075
 
         # Loop through and display all the difficulty settings
-        for i in range(len(DIFFICULTY)):
+        for i in range(len(self.constants.difficulty)):
 
             play_difficulty = self.__menuFont.render(
-                _("{}").decode('utf8').format(DIFFICULTY[i]), True, (0, 0, 0))
+                _("{}").format(self.constants.difficulty[i]), True, (0, 0, 0))
             fw, fh = play_difficulty.get_size()
             render_left = (self.game_engine.width / 2) - (fw / 2)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
@@ -365,8 +367,8 @@ class LemonadeGui(GameEngineElement):
         """
 
         lang = gettext.translation(
-            'Lemonade',
-            '/usr/share/locale/',
+            'org.laptop.community.lemonade',
+            'locale/',
             languages=[self.main.language])
         _ = lang.ugettext
 
@@ -376,10 +378,10 @@ class LemonadeGui(GameEngineElement):
         spacer = .4
 
         # Loop through and display all of the menu items
-        for i in range(len(MENU)):
+        for i in range(len(self.constants.menu)):
 
             play_menu_item = self.__menuFont.render(
-                _("{}").decode('utf8').format(MENU[i]), True, (0, 0, 0))
+                _("{}").format(self.constants.menu[i]), True, (0, 0, 0))
             fw, fh = play_menu_item.get_size()
             render_left = (self.game_engine.width / 2) - (fw / 2)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
@@ -420,8 +422,8 @@ class LemonadeGui(GameEngineElement):
         #            13/24   27/36
 
         lang = gettext.translation(
-            'Lemonade',
-            '/usr/share/locale/',
+            'org.laptop.community.lemonade',
+            'locale/',
             languages=[self.main.language])
         _ = lang.ugettext
 
@@ -462,8 +464,8 @@ class LemonadeGui(GameEngineElement):
         """
 
         lang = gettext.translation(
-            'Lemonade',
-            '/usr/share/locale/',
+            'org.laptop.community.lemonade',
+            'locale/',
             languages=[self.main.language])
         _ = lang.ugettext
 
@@ -478,7 +480,7 @@ to buy more supplies to make more lemonade.
 
 The bottom right hand side of your screen displays
 your current supplies of each item and how much
-money you have to spend.""").decode('utf8'),
+money you have to spend."""),
                 (255, 255, 255),
                 (0, 0, 0))
 
@@ -495,7 +497,7 @@ Also below the item, you can type how many of that
 item you would like to purchase and the color of the
 text will change from black to white.
 
-Use the arrow keys to switch between items.""").decode('utf8'),
+Use the arrow keys to switch between items."""),
                 (255, 255, 255),
                 (0, 0, 0))
 
@@ -511,7 +513,7 @@ The daily log displays:
 - The total number of supplies you purchased
 - How much money you spent in the shop
 - The total number of cups of lemonade you sold
-- How much money you made from selling lemonade""").decode('utf8'),
+- How much money you made from selling lemonade"""),
                 (255, 255, 255),
                 (0, 0, 0))
 
@@ -530,7 +532,7 @@ The top right corner of the screen
 displays the amount of money you
 started with, the amount money after
 buying supplies and selling lemonade
-and how much profit you made.""").decode('utf8'),
+and how much profit you made."""),
                 (255, 255, 255),
                 (0, 0, 0))
 
@@ -552,7 +554,7 @@ make $6.10 and then you would continue
 to the end of the day.
 
 You will not be able continue to the
-end of the day until you are correct.""").decode('utf8'),
+end of the day until you are correct."""),
                 (255, 255, 255),
                 (0, 0, 0))
 
@@ -671,7 +673,14 @@ end of the day until you are correct.""").decode('utf8'),
         """
         Displays an interactive menu to select different recipes
         """
-        self.__input_keys[self.game_mode] = RECIPES[self.version].keys()
+
+        lang = gettext.translation(
+            'org.laptop.community.lemonade',
+            'locale/',
+            languages=[self.main.language])
+        _ = lang.ugettext
+
+        self.__input_keys[self.game_mode] = self.constants.recipes[self.version].keys()
         text_array = []
 
         text_array.append(_("What would you like to make for tomorrow"))
@@ -682,7 +691,7 @@ end of the day until you are correct.""").decode('utf8'),
             else:
                 t = "  "
 
-            text_array.append("{}{}".format(t, RECIPES[self.version][
+            text_array.append("{}{}".format(t, self.constants.recipes[self.version][
                               self.__input_keys[self.game_mode][i]][
                                   'name']))
         return self._blit_to_block(text_array, (0, 0, 0), (255, 255, 255),
@@ -709,8 +718,8 @@ end of the day until you are correct.""").decode('utf8'),
         """
 
         lang = gettext.translation(
-            'Lemonade',
-            '/usr/share/locale/',
+            'org.laptop.community.lemonade',
+            'locale/',
             languages=[self.main.language])
         _ = lang.ugettext
 
@@ -723,15 +732,15 @@ end of the day until you are correct.""").decode('utf8'),
 
         # Create the spacing and the height and width for
         # the boxs that are used to selecting a value
-        spacer = self.game_engine.height / ((len(CURRENCY) - 1) * 3)
+        spacer = self.game_engine.height / ((len(self.constants.currency) - 1) * 3)
         box_width = (self.game_engine.width / 3) - 10
-        box_height = (self.game_engine.height - (len(CURRENCY) + 1) *
-                      (spacer)) / (len(CURRENCY))
+        box_height = (self.game_engine.height - (len(self.constants.currency) + 1) *
+                      (spacer)) / (len(self.constants.currency))
 
         space_between = spacer + (self.game_engine.height * .12)
 
         # Loop through all of the currency values
-        for i in range(0, len(CURRENCY)):
+        for i in range(0, len(self.constants.currency)):
 
             # Create the box
             outline = Surface((box_width, box_height))
@@ -748,7 +757,7 @@ end of the day until you are correct.""").decode('utf8'),
             cashbox.blit(outline, (render_left, render_top))
 
             # Display the name of the currency next to its box
-            name = self.__shopFont.render(self.currency(i), 1, (0, 0, 0))
+            name = self.__shopFont.render(_(self.currency(i)), 1, (0, 0, 0))
             fw, fh = name.get_size()
             render_left = self.game_engine.width / 15
             render_top = space_between + (fh / 2)
@@ -774,8 +783,8 @@ end of the day until you are correct.""").decode('utf8'),
         color = (0, 0, 0)
 
         # Display current day in the log book
-        day_title = self.__shopFont.render(_("-- Day {} --").decode(
-            'utf8').format(main.day), 1, color)
+        day_title = self.__shopFont.render(_("-- Day {} --").format(
+            main.day), 1, color)
         fw, fh = day_title.get_size()
         render_top = self.game_engine.height / 15
         render_left = (self.game_engine.width * 8 / 10) - (fw / 2)
@@ -834,6 +843,13 @@ end of the day until you are correct.""").decode('utf8'),
         :type main: LemonadeMain
         :param main: the main class of Lemonade Stand that contains info
         """
+
+        lang = gettext.translation(
+            'org.laptop.community.lemonade',
+            'locale/',
+            languages=[self.main.language])
+        _ = lang.ugettext
+
         # Loads and Scales background
         crafter = image.load("images/{}/store-outline.gif".format(
             self.version)).convert()
@@ -842,9 +858,9 @@ end of the day until you are correct.""").decode('utf8'),
                                   self.game_engine.height))
 
         # Crafter displaying items.
-        spacer = self.game_engine.width / (len(ITEMS[self.version]) * 4)
-        icon_size = (self.game_engine.width - len(ITEMS[self.version]) *
-                    (3 * spacer) / 2) / len(ITEMS[self.version])
+        spacer = self.game_engine.width / (len(self.constants.items[self.version]) * 4)
+        icon_size = (self.game_engine.width - len(self.constants.items[self.version]) *
+                    (3 * spacer) / 2) / len(self.constants.items[self.version])
         j = spacer
 
         # Draw Items
@@ -909,8 +925,8 @@ end of the day until you are correct.""").decode('utf8'),
         """
 
         lang = gettext.translation(
-            'Lemonade',
-            '/usr/share/locale/',
+            'org.laptop.community.lemonade',
+            'locale/',
             languages=[self.main.language])
         _ = lang.ugettext
 
@@ -923,7 +939,7 @@ end of the day until you are correct.""").decode('utf8'),
         # Store item display.
         # Calculate Items to buy
         self.__input_keys[self.game_mode] = []
-        for item in ITEMS[self.version].keys():
+        for item in self.constants.items[self.version].keys():
             if main.current_recipe.get(item, 0) > 0:
                 self.__input_keys[self.game_mode].append(item)
         # Adjust size for display
@@ -953,9 +969,9 @@ end of the day until you are correct.""").decode('utf8'),
             # Display pricing info under the item.
             ren = self.__shopFont.render(_("{} for {}").format(
                 format_money(
-                    ITEMS[self.version][name]["cost"][main.difficulty] *
-                    ITEMS[self.version][name]["bulk"]),
-                ITEMS[self.version][name]["bulk"]), True, (0, 0, 0))
+                    self.constants.items[self.version][name]["cost"][main.difficulty] *
+                    self.constants.items[self.version][name]["bulk"]),
+                self.constants.items[self.version][name]["bulk"]), True, (0, 0, 0))
             fw, fh = ren.get_size()
             render_left = j + (icon_size / 2) - (fw / 2)
             render_top = icon_render_top + icon_size + (fh / 10)
@@ -1019,7 +1035,7 @@ end of the day until you are correct.""").decode('utf8'),
 
         # Title above recipe
         ren = self.__shopNumFont.render(
-            _("Ingredients for {} {}:").decode('utf8').format(
+            _("Ingredients for {} {}:").format(
                 main.current_recipe['name'], self.version), 1, (255, 240, 0))
         render_left = 5
         render_top = self.game_engine.height / 11
@@ -1117,11 +1133,11 @@ end of the day until you are correct.""").decode('utf8'),
                     upgrade_info = []
                     for i in range(0, len(self.__input_keys[self.game_mode])):
                         if i == self.__input_mode[self.game_mode]:
-                            upgrade_info.append(UPGRADES
+                            upgrade_info.append(self.constants.upgrades
                                                 [self.version][i]['name'])
-                            upgrade_info.append(UPGRADES
+                            upgrade_info.append(self.constants.upgrades
                                                 [self.version][i]['cost'])
-                            upgrade_info.append(UPGRADES
+                            upgrade_info.append(self.constants.upgrades
                                                 [self.version][i]['capacity'])
                 elif self.game_mode != 9:
                     item_list = {}
@@ -1164,12 +1180,12 @@ end of the day until you are correct.""").decode('utf8'),
                     index = 0
                     costs = [0, 0, 0, 0]
                     for key in self.__input_keys[self.game_mode]:
-                        if main.current_recipe[key] < ITEMS[self.version][
+                        if main.current_recipe[key] < self.constants.items[self.version][
                                 key].get('min', 0):
-                            main.current_recipe[key] = ITEMS[self.version][
+                            main.current_recipe[key] = self.constants.items[self.version][
                                 key].get('min', 0)
                         index += 1
-                        cost = ITEMS[self.version][key]['cost']
+                        cost = self.constants.items[self.version][key]['cost']
                         costs[0] += main.current_recipe[key] * cost[0]
                         costs[1] += main.current_recipe[key] * cost[1]
                         costs[2] += main.current_recipe[key] * cost[2]
@@ -1186,7 +1202,7 @@ end of the day until you are correct.""").decode('utf8'),
                         self.game_mode = 4
 
                     else:
-                        main.current_recipe = RECIPES[self.version][
+                        main.current_recipe = self.constants.recipes[self.version][
                             self.__input_keys[self.game_mode][
                                 self.__input_mode[self.game_mode]]]
                         main.prices = main.current_recipe['cost']
@@ -1206,9 +1222,13 @@ end of the day until you are correct.""").decode('utf8'),
                 # Checks if the player is in language selection
                 elif self.game_mode == 8:
                     if self.__input_mode[self.game_mode] == 0:
-                        self.main.language = 'en'
+                        self.main.language = 'LemonadeEnglish'
+
                     if self.__input_mode[self.game_mode] == 1:
-                        self.main.language = 'es'
+                        self.main.language = 'LemonadeSpanish'
+
+                    self.main.constants = constants(self.main.language)
+                    self.constants = self.main.constants
                     self.game_mode = 4
 
             # Checks if the player hit space to enter the upgrade shop

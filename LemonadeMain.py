@@ -21,16 +21,14 @@
 #     Justin Lewis <jlew.blackout@gmail.com>
 #     Nathaniel Case <Qalthos@gmail.com>
 
+from __future__ import unicode_literals
 from random import randint
 from sugar.datastore import datastore
 import gettext
+from constants import constants
+from constants import format_money, CURRENCY
 
 from operator import itemgetter
-from constants import STARTING_MONEY, MAX_MSG, ITEMS, \
-    CURRENCY, RECIPES, format_money, \
-    WEATHER, GOOD_ODDS, BAD_ODDS, SCALE, EVENT_KEYS, \
-    STARTING_ITEMS, G_EVENTS_DICT, B_EVENTS_DICT, \
-    SERVING_ITEM, LOCATIONS, REP_VALUES, UPGRADES
 
 
 class LemonadeMain:
@@ -44,15 +42,16 @@ class LemonadeMain:
         self.__day = 1
         self.__difficulty = difficulty_level
         self.version = "lemonade"
-        self.language = 'es'
+        self.language = 'Lemonade'
+        self.constants = constants(self.language)
         self.__resources = {
             'money': 0,
             'day_start_money': 0,
             'last_income': 0,
             'last_profit': 0,
             'last_spent': 0,
-            'price': RECIPES[self.version]['basic']['cost'],
-            'recipe': RECIPES[self.version]['basic'],
+            'price': self.constants.recipes[self.version]['basic']['cost'],
+            'recipe': self.constants.recipes[self.version]['basic'],
             'upgrades': [0,
                            {
                                'name': [],
@@ -63,17 +62,17 @@ class LemonadeMain:
         }
 
         # Populate resources with item keys
-        for item_key in ITEMS[self.version].keys():
+        for item_key in self.constants.items[self.version].keys():
             self.__resources[item_key] = []
 
         # Populate the upgrade resource
-        for i in range(0, len(UPGRADES[self.version])):
+        for i in range(0, len(self.constants.upgrades[self.version])):
             self.__resources['upgrades'][1]['name'].append(
-                UPGRADES[self.version][i]['name'])
+                self.constants.upgrades[self.version][i]['name'])
             self.__resources['upgrades'][1]['level'].append(0)
             self.__resources['upgrades'][1]['capacity'].append(0)
             self.__resources['upgrades'][1]['saves'].append(
-                UPGRADES[self.version][i]['saves'])
+                self.constants.upgrades[self.version][i]['saves'])
             self.__resources['upgrades'][0] += 1
 
         self.first_upgrade = True
@@ -182,12 +181,12 @@ class LemonadeMain:
 
     @property
     def weather_name(self):
-        return WEATHER[self.weather]
+        return self.constants.weather[self.weather]
 
     @property
     def resource_list(self):
         resources = {}
-        for item_key in ITEMS[self.version].keys():
+        for item_key in self.constants.items[self.version].keys():
             resources[item_key] = self.count_item(item_key)
         return resources
 
@@ -252,18 +251,18 @@ class LemonadeMain:
 
         # Populate the player's inventory with the starting
         # items for this specific difficulty
-        for item_key in ITEMS[self.version].keys():
+        for item_key in self.constants.items[self.version].keys():
             self.add_item(item_key,
-                          STARTING_ITEMS[self.version].get(item_key,
-                                        [0, 0, 0, 0])[difficulty])
+                          self.constants.starting_items[self.version].get(
+                            item_key, [0, 0, 0, 0])[difficulty])
 
         # Give the player starting money depending on the difficulty
-        self.money = STARTING_MONEY[difficulty]
-        self.start_money = STARTING_MONEY[difficulty]
+        self.money = self.constants.starting_money[difficulty]
+        self.start_money = self.constants.starting_money[difficulty]
 
     def add_msg(self, mesg):
         self.__msg_queue.append(mesg)
-        if len(self.__msg_queue) > MAX_MSG:
+        if len(self.__msg_queue) > self.constants.max_msg:
             self.__msg_queue.pop(0)
 
     def clear_queue(self):
@@ -293,7 +292,7 @@ class LemonadeMain:
         rand_num = randint(1, 100)
 
         # Loop through all the weights starting with the lowest
-        for key in EVENT_KEYS:
+        for key in self.constants.event_keys:
 
             # Once you found which weight value you are using,
             # return a random event with that weight
@@ -306,7 +305,7 @@ class LemonadeMain:
                     index = randint(0, len(events[key][self.version]) - 1)
                     event = events[key][self.version][index]
                     print event['item']
-                    if ITEMS[self.version].get(event['item'], None) is None:
+                    if self.constants.items[self.version].get(event['item'], None) is None:
                         events[key][self.version].remove(event)
                         print "not found"
                     else:
@@ -322,8 +321,8 @@ class LemonadeMain:
         """
 
         lang = gettext.translation(
-            'Lemonade',
-            '/usr/share/locale/',
+            'org.laptop.community.lemonade',
+            'locale/',
             languages=[self.language])
         _ = lang.ugettext
 
@@ -337,10 +336,10 @@ class LemonadeMain:
         event_num = randint(1, 100)
 
         # Check if you got a bad event
-        if event_num <= BAD_ODDS[self.difficulty]:
+        if event_num <= self.constants.bad_odds[self.difficulty]:
 
             # Generate a bad event
-            event = self.event_select(B_EVENTS_DICT)
+            event = self.event_select(self.constants.bad_events_dict)
             # Checks if an event was found
             if event is None:
                 return
@@ -371,7 +370,7 @@ class LemonadeMain:
 
                 # Find the amount of items to remove based on the scale
                 remove = int(abs(event['change']) +
-                             (itemcount * SCALE[self.difficulty]))
+                             (itemcount * self.constants.scale[self.difficulty]))
 
             # Else remove a flat amount
             else:
@@ -404,12 +403,12 @@ class LemonadeMain:
             self.event_messages.append(msg)
 
         # Check if you got a good event
-        elif event_num > BAD_ODDS[self.difficulty] \
-            and event_num <= (GOOD_ODDS[self.difficulty] +
-                              BAD_ODDS[self.difficulty]):
+        elif event_num > self.constants.bad_odds[self.difficulty] \
+            and event_num <= (self.constants.good_odds[self.difficulty] +
+                              self.constants.bad_odds[self.difficulty]):
 
             # Generate a good event
-            event = self.event_select(G_EVENTS_DICT)
+            event = self.event_select(self.constants.good_events_dict)
             # Checks if an event was foud
             if event is None:
                 print "No Event found!"
@@ -422,7 +421,7 @@ class LemonadeMain:
 
                 # Find the amount of items to add based on the scale
                 add = int(abs(event['change']) +
-                          (itemcount * SCALE[3 - self.difficulty]))
+                          (itemcount * self.constants.scale[3 - self.difficulty]))
 
             # Else add a flat amount
             else:
@@ -459,8 +458,8 @@ class LemonadeMain:
 
     def process_sales(self, max_sales):
 
-        sales = LOCATIONS[self.location]['base'] + \
-            LOCATIONS[self.location]['multiple'] * \
+        sales = self.constants.locations[self.location]['base'] + \
+            self.constants.locations[self.location]['multiple'] * \
             self.reputation[self.location]
 
         if self.reputation != 100:
@@ -483,8 +482,8 @@ class LemonadeMain:
     def update_day_log(self, items):
 
         lang = gettext.translation(
-            'Lemonade',
-            '/usr/share/locale/',
+            'org.laptop.community.lemonade',
+            'locale/',
             languages=[self.language])
         _ = lang.ugettext
 
@@ -494,7 +493,7 @@ class LemonadeMain:
         self.start_money = self.money
 
         # Display the current day
-        self.add_msg(_("--Day {} Log--").decode('utf8').format(self.day))
+        self.add_msg(_("--Day {} Log--").format(self.day))
         self.add_msg("")
 
         self.add_msg(_("Today's weather: {}").format(
@@ -506,25 +505,25 @@ class LemonadeMain:
         for item in items:
             total_bought = self.buy_item(item, items[item])
             if total_bought != 1:
-                self.add_msg(_("{} {}s for {}").decode('utf8').format(
+                self.add_msg(_("{} {}s for {}").format(
                              total_bought,
-                             ITEMS[self.version][item]['name'],
+                             self.constants.items[self.version][item]['name'],
                              format_money(total_bought *
-                             ITEMS[self.version][
+                             self.constants.items[self.version][
                                  item]['cost'][self.difficulty])))
             else:
-                self.add_msg(_("{} {} for {}").decode('utf8').format(
+                self.add_msg(_("{} {} for {}").format(
                              total_bought,
-                             ITEMS[self.version][item]['name'],
+                             self.constants.items[self.version][item]['name'],
                              format_money(total_bought *
-                             ITEMS[self.version][
+                             self.constants.items[self.version][
                                  item]['cost'][self.difficulty])))
 
             self.spent += total_bought * \
-                ITEMS[self.version][item]['cost'][self.difficulty]
+                self.constants.items[self.version][item]['cost'][self.difficulty]
 
         self.add_msg("------------------------------")
-        self.add_msg(_("Total Spent: {}").decode('utf8').format(
+        self.add_msg(_("Total Spent: {}").format(
             format_money(self.spent)))
         self.add_msg("")
 
@@ -533,7 +532,7 @@ class LemonadeMain:
 
         # Calculate the max number of cups of lemonade you can sell
         inventory_hold = []
-        for item_key in ITEMS[self.version].keys():
+        for item_key in self.constants.items[self.version].keys():
             if self.recipe(item_key) == 0:
                 continue
             inventory_hold.append(
@@ -545,12 +544,12 @@ class LemonadeMain:
         # Calculates how much reputation you acquired today
         if sales > 0 and max_sales > sales:
             self.reputation[self.location] += \
-                REP_VALUES['gain'][self.difficulty]
+                self.constants.rep_values['gain'][self.difficulty]
             if self.reputation[self.location] > 100:
                 self.reputation[self.location] = 100
         else:
             self.reputation[self.location] -= \
-                REP_VALUES['lose'][self.difficulty]
+                self.constants.rep_values['lose'][self.difficulty]
             if self.reputation[self.location] < 0:
                 self.reputation[self.location] = 0
 
@@ -562,16 +561,16 @@ class LemonadeMain:
         self.add_msg(_("Sales:"))
         if sales != 1:
             self.add_msg(_("{} {}s of {} sold").format(
-                sales, SERVING_ITEM[self.version], self.version))
+                sales, self.constants.serving_item[self.version], self.version))
         else:
             self.add_msg(_("{} {} of {} sold").format(
-                sales, SERVING_ITEM[self.version], self.version))
+                sales, self.constants.serving_item[self.version], self.version))
         self.add_msg(_("    @ {} each").format(format_money(self.price)))
         self.add_msg("------------------------------")
         self.add_msg(_("Total Made: {}").format(format_money(self.income)))
 
         # Remove supplies required to make your number of sales
-        for item_key in ITEMS[self.version].keys():
+        for item_key in self.constants.items[self.version].keys():
             self.remove_item(item_key, sales * self.recipe(item_key))
 
         self.profit = self.income - self.spent
@@ -585,8 +584,8 @@ class LemonadeMain:
         """
 
         lang = gettext.translation(
-            'Lemonade',
-            '/usr/share/locale/',
+            'org.laptop.community.lemonade',
+            'locale/',
             languages=[self.language])
         _ = lang.ugettext
 
@@ -614,8 +613,8 @@ class LemonadeMain:
         """
 
         lang = gettext.translation(
-            'Lemonade',
-            '/usr/share/locale/',
+            'org.laptop.community.lemonade',
+            'locale/',
             languages=[self.language])
         _ = lang.ugettext
 
@@ -638,8 +637,7 @@ class LemonadeMain:
         else:
             self.add_msg(_("Time to get some rest."))
             self.add_msg(
-                _("It looks like it will be {} tomorrow.").decode(
-                    'utf8').format(self.weather_name))
+                _("It looks like it will be {} tomorrow.").format(self.weather_name))
 
     def buy_item(self, key, quanity):
         """
@@ -651,7 +649,7 @@ class LemonadeMain:
         @return:          Returns total bought, -1 if you can't
                           afford any
         """
-        the_item = ITEMS[self.version][key]
+        the_item = self.constants.items[self.version][key]
 
         total = quanity * the_item['bulk']
         cost = the_item['cost'][self.difficulty] * total
@@ -682,7 +680,7 @@ class LemonadeMain:
         """
         total = quantity
         self.__resources[key].append(
-            [ITEMS[self.version][key]['decay'], total])
+            [self.constants.items[self.version][key]['decay'], total])
 
     def remove_item(self, key, quantity):
         """
@@ -720,13 +718,13 @@ class LemonadeMain:
         """
 
         lang = gettext.translation(
-            'Lemonade',
-            '/usr/share/locale/',
+            'org.laptop.community.lemonade',
+            'locale/',
             languages=[self.language])
         _ = lang.ugettext
 
         # Loop through all items
-        for item_key in ITEMS[self.version].keys():
+        for item_key in self.constants.items[self.version].keys():
             new_list = []
 
             # Loops through all items stored in item list
