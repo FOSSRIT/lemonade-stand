@@ -42,7 +42,8 @@ STARTING_ITEMS = {
         'cup': [12, 10, 5, 0],
         'lemon': [18, 15, 5, 0],
         'sugar': [20, 10, 5, 0],
-#        'strawberry': [18, 15, 5, 0]
+#        'strawberry': [0, 0, 0, 0],
+#        'icecube': [0, 0, 0, 0]
     },
     'ice cream': {
         'cone': [12, 10, 5, 0],
@@ -141,6 +142,7 @@ UPGRADES = {
         {
             'name': _('Cooler'),
             'cost': 2000,
+            'prevents_losing': 'ice cream',
             'capacity': 20,
             'level': 1,
             'saves': 'ice cream',
@@ -227,7 +229,8 @@ ITEMS = {
             'name': _('Cup').decode('utf8'),
             'cost': [5, 10, 15, 30],
             'decay': 0,
-            'bulk': 1
+            'bulk': 1,
+            'min': 1
         },
         'lemon': {
             'name': _('Lemon').decode('utf8'),
@@ -240,20 +243,27 @@ ITEMS = {
             'cost': [2, 5, 8, 15],
             'decay': 0,
             'bulk': 1
-        },
+#        },
 #        'strawberry': {
 #            'name': _('Strawberry'),
 #            'cost': [25, 50, 75, 150],
 #            'decay': 3,
-#            'bulk': 5
-#        }
+#            'bulk': 1
+#        },
+#        'icecube': {
+#            'name': _('Ice Cube'),
+#            'cost': [1, 2, 5, 10],
+#            'decay': 0,
+#            'bulk': 1
+        }
     },
     'ice cream': {
         'cone': {
             'name': _('Cone').decode('utf8'),
             'cost': [5, 10, 15, 30],
             'decay': 0,
-            'bulk': 1
+            'bulk': 1,
+            'min': 1
         },
         'ice cream': {
             'name': _('Ice cream').decode('utf8'),
@@ -318,6 +328,16 @@ B_EVENTS_DICT = {
                 'item': 'sugar',
                 'change': -2,
                 'level': 1
+#            },
+#            {
+#                'text': _("Your strawberries are infested!"),
+#                'item': 'strawberry',
+#                'change': -2
+#            },
+#            {
+#                'text': _("Your ice melts!"),
+#                'item': 'icecube',
+#                'change': -2
             }
         ]},
     '50': {
@@ -339,6 +359,16 @@ B_EVENTS_DICT = {
                 'item': 'sugar',
                 'change': 10,
                 'level': 1
+#            },
+#            {
+#                'text': _("A bird takes your strawberries!"),
+#                'item': 'strawberry',
+#                'change': 10
+#            },
+#            {
+#                'text': _("Your ice is contaminated!"),
+#                'item': 'icecube',
+#                'change': 10
             }
         ]},
     '80': {
@@ -360,6 +390,16 @@ B_EVENTS_DICT = {
                 'item': 'sugar',
                 'change': 5,
                 'level': 2
+#            },
+#            {
+#                'text': _("Your straberrys got trampled!"),
+#                'item': 'strawberry',
+#                'change': 5
+#            },
+#            {
+#                'text': _("Your friend eats some of your ice!"),
+#                'item': 'icecube',
+#                'change': 5
             }
         ]},
     '100': {
@@ -381,6 +421,16 @@ B_EVENTS_DICT = {
                 'item': 'sugar',
                 'change': 2,
                 'level': 0
+#            },
+#            {
+#                'text': _("Your friend eats some of your strawberries!"),
+#                'item': 'strawberry',
+#                'change': 2
+#            },
+#            {
+#                'text': _("Some ice cubes dissapeared!"),
+#                'item': 'icecube',
+#                'change': 2
             }
         ]}
 }
@@ -402,6 +452,16 @@ G_EVENTS_DICT = {
                 'text': _("A sugar farm would like to invest in your stand!"),
                 'item': 'sugar',
                 'change': -5
+#            },
+#            {
+#                'text': _("A happy customer give you a gift!"),
+#                'item': 'strawberry',
+#                'change': -5
+#            },
+#            {
+#                'text': _("It begins to hail!"),
+#                'item': 'icecube',
+#                'change': -5
             }
         ]},
     '50': {
@@ -420,6 +480,16 @@ G_EVENTS_DICT = {
                 'text': _("You find a bag of sugar on the side of the road!"),
                 'item': 'sugar',
                 'change': 100
+#            },
+#            {
+#                'text': _("You find a strawberry bush!"),
+#                'item': 'strawberry',
+#                'change': 100
+#            },
+#            {
+#                'text': _("A resturante wants to support you!"),
+#                'item': 'icecube',
+#                'change': 100
             }
         ]},
     '80': {
@@ -438,6 +508,16 @@ G_EVENTS_DICT = {
                 'text': _("A sugar salesman gives you some free samples!"),
                 'item': 'sugar',
                 'change': 10
+#            },
+#            {
+#                'text': _("Your friend brings you a gift to make up!"),
+#                'item': 'strawberry',
+#                'change': 10
+#            },
+#            {
+#                'text': _("You break your icecubs into smaller pieces!"),
+#                'item': 'icecube',
+#                'change': 10
             }
         ]},
     '100': {
@@ -453,10 +533,20 @@ G_EVENTS_DICT = {
                 'change': 5
             },
             {
-                'text':
-                _("Some customers didn't notice you forgot the sugar!"),
+                'text': _("Some customers didn't notice you forgot the \
+                        sugar!"),
                 'item': 'sugar',
                 'change': 5
+#            },
+#            {
+#                'text': _("Free give away at the farm!"),
+#                'item': 'strawberry',
+#                'change': 5
+#            },
+#            {
+#                'text': _("A upset customer throws ice at you!"),
+#                'item': 'icecube',
+#                'change': 5
             }
         ]}
 }
@@ -510,26 +600,45 @@ RECIPES = {
             'sugar': 3,
             'cost': [100, 175, 250, 350]
         },
-        'sweet': {
-            'name': _("sweet"),
+        'iced': {
+            'name': _("iced"),
             'cup': 1,
-            'lemon': 1,
-            'sugar': 10,
-            'cost': [80, 175, 250, 356]
-        },
-        'fancy': {
-            'name': _("fancy"),
-            'cup': 3,
             'lemon': 2,
-            'sugar': 1,
-            'cost': [130, 190, 272, 393]
+            'sugar': 3,
+            'icecube': 3,
+            'cost': [100, 200, 275, 390]
+        },
+        'icedjuce': {
+            'name': _("iced juice"),
+            'cup': 1,
+            'strawberry': 2,
+            'sugar': 3,
+            'icecube': 3,
+            'cost': [130, 240, 340, 506]
         },
         'juice': {
             'name': _("juice"),
             'cup': 1,
-            'lemon': 5,
-            'sugar': 5,
-            'cost': [180, 380, 550, 800]
+            'strawberry': 2,
+            'sugar': 3,
+            'cost': [120, 230, 315, 470]
+        },
+        'strawberry': {
+            'name': _("strawberry"),
+            'cup': 1,
+            'lemon': 2,
+            'sugar': 3,
+            'strawberry': 2,
+            'cost': [180, 350, 490, 731]
+        },
+        'icedstrawberry': {
+            'name': _("iced strawberry"),
+            'cup': 1,
+            'lemon': 2,
+            'strawberry': 2,
+            'sugar': 3,
+            'icecube': 3,
+            'cost': [210, 365, 500, 820]
         },
         'epic': {
             'name': _("epic"),
@@ -537,6 +646,10 @@ RECIPES = {
             'lemon': 3,
             'sugar': 5,
             'cost': [130, 275, 400, 550]
+        },
+        'custom': {
+            'name': _("custom"),
+            'cost': [0, 0, 0, 0]
         }
     },
     'ice cream': {
@@ -553,6 +666,10 @@ RECIPES = {
             'ice cream': 3,
             'sprinkles': 5,
             'cost': [130, 275, 400, 550]
+        },
+        'custom': {
+            'name': _("custom"),
+            'cost': [0, 0, 0, 0]
         }
     },
     'noodle soup': {

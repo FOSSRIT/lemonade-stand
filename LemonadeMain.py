@@ -154,7 +154,7 @@ class LemonadeMain:
 
     @property
     def price(self):
-        return self.__resources['price'][self.difficulty]
+        return self.prices[self.difficulty]
 
     @property
     def income(self):
@@ -196,7 +196,7 @@ class LemonadeMain:
         return self.__msg_queue
 
     def recipe(self, ingredient):
-        return self.__resources['recipe'].get(ingredient, 0)
+        return self.current_recipe.get(ingredient, 0)
 
     def get_resource(self, key):
         return self.count_item(key)
@@ -254,7 +254,8 @@ class LemonadeMain:
         # items for this specific difficulty
         for item_key in ITEMS[self.version].keys():
             self.add_item(item_key,
-                          STARTING_ITEMS[self.version][item_key][difficulty])
+                          STARTING_ITEMS[self.version].get(item_key,
+                                        [0, 0, 0, 0])[difficulty])
 
         # Give the player starting money depending on the difficulty
         self.money = STARTING_MONEY[difficulty]
@@ -297,8 +298,23 @@ class LemonadeMain:
             # Once you found which weight value you are using,
             # return a random event with that weight
             if rand_num <= int(key):
-                index = randint(0, len(events[key]) - 1)
-                return events[key][self.version][index]
+                # 100% absolutely necissary.
+                # Do not remove
+                # while there are events in the list
+                # loop through  untill a valid event is found
+                while len(events[key].get(self.version, [])) > 0:
+                    index = randint(0, len(events[key][self.version]) - 1)
+                    event = events[key][self.version][index]
+                    print event['item']
+                    if ITEMS[self.version].get(event['item'], None) is None:
+                        events[key][self.version].remove(event)
+                        print "not found"
+                    else:
+                        print "found"
+                        return event
+                # If while loop concluded without returning
+                # Then no events matched the items in version
+                return None
 
     def random_event(self):
         """
@@ -325,6 +341,9 @@ class LemonadeMain:
 
             # Generate a bad event
             event = self.event_select(B_EVENTS_DICT)
+            # Checks if an event was found
+            if event is None:
+                return
 
             # Get the amount of the item you have
             itemcount = self.count_item(event['item'])
@@ -391,6 +410,10 @@ class LemonadeMain:
 
             # Generate a good event
             event = self.event_select(G_EVENTS_DICT)
+            # Checks if an event was foud
+            if event is None:
+                print "No Event found!"
+                return
 
             # Checks if event scales
             if event['change'] < 0:
