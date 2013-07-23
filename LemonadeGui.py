@@ -200,14 +200,15 @@ class LemonadeGui(GameEngineElement):
 
             # Displays a cursor next to the selected upgrade
             if key == i:
-                lemon_icon = image.load("images/{}/cursor/lemon.gif".format(
+                icon = image.load(
+                    "images/{0}/cursor/{0}_menu.gif".format(
                     self.version)).convert()
-                lemon_icon = transform.scale(lemon_icon, (
+                icon = transform.scale(icon, (
                     self.game_engine.width / 17,
                     self.game_engine.height / 15))
-                iw, ih = lemon_icon.get_size()
+                iw, ih = icon.get_size()
                 render_left = (self.game_engine.width * .005)
-                screen.blit(lemon_icon, (render_left, render_top - (iw / 6)))
+                screen.blit(icon, (render_left, render_top - (iw / 6)))
 
             # Draws the info for the upgrade
             level = self.main.upgrades[1]['level'][i]
@@ -727,7 +728,7 @@ end of the day until you are correct.""").decode('utf8'),
         box_height = (self.game_engine.height - (len(CURRENCY) + 1) *
                       (spacer)) / (len(CURRENCY))
 
-        space_between = spacer + (self.game_engine.height / 7) - 20
+        space_between = spacer + (self.game_engine.height * .12)
 
         # Loop through all of the currency values
         for i in range(0, len(CURRENCY)):
@@ -742,13 +743,16 @@ end of the day until you are correct.""").decode('utf8'),
                 color = (0, 0, 225)
 
             outline.fill(color)
-            cashbox.blit(outline, ((self.game_engine.width / 4) + 8,
-                         space_between))
+            render_left = self.game_engine.width * .2575
+            render_top = space_between
+            cashbox.blit(outline, (render_left, render_top))
 
             # Display the name of the currency next to its box
             name = self.__shopFont.render(self.currency(i), 1, (0, 0, 0))
+            fw, fh = name.get_size()
             render_left = self.game_engine.width / 15
-            cashbox.blit(name, (render_left, space_between + 10))
+            render_top = space_between + (fh / 2)
+            cashbox.blit(name, (render_left, render_top))
 
             # Sets the color of the amount of the currency
             if key == i:
@@ -762,7 +766,9 @@ end of the day until you are correct.""").decode('utf8'),
             render_left = (((self.game_engine.width / 4) + 8) +
                            (box_width / 2) - (fw / 2))
 
-            cashbox.blit(amount, (render_left, space_between + 10))
+            render_top = space_between + (box_height / 2) - (fh / 2)
+            cashbox.blit(amount, (render_left, render_top))
+
             space_between += (box_height / 2) + spacer
 
         color = (0, 0, 0)
