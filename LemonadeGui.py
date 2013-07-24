@@ -54,9 +54,12 @@ class LemonadeGui(GameEngineElement):
         self.version = self.main.version
 
         self.__input_keys = [self.constants.items[self.version].keys(),
-                             self.constants.items[self.version].keys(), self.constants.currency.keys(),
-                             self.constants.recipes[self.version].keys(), self.constants.menu, self.constants.difficulty,
-                             [None], self.constants.upgrades[self.version], self.constants.language,
+                             self.constants.items[self.version].keys(),
+                             self.constants.currency.keys(),
+                             self.constants.recipes[self.version].keys(),
+                             self.constants.menu, self.constants.difficulty,
+                             [None], self.constants.upgrades[self.version],
+                             self.constants.language,
                              self.constants.items[self.version].keys()]
         self.__input_mode = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.__input_string = []
@@ -184,8 +187,8 @@ class LemonadeGui(GameEngineElement):
             # Draws the cost of the upgrade
             upgrade_cost = self.__shopFont.render(_("{}").format(
                 format_money(self.constants.upgrades[self.version][i]['cost'] +
-                             self.constants.upgrades[self.version][i]['cost'] * 1.5 *
-                             self.main.upgrades[1]['level'][i])),
+                             self.constants.upgrades[self.version][i]['cost'] *
+                             1.5 * self.main.upgrades[1]['level'][i])),
                 True, (0, 0, 0))
             fw, fh = upgrade_cost.get_size()
             render_left = (self.game_engine.width * .375) - (fw / 2)
@@ -217,12 +220,14 @@ class LemonadeGui(GameEngineElement):
             if level > (len(self.main.upgrades[1]['level']) - 1):
                 level = len(self.main.upgrades[1]['level']) - 1
 
-            top_buffer = len(self.constants.upgrades[self.version][i]['info'][level]) / 2
+            top_buffer = len(
+                self.constants.upgrades[self.version][i]['info'][level]) / 2
             if top_buffer < 1:
                 top_buffer = 0
 
             render_top = render_top - fw * top_buffer
-            for line in self.constants.upgrades[self.version][i]['info'][level]:
+            for line in self.constants.upgrades[
+                    self.version][i]['info'][level]:
                 upgrade_info = self.__font.render(_("{}").format(
                     line), True, (0, 0, 0))
                 fw, fh = upgrade_info.get_size()
@@ -284,7 +289,8 @@ class LemonadeGui(GameEngineElement):
 
         space_between = self.game_engine.height / 10
         space_between += tab_height / 2
-        start_top = (self.game_engine.height / 2) - (len(self.constants.language)) * \
+        start_top = (self.game_engine.height / 2) - \
+            (len(self.constants.language)) * \
             (tab_height / 2)
         spacer = start_top
 
@@ -680,7 +686,8 @@ end of the day until you are correct."""),
             languages=[self.main.language])
         _ = lang.ugettext
 
-        self.__input_keys[self.game_mode] = self.constants.recipes[self.version].keys()
+        self.__input_keys[self.game_mode] = self.constants.recipes[
+            self.version].keys()
         text_array = []
 
         text_array.append(_("What would you like to make for tomorrow"))
@@ -691,9 +698,9 @@ end of the day until you are correct."""),
             else:
                 t = "  "
 
-            text_array.append("{}{}".format(t, self.constants.recipes[self.version][
-                              self.__input_keys[self.game_mode][i]][
-                                  'name']))
+            text_array.append("{}{}".format(
+                t, self.constants.recipes[self.version][
+                    self.__input_keys[self.game_mode][i]]['name']))
         return self._blit_to_block(text_array, (0, 0, 0), (255, 255, 255),
                                    False)
 
@@ -732,10 +739,12 @@ end of the day until you are correct."""),
 
         # Create the spacing and the height and width for
         # the boxs that are used to selecting a value
-        spacer = self.game_engine.height / ((len(self.constants.currency) - 1) * 3)
+        spacer = self.game_engine.height / ((len(
+            self.constants.currency) - 1) * 3)
         box_width = (self.game_engine.width / 3) - 10
-        box_height = (self.game_engine.height - (len(self.constants.currency) + 1) *
-                      (spacer)) / (len(self.constants.currency))
+        box_height = (self.game_engine.height - (len(
+            self.constants.currency) + 1) * (spacer)) / (len(
+                self.constants.currency))
 
         space_between = spacer + (self.game_engine.height * .12)
 
@@ -858,9 +867,11 @@ end of the day until you are correct."""),
                                   self.game_engine.height))
 
         # Crafter displaying items.
-        spacer = self.game_engine.width / (len(self.constants.items[self.version]) * 4)
-        icon_size = (self.game_engine.width - len(self.constants.items[self.version]) *
-                    (3 * spacer) / 2) / len(self.constants.items[self.version])
+        spacer = self.game_engine.width / (len(
+            self.constants.items[self.version]) * 4)
+        icon_size = (self.game_engine.width - len(
+            self.constants.items[self.version]) * (3 * spacer) / 2) / len(
+                self.constants.items[self.version])
         j = spacer
 
         # Draw Items
@@ -969,9 +980,11 @@ end of the day until you are correct."""),
             # Display pricing info under the item.
             ren = self.__shopFont.render(_("{} for {}").format(
                 format_money(
-                    self.constants.items[self.version][name]["cost"][main.difficulty] *
-                    self.constants.items[self.version][name]["bulk"]),
-                self.constants.items[self.version][name]["bulk"]), True, (0, 0, 0))
+                    self.constants.items[self.version][name]["cost"][
+                        main.difficulty] * self.constants.items[
+                            self.version][name]["bulk"]),
+                self.constants.items[self.version][name]["bulk"]),
+                True, (0, 0, 0))
             fw, fh = ren.get_size()
             render_left = j + (icon_size / 2) - (fw / 2)
             render_top = icon_render_top + icon_size + (fh / 10)
@@ -1180,10 +1193,10 @@ end of the day until you are correct."""),
                     index = 0
                     costs = [0, 0, 0, 0]
                     for key in self.__input_keys[self.game_mode]:
-                        if main.current_recipe[key] < self.constants.items[self.version][
-                                key].get('min', 0):
-                            main.current_recipe[key] = self.constants.items[self.version][
-                                key].get('min', 0)
+                        if main.current_recipe[key] < self.constants.items[
+                                self.version][key].get('min', 0):
+                            main.current_recipe[key] = self.constants.items[
+                                self.version][key].get('min', 0)
                         index += 1
                         cost = self.constants.items[self.version][key]['cost']
                         costs[0] += main.current_recipe[key] * cost[0]
@@ -1202,8 +1215,8 @@ end of the day until you are correct."""),
                         self.game_mode = 4
 
                     else:
-                        main.current_recipe = self.constants.recipes[self.version][
-                            self.__input_keys[self.game_mode][
+                        main.current_recipe = self.constants.recipes[
+                            self.version][self.__input_keys[self.game_mode][
                                 self.__input_mode[self.game_mode]]]
                         main.prices = main.current_recipe['cost']
                         if self.__input_keys[self.game_mode][

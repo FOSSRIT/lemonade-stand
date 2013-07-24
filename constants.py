@@ -22,6 +22,7 @@
 
 import gettext
 
+
 class constants:
 
     def __init__(self, language):
@@ -43,8 +44,8 @@ class constants:
                 'cup': [12, 10, 5, 0],
                 'lemon': [18, 15, 5, 0],
                 'sugar': [20, 10, 5, 0],
-        #        'strawberry': [0, 0, 0, 0],
-        #        'icecube': [0, 0, 0, 0]
+                #'strawberry': [0, 0, 0, 0],
+                #'icecube': [0, 0, 0, 0]
             },
             'ice cream': {
                 'cone': [12, 10, 5, 0],
@@ -244,18 +245,18 @@ class constants:
                     'cost': [2, 5, 8, 15],
                     'decay': 0,
                     'bulk': 1
-        #        },
-        #        'strawberry': {
-        #            'name': self._('Strawberry'),
-        #            'cost': [25, 50, 75, 150],
-        #            'decay': 3,
-        #            'bulk': 1
-        #        },
-        #        'icecube': {
-        #            'name': self._('Ice Cube'),
-        #            'cost': [1, 2, 5, 10],
-        #            'decay': 0,
-        #            'bulk': 1
+                #},
+                #'strawberry': {
+                #    'name': self._('Strawberry'),
+                #    'cost': [25, 50, 75, 150],
+                #    'decay': 3,
+                #    'bulk': 1
+                #},
+                #'icecube': {
+                #    'name': self._('Ice Cube'),
+                #    'cost': [1, 2, 5, 10],
+                #    'decay': 0,
+                #    'bulk': 1
                 }
             },
             'ice cream': {
@@ -319,7 +320,8 @@ class constants:
                         'level': 2
                     },
                     {
-                        'text': self._("A strong wind blows away some of your cups!"),
+                        'text': self._(
+                            "A strong wind blows away some of your cups!"),
                         'item': 'cup',
                         'change': -2,
                         'level': 1
@@ -329,22 +331,23 @@ class constants:
                         'item': 'sugar',
                         'change': -2,
                         'level': 1
-        #            },
-        #            {
-        #                'text': self._("Your strawberries are infested!"),
-        #                'item': 'strawberry',
-        #                'change': -2
-        #            },
-        #            {
-        #                'text': self._("Your ice melts!"),
-        #                'item': 'icecube',
-        #                'change': -2
                     }
+                    #{
+                    #    'text': self._("Your strawberries are infested!"),
+                    #    'item': 'strawberry',
+                    #    'change': -2
+                    #},
+                    #{
+                    #    'text': self._("Your ice melts!"),
+                    #    'item': 'icecube',
+                    #    'change': -2
+                    #}
                 ]},
             '50': {
                 'lemonade': [
                     {
-                        'text': self._("Your friend has eaten some of your lemons!"),
+                        'text': self._(
+                            "Your friend has eaten some of your lemons!"),
                         'item': 'lemon',
                         'change': 10,
                         'level': 0
@@ -360,17 +363,17 @@ class constants:
                         'item': 'sugar',
                         'change': 10,
                         'level': 1
-        #            },
-        #            {
-        #                'text': self._("A bird takes your strawberries!"),
-        #                'item': 'strawberry',
-        #                'change': 10
-        #            },
-        #            {
-        #                'text': self._("Your ice is contaminated!"),
-        #                'item': 'icecube',
-        #                'change': 10
                     }
+                    #{
+                    #    'text': self._("A bird takes your strawberries!"),
+                    #    'item': 'strawberry',
+                    #    'change': 10
+                    #},
+                    #{
+                    #    'text': self._("Your ice is contaminated!"),
+                    #    'item': 'icecube',
+                    #    'change': 10
+                    #}
                 ]},
             '80': {
                 'lemonade': [
@@ -391,22 +394,23 @@ class constants:
                         'item': 'sugar',
                         'change': 5,
                         'level': 2
-        #            },
-        #            {
-        #                'text': self._("Your straberrys got trampled!"),
-        #                'item': 'strawberry',
-        #                'change': 5
-        #            },
-        #            {
-        #                'text': self._("Your friend eats some of your ice!"),
-        #                'item': 'icecube',
-        #                'change': 5
                     }
+                    #{
+                    #    'text': self._("Your strawberries got trampled!"),
+                    #    'item': 'strawberry',
+                    #    'change': 5
+                    #},
+                    #{
+                    #    'text': self._("Your friend eats some of your ice!"),
+                    #    'item': 'icecube',
+                    #    'change': 5
+                    #}
                 ]},
             '100': {
                 'lemonade': [
                     {
-                        'text': self._("Some of your lemons are Lemonzilla eggs!"),
+                        'text': self._(
+                            "Some of your lemons are Lemonzilla eggs!"),
                         'item': 'lemon',
                         'change': 2,
                         'level': 0
@@ -422,17 +426,18 @@ class constants:
                         'item': 'sugar',
                         'change': 2,
                         'level': 0
-        #            },
-        #            {
-        #                'text': self._("Your friend eats some of your strawberries!"),
-        #                'item': 'strawberry',
-        #                'change': 2
-        #            },
-        #            {
-        #                'text': self._("Some ice cubes dissapeared!"),
-        #                'item': 'icecube',
-        #                'change': 2
                     }
+                    #{
+                    #    'text': self._(
+                    #    "Your friend eats some of your strawberries!"),
+                    #    'item': 'strawberry',
+                    #    'change': 2
+                    #},
+                    #{
+                    #    'text': self._("Some ice cubes dissapeared!"),
+                    #    'item': 'icecube',
+                    #    'change': 2
+                    #}
                 ]}
         }
 
@@ -445,30 +450,35 @@ class constants:
                         'change': -5
                     },
                     {
-                        'text': self._("You rub a cup and your wish for cups is granted!"),
+                        'text': self._(
+                            "You rub a cup and your \
+                            wish for cups is granted!"),
                         'item': 'cup',
                         'change': -5
                     },
                     {
-                        'text': self._("A sugar farm would like to invest in your stand!"),
+                        'text': self._(
+                            "A sugar farm would \
+                            like to invest in your stand!"),
                         'item': 'sugar',
                         'change': -5
-        #            },
-        #            {
-        #                'text': self._("A happy customer give you a gift!"),
-        #                'item': 'strawberry',
-        #                'change': -5
-        #            },
-        #            {
-        #                'text': self._("It begins to hail!"),
-        #                'item': 'icecube',
-        #                'change': -5
                     }
+                    #{
+                    #    'text': self._("A happy customer give you a gift!"),
+                    #    'item': 'strawberry',
+                    #    'change': -5
+                    #},
+                    #{
+                    #    'text': self._("It begins to hail!"),
+                    #    'item': 'icecube',
+                    #    'change': -5
+                    #}
                 ]},
             '50': {
                 'lemonade': [
                     {
-                        'text': self._("A lemon truck crashes in front of your stand!"),
+                        'text': self._(
+                            "A lemon truck crashes in front of your stand!"),
                         'item': 'lemon',
                         'change': 100
                     },
@@ -478,20 +488,22 @@ class constants:
                         'change': 100
                     },
                     {
-                        'text': self._("You find a bag of sugar on the side of the road!"),
+                        'text': self._(
+                            "You find a bag of sugar \
+                            on the side of the road!"),
                         'item': 'sugar',
                         'change': 100
-        #            },
-        #            {
-        #                'text': self._("You find a strawberry bush!"),
-        #                'item': 'strawberry',
-        #                'change': 100
-        #            },
-        #            {
-        #                'text': self._("A resturante wants to support you!"),
-        #                'item': 'icecube',
-        #                'change': 100
                     }
+                    #{
+                    #    'text': self._("You find a strawberry bush!"),
+                    #    'item': 'strawberry',
+                    #    'change': 100
+                    #},
+                    #{
+                    #    'text': self._("A restaurant wants to support you!"),
+                    #    'item': 'icecube',
+                    #    'change': 100
+                    #}
                 ]},
             '80': {
                 'lemonade': [
@@ -501,25 +513,29 @@ class constants:
                         'change': 10
                     },
                     {
-                        'text': self._("A friendly neighbor gives you some cups!"),
+                        'text': self._(
+                            "A friendly neighbor gives you some cups!"),
                         'item': 'cup',
                         'change': 10
                     },
                     {
-                        'text': self._("A sugar salesman gives you some free samples!"),
+                        'text': self._(
+                            "A sugar salesman gives you some free samples!"),
                         'item': 'sugar',
                         'change': 10
-        #            },
-        #            {
-        #                'text': self._("Your friend brings you a gift to make up!"),
-        #                'item': 'strawberry',
-        #                'change': 10
-        #            },
-        #            {
-        #                'text': self._("You break your icecubs into smaller pieces!"),
-        #                'item': 'icecube',
-        #                'change': 10
                     }
+                    #{
+                    #    'text': self._(
+                    #    "Your friend brings you a gift to make up!"),
+                    #    'item': 'strawberry',
+                    #    'change': 10
+                    #},
+                    #{
+                    #    'text': self._(
+                    #       "You break your icecubes into smaller pieces!"),
+                    #    'item': 'icecube',
+                    #    'change': 10
+                    #}
                 ]},
             '100': {
                 'lemonade': [
@@ -529,26 +545,28 @@ class constants:
                         'change': 5
                     },
                     {
-                        'text': self._("Something hits you in the back of the head!"),
+                        'text': self._(
+                            "Something hits you in the back of the head!"),
                         'item': 'cup',
                         'change': 5
                     },
                     {
-                        'text': self._("Some customers didn't notice you forgot the \
-                                sugar!"),
+                        'text': self._(
+                            "Some customers didn't notice \
+                            you forgot the sugar!"),
                         'item': 'sugar',
                         'change': 5
-        #            },
-        #            {
-        #                'text': self._("Free give away at the farm!"),
-        #                'item': 'strawberry',
-        #                'change': 5
-        #            },
-        #            {
-        #                'text': self._("A upset customer throws ice at you!"),
-        #                'item': 'icecube',
-        #                'change': 5
                     }
+                    #{
+                    #    'text': self._("Free give away at the farm!"),
+                    #    'item': 'strawberry',
+                    #    'change': 5
+                    #},
+                    #{
+                    #    'text': self._("A upset customer throws ice at you!"),
+                    #    'item': 'icecube',
+                    #    'change': 5
+                    #}
                 ]}
         }
 
@@ -695,6 +713,7 @@ CURRENCY = {
     'Nickels': 5,
     'Pennies': 1
 }
+
 
 def format_money(value):
     return locale.currency(value / 100.0, grouping=True)

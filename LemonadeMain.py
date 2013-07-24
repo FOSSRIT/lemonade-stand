@@ -254,7 +254,7 @@ class LemonadeMain:
         for item_key in self.constants.items[self.version].keys():
             self.add_item(item_key,
                           self.constants.starting_items[self.version].get(
-                            item_key, [0, 0, 0, 0])[difficulty])
+                          item_key, [0, 0, 0, 0])[difficulty])
 
         # Give the player starting money depending on the difficulty
         self.money = self.constants.starting_money[difficulty]
@@ -305,11 +305,10 @@ class LemonadeMain:
                     index = randint(0, len(events[key][self.version]) - 1)
                     event = events[key][self.version][index]
                     print event['item']
-                    if self.constants.items[self.version].get(event['item'], None) is None:
+                    if self.constants.items[self.version].get(
+                            event['item'], None) is None:
                         events[key][self.version].remove(event)
-                        print "not found"
                     else:
-                        print "found"
                         return event
                 # If while loop concluded without returning
                 # Then no events matched the items in version
@@ -369,8 +368,8 @@ class LemonadeMain:
             if event['change'] < 0:
 
                 # Find the amount of items to remove based on the scale
-                remove = int(abs(event['change']) +
-                             (itemcount * self.constants.scale[self.difficulty]))
+                remove = int(abs(event['change']) + (itemcount *
+                             self.constants.scale[self.difficulty]))
 
             # Else remove a flat amount
             else:
@@ -421,7 +420,8 @@ class LemonadeMain:
 
                 # Find the amount of items to add based on the scale
                 add = int(abs(event['change']) +
-                          (itemcount * self.constants.scale[3 - self.difficulty]))
+                          (itemcount * self.constants.scale[
+                          3 - self.difficulty]))
 
             # Else add a flat amount
             else:
@@ -520,7 +520,8 @@ class LemonadeMain:
                                  item]['cost'][self.difficulty])))
 
             self.spent += total_bought * \
-                self.constants.items[self.version][item]['cost'][self.difficulty]
+                self.constants.items[
+                    self.version][item]['cost'][self.difficulty]
 
         self.add_msg("------------------------------")
         self.add_msg(_("Total Spent: {}").format(
@@ -561,10 +562,12 @@ class LemonadeMain:
         self.add_msg(_("Sales:"))
         if sales != 1:
             self.add_msg(_("{} {}s of {} sold").format(
-                sales, self.constants.serving_item[self.version], self.version))
+                sales,
+                self.constants.serving_item[self.version], self.version))
         else:
             self.add_msg(_("{} {} of {} sold").format(
-                sales, self.constants.serving_item[self.version], self.version))
+                sales,
+                self.constants.serving_item[self.version], self.version))
         self.add_msg(_("    @ {} each").format(format_money(self.price)))
         self.add_msg("------------------------------")
         self.add_msg(_("Total Made: {}").format(format_money(self.income)))
@@ -637,7 +640,8 @@ class LemonadeMain:
         else:
             self.add_msg(_("Time to get some rest."))
             self.add_msg(
-                _("It looks like it will be {} tomorrow.").format(self.weather_name))
+                _("It looks like it will be {} tomorrow.").format(
+                    self.weather_name))
 
     def buy_item(self, key, quanity):
         """
