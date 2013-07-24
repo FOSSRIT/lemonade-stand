@@ -66,8 +66,8 @@ class VteActivity(activity.Activity):
         self._pid = self._vte.fork_command(
             command='/bin/sh',
             argv=['/bin/sh', '-c',
-                  'python %s/LemonadeStand.py --width=1200 --height=875 \
-                  --font=36 --shopFont=52 --shopNumFont=72 --menuFont = 90'
+                  'python %s/LemonadeStand.py --width=1200 --height=875'
+                  ' --font=36 --shopFont=52 --shopNumFont=72 --menuFont = 90'
                   % bundle_path],
             envv=["PYTHONPATH=%s/library" % bundle_path],
             directory=bundle_path)
