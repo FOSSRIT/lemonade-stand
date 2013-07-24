@@ -178,7 +178,8 @@ class LemonadeGui(GameEngineElement):
 
             # Draws the name of the upgrade
             upgrade_name = self.__shopFont.render(_("{}").format(
-                [self.version][i]['name']), True, (0, 0, 0))
+                self.constants.upgrades[self.version][i]['name']),
+                True, (0, 0, 0))
             fw, fh = upgrade_name.get_size()
             render_left = (self.game_engine.width * .075)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
