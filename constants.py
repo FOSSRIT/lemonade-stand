@@ -302,7 +302,8 @@ class constants:
             }
         }
 
-        self.weather = ["cloudy", "nice", "hot"]
+        self.weather = [self._("cloudy"), self._("nice"), self._("hot")]
+        self.weather_name = ["cloudy", "nice", "hot"]
 
         self.bad_odds = [5, 12, 38, 45]
         self.good_odds = [45, 38, 12, 5]

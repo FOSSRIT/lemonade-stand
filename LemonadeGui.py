@@ -121,7 +121,7 @@ class LemonadeGui(GameEngineElement):
         """
 
         bg = image.load("images/{}/field/{}.gif".format(
-            self.version, self.constants.weather[weather])).convert()
+            self.version, self.constants.weather_name[weather])).convert()
 
         stand = image.load("images/{}/booth.gif".format(
             self.version)).convert()
@@ -953,6 +953,7 @@ end of the day until you are correct."""),
         for item in self.constants.items[self.version].keys():
             if main.current_recipe.get(item, 0) > 0:
                 self.__input_keys[self.game_mode].append(item)
+
         # Adjust size for display
         length = len(self.__input_keys[self.game_mode])
         if length < 3:
@@ -1048,8 +1049,9 @@ end of the day until you are correct."""),
 
         # Title above recipe
         ren = self.__shopNumFont.render(
-            _("Ingredients for {} {}:").format(
-                main.current_recipe['name'], self.version), 1, (255, 240, 0))
+            _("Ingredients for {0} {1}:").format(
+                _(main.current_recipe['name']), _(self.version)), 1,
+            (255, 240, 0))
         render_left = 5
         render_top = self.game_engine.height / 11
         store.blit(ren, (render_left, render_top))

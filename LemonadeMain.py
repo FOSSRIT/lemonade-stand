@@ -563,11 +563,11 @@ class LemonadeMain:
         if sales != 1:
             self.add_msg(_("{} {}s of {} sold").format(
                 sales,
-                self.constants.serving_item[self.version], self.version))
+                self.constants.serving_item[self.version], _(self.version)))
         else:
             self.add_msg(_("{} {} of {} sold").format(
                 sales,
-                self.constants.serving_item[self.version], self.version))
+                self.constants.serving_item[self.version], _(self.version)))
         self.add_msg(_("    @ {} each").format(format_money(self.price)))
         self.add_msg("------------------------------")
         self.add_msg(_("Total Made: {}").format(format_money(self.income)))

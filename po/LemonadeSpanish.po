@@ -230,7 +230,7 @@ msgid "ice cream"
 msgstr "helado"
  
 #: constants.py:162
-msgid "Sprinkles"
+msgid "Sprinkle"
 msgstr "Asperja"
  
 #: constants.py:170
@@ -580,8 +580,8 @@ msgid "{} for {}"
 msgstr "{} por {}"
  
 #: LemonadeGui.py:753
-msgid "Ingredients for "
-msgstr "Ingredientes para "
+msgid "Ingredients for {0} {1}:"
+msgstr "Ingredientes para {1} {0}:"
  
 #: LemonadeGui.py:760
 msgid "Current Supplies:"
