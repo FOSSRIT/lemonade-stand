@@ -24,11 +24,13 @@
 from __future__ import unicode_literals
 from random import randint
 from sugar.datastore import datastore
-import gettext
 from constants import constants
 from constants import format_money, CURRENCY
+from datetime import date
 
 from operator import itemgetter
+import json
+import gettext
 
 
 class LemonadeMain:
@@ -92,12 +94,17 @@ class LemonadeMain:
 
         self.event_messages = []
 
-        self.badges = datastore.create()
-        self.badges.metadata['title'] = 'badges_lemonadestand'
-        self.badges.metadata['badges'] = ''
-        self.badges.metadata['info'] = ''
+        ds_objects, num_objects = datastore.find(
+            {'activity': 'LemonadeStand'})
 
-        datastore.write(self.badges)
+        if not ds_objects:
+            self.badges = datastore.create()
+            self.badges.metadata['activity'] = 'Lemonade Stand'
+            self.badges.metadata['has_badges'] = 'True'
+            self.badges.metadata['badge_list'] = json.dumps({})
+            datastore.write(self.badges)
+        else:
+            self.badges = ds_objects[0]
 
     @property
     def language(self):
@@ -200,6 +207,22 @@ class LemonadeMain:
     def get_resource(self, key):
         return self.count_item(key)
 
+    def award_badge(self, name, description):
+
+        badge_json = json.loads(self.badges.metadata['badge_list'])
+
+        if not name in badge_json.keys():
+
+            today = date.today()
+            badge_info = {'name': name,
+                          'criteria': description,
+                          'time': today.strftime("%m/%d/%y")}
+
+            badge_json[name] = badge_info
+
+            self.badges.metadata['badge_list'] = json.dumps(badge_json)
+            datastore.write(self.badges)
+
     def process_buy_upgrade(self, info):
         """
         Checks to see if the player can afford a specific upgrade.
@@ -220,11 +243,8 @@ class LemonadeMain:
             self.upgrades[1]['level'][upgrade_index] += 1
             self.upgrades[1]['capacity'][upgrade_index] += base_capacity
 
-            if self.first_upgrade:
-                self.badges.metadata['badges'] += 'First Upgrade:'
-                self.badges.metadata['info'] += 'Purchased first upgrade:'
-                datastore.write(self.badges)
-                self.first_upgrade = False
+            self.award_badge('First Upgrade',
+                             'Purchase your very first upgrade')
 
             return True
 
@@ -471,11 +491,9 @@ class LemonadeMain:
         if sales > max_sales:
             sales = max_sales
 
-        if int(sales) >= 10 and self.first_ten_sales:
-            self.badges.metadata['badges'] += 'Double Digit Sales:'
-            self.badges.metadata['info'] += 'Sold 10 or more cups of lemonade:'
-            datastore.write(self.badges)
-            self.first_ten_sales = False
+        if int(sales) >= 10:
+            self.award_badge('Double Digit Sales',
+                             'Sold more than 10 cups in one day')
 
         return int(sales)
 
@@ -595,13 +613,9 @@ class LemonadeMain:
         if self.profit > 0:
             mini_game_success = self.count_game(mini_game_key, self.profit)
             if mini_game_success:
-                if self.first_correct_change:
-                    self.badges.metadata['badges'] += 'Right on the Money:'
-                    self.badges.metadata['info'] += 'First correct amount \
-                    of change:'
-                    datastore.write(self.badges)
-                    self.first_correct_change = False
-                    _
+                self.award_badge('Right on the Money',
+                                 'Determined the correct amount of change')
+
                 # Give them the money if they added
                 self.money += self.profit
             else:
@@ -632,10 +646,7 @@ class LemonadeMain:
         if self.challenge and self.day == 90:
             self.add_msg(_("Summer is over!"))
             self.add_msg(_("You have successfully completed Lemonade Stand!"))
-            self.challenge_completed = True
-            self.badges.metadata['badges'] += 'Summer Completed:'
-            self.badges.metadata['info'] += 'Completed the summer season:'
-            datastore.write(self.badges)
+            self.award_badge('Summer Complete', 'Completed the Summer season')
 
         else:
             self.add_msg(_("Time to get some rest."))
@@ -685,6 +696,8 @@ class LemonadeMain:
         total = quantity
         self.__resources[key].append(
             [self.constants.items[self.version][key]['decay'], total])
+        self.award_badge('More is Better',
+                         'Purchased your first items from the store')
 
     def remove_item(self, key, quantity):
         """
