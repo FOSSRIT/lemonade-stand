@@ -18,17 +18,15 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """Activity helper classes."""
 from sugar.activity import activity
+
 # Set to false to hide terminal and auto quit on exit
 DEBUG_TERMINAL = False
-
 
 class VteActivity(activity.Activity):
     """Activity subclass built around the Vte terminal widget."""
     def __init__(self, handle):
-        import gtk
-        import pango
-        import vte
-        super(VteActivity, self).__init__(handle, create_jobject=True)
+        import gtk, pango, vte
+        super(VteActivity, self).__init__(handle, create_jobject=False)
         self.__source_object_id = None
 
         # creates vte widget
@@ -39,12 +37,12 @@ class VteActivity(activity.Activity):
             toolbar = toolbox.get_activity_toolbar()
             self.set_toolbox(toolbox)
 
-            self._vte.set_size(30, 5)
+            self._vte.set_size(30,5)
             self._vte.set_size_request(200, 300)
             font = 'Monospace 10'
             self._vte.set_font(pango.FontDescription(font))
-            self._vte.set_colors(gtk.gdk.color_parse('#E7E7E7'),
-                                 gtk.gdk.color_parse('#000000'),
+            self._vte.set_colors(gtk.gdk.color_parse ('#E7E7E7'),
+                                 gtk.gdk.color_parse ('#000000'),
                                  [])
 
             vtebox = gtk.HBox()
@@ -63,17 +61,15 @@ class VteActivity(activity.Activity):
         self._vte.connect('child-exited', self.on_child_exit)
         self._vte.grab_focus()
         bundle_path = activity.get_bundle_path()
-        self._pid = self._vte.fork_command(
-            command='/bin/sh',
-            argv=['/bin/sh', '-c',
-                  'python %s/LemonadeStand.py --width=1200 --height=875'
-                  ' --font=36 --shopFont=52 --shopNumFont=72 --menuFont = 90'
-                  % bundle_path],
-            envv=["PYTHONPATH=%s/library" % bundle_path],
-            directory=bundle_path)
-
+        self._pid = self._vte.fork_command \
+            (command='/bin/sh',
+             argv=['/bin/sh','-c',
+             'python %s/LemonadeStand.py --width=1200 --height=875 --font=36 --shopFont=52 --shopNumFont=72 --menuFont=90' % bundle_path],
+             envv=["PYTHONPATH=%s/library" % bundle_path],
+             directory=bundle_path)
     def on_child_exit(self, widget):
         """This method is invoked when the user's script exits."""
         if not DEBUG_TERMINAL:
             import sys
             sys.exit()
+
