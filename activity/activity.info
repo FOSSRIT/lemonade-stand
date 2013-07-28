@@ -1,6 +1,6 @@
 [Activity]
 name = Lemonade
-bundle_id = org.laptop.community.lemonade
+bundle_id = org.laptop.Lemonade
 icon = activity
 activity_version = 5
 host_version = 1
