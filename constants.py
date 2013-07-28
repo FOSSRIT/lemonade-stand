@@ -28,7 +28,7 @@ class constants:
     def __init__(self, language):
 
         lang = gettext.translation(
-            'org.laptop.community.lemonade',
+            'org.laptop.Lemonade',
             'locale/',
             languages=[language])
         self._ = lang.ugettext

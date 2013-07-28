@@ -164,7 +164,7 @@ class LemonadeGui(GameEngineElement):
         """
 
         lang = gettext.translation(
-            'org.laptop.community.lemonade',
+            'org.laptop.Lemonade',
             'locale/',
             languages=[self.main.language])
         _ = lang.ugettext
@@ -264,8 +264,8 @@ class LemonadeGui(GameEngineElement):
         screen.blit(item_info, (render_left, render_top))
 
         # Draw the player's money
-        player_money = self.__shopFont.render(_("Money: {}".format(
-            format_money(self.main.money))), True, (0, 0, 0))
+        player_money = self.__shopFont.render(_("Money: {}").format(
+            format_money(self.main.money)), True, (0, 0, 0))
         fw, fh = player_money.get_size()
         render_left = (self.game_engine.width * .15) - (fw / 2)
         render_top = (self.game_engine.height * .9) - (fh / 2)
@@ -330,7 +330,7 @@ class LemonadeGui(GameEngineElement):
         """
 
         lang = gettext.translation(
-            'org.laptop.community.lemonade',
+            'org.laptop.Lemonade',
             'locale/',
             languages=[self.main.language])
         _ = lang.ugettext
@@ -374,7 +374,7 @@ class LemonadeGui(GameEngineElement):
         """
 
         lang = gettext.translation(
-            'org.laptop.community.lemonade',
+            'org.laptop.Lemonade',
             'locale/',
             languages=[self.main.language])
         _ = lang.ugettext
@@ -429,7 +429,7 @@ class LemonadeGui(GameEngineElement):
         #            13/24   27/36
 
         lang = gettext.translation(
-            'org.laptop.community.lemonade',
+            'org.laptop.Lemonade',
             'locale/',
             languages=[self.main.language])
         _ = lang.ugettext
@@ -471,7 +471,7 @@ class LemonadeGui(GameEngineElement):
         """
 
         lang = gettext.translation(
-            'org.laptop.community.lemonade',
+            'org.laptop.Lemonade',
             'locale/',
             languages=[self.main.language])
         _ = lang.ugettext
@@ -682,7 +682,7 @@ end of the day until you are correct."""),
         """
 
         lang = gettext.translation(
-            'org.laptop.community.lemonade',
+            'org.laptop.Lemonade',
             'locale/',
             languages=[self.main.language])
         _ = lang.ugettext
@@ -726,7 +726,7 @@ end of the day until you are correct."""),
         """
 
         lang = gettext.translation(
-            'org.laptop.community.lemonade',
+            'org.laptop.Lemonade',
             'locale/',
             languages=[self.main.language])
         _ = lang.ugettext
@@ -855,7 +855,7 @@ end of the day until you are correct."""),
         """
 
         lang = gettext.translation(
-            'org.laptop.community.lemonade',
+            'org.laptop.Lemonade',
             'locale/',
             languages=[self.main.language])
         _ = lang.ugettext
@@ -937,7 +937,7 @@ end of the day until you are correct."""),
         """
 
         lang = gettext.translation(
-            'org.laptop.community.lemonade',
+            'org.laptop.Lemonade',
             'locale/',
             languages=[self.main.language])
         _ = lang.ugettext
