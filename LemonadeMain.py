@@ -215,9 +215,6 @@ class LemonadeMain:
             self.upgrades[1]['level'][upgrade_index] += 1
             self.upgrades[1]['capacity'][upgrade_index] += base_capacity
 
-            self.badges.award('First Upgrade',
-                              'Purchase your very first upgrade')
-
             return True
 
         return False
@@ -463,10 +460,6 @@ class LemonadeMain:
         if sales > max_sales:
             sales = max_sales
 
-        if int(sales) >= 10:
-            self.badges.award('Double Digit Sales',
-                              'Sold more than 10 cups in one day')
-
         return int(sales)
 
     def update_day_log(self, items):
@@ -585,9 +578,6 @@ class LemonadeMain:
         if self.profit > 0:
             mini_game_success = self.count_game(mini_game_key, self.profit)
             if mini_game_success:
-                self.badges.award('Right on the Money',
-                                  'Determined the correct amount of change')
-
                 # Give them the money if they added
                 self.money += self.profit
             else:

@@ -1,0 +1,7 @@
+include *.py *.txt *.gif NEWS README
+include activity *.svg *.info
+include images *.gif
+include olpcgames/COPYING
+include olpcgames *.py
+include badges.py
+include badges *.png

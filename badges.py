@@ -1,5 +1,4 @@
 from sugar.datastore import datastore
-#from sugar.activity import activity
 from datetime import date
 import json
 import os
@@ -9,11 +8,9 @@ class badges:
 
     def __init__(self, activity, bundle_id):
 
-        #activity_name = activity.get_bundle_name()
-        #bundle_id = activity.Activity.get_bundle_id()
-
         self._id = bundle_id
-        ds_objects, num_objects = datastore.find({'activity': activity})
+        ds_objects, num_objects = datastore.find({'activity': activity,
+                                                  'has_badges': True})
 
         # Path for all badges
         badge_path = os.path.expanduser('~/.local/share/badges')
@@ -78,11 +75,3 @@ class badges:
             # Save the new badge info to the DS object
             self._list.metadata['badge_list'] = json.dumps(badge_json)
             datastore.write(self._list)
-
-    def clear(self):
-        """
-        Clears all of the badges that have been awarded by an activity
-        WARNING: badges will be lost forever, used to testing purposes
-        """
-        self._list.destory()
-        datastore.delete(self._list.object_id)
