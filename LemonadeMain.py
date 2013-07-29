@@ -396,7 +396,7 @@ class LemonadeMain:
                               self.constants.bad_odds[self.difficulty]):
 
             # Generate a good event
-            event = self.event_select(self.constants.good_events_dict)
+            event = self.event_select(self.constants.good_event_dict)
             # Checks if an event was foud
             if event is None:
                 print "No Event found!"
@@ -666,6 +666,17 @@ class LemonadeMain:
         total = quantity
         self.__resources[key].append(
             [self.constants.items[self.version][key]['decay'], total])
+
+        # Award badges
+        if key == 'lemon' and int(self.resource_list[key]) >= 150:
+            self.badges.award('When Life Gives You Lemons',
+                              'Get more than 150 lemons')
+        if key == 'cup' and int(self.resource_list[key]) >= 200:
+            self.badges.award('Cup Pyramid',
+                              'Get more than 200 cups')
+        if key == 'sugar' and int(self.resource_list[key]) >= 150:
+            self.badges.award('Sweet Tooth',
+                              'Get more than 150 sugar')
 
     def remove_item(self, key, quantity):
         """

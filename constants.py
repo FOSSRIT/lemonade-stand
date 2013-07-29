@@ -452,15 +452,15 @@ class constants:
                     },
                     {
                         'text': self._(
-                            "You rub a cup and your \
-                            wish for cups is granted!"),
+                            "You rub a cup and your"
+                            "wish for cups is granted!"),
                         'item': 'cup',
                         'change': -5
                     },
                     {
                         'text': self._(
-                            "A sugar farm would \
-                            like to invest in your stand!"),
+                            "A sugar farm would"
+                            "like to invest in your stand!"),
                         'item': 'sugar',
                         'change': -5
                     }
@@ -490,8 +490,7 @@ class constants:
                     },
                     {
                         'text': self._(
-                            "You find a bag of sugar \
-                            on the side of the road!"),
+                            "You find a bag of sugar on the sidewalk!"),
                         'item': 'sugar',
                         'change': 100
                     }
