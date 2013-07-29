@@ -1,4 +1,5 @@
 from sugar.datastore import datastore
+#from sugar.activity import activity
 from datetime import date
 import json
 import os
@@ -7,6 +8,9 @@ import os
 class badges:
 
     def __init__(self, activity, bundle_id):
+
+        #activity_name = activity.get_bundle_name()
+        #bundle_id = activity.Activity.get_bundle_id()
 
         self._id = bundle_id
         ds_objects, num_objects = datastore.find({'activity': activity})

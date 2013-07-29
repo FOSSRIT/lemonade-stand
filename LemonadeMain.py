@@ -217,8 +217,6 @@ class LemonadeMain:
 
             self.badges.award('First Upgrade',
                               'Purchase your very first upgrade')
-            self.badges.award('100 Sales', 'Sold over 100 cups')
-            self.badges.award('Double Tags', 'You got a lot of tags')
 
             return True
 
@@ -617,16 +615,24 @@ class LemonadeMain:
         # Weather
         self.weather_change()
 
-        if self.challenge and self.day == 90:
-            self.add_msg(_("Summer is over!"))
-            self.add_msg(_("You have successfully completed Lemonade Stand!"))
-            self.badges.award('Summer Complete', 'Completed the Summer season')
+        # Award badges
+        if self.day == 1:
+            self.badges.award('So It Begins', 'Make your very first sale')
 
-        else:
-            self.add_msg(_("Time to get some rest."))
-            self.add_msg(
-                _("It looks like it will be {} tomorrow.").format(
-                    self.weather_name))
+        # Seasonal badges
+        if self.day == 90:
+            self.badges.award('90 Days', 'Completed one season')
+        if self.day == 180:
+            self.badges.award('180 Days', 'Completed two seasons')
+        if self.day == 270:
+            self.badges.award('270 Days', 'Completed three seasons')
+        if self.day == 360:
+            self.badges.award('360 Days', 'Completed all four seasons')
+
+        self.add_msg(_("Time to get some rest."))
+        self.add_msg(
+            _("It looks like it will be {} tomorrow.").format(
+                self.weather_name))
 
     def buy_item(self, key, quanity):
         """
@@ -670,8 +676,6 @@ class LemonadeMain:
         total = quantity
         self.__resources[key].append(
             [self.constants.items[self.version][key]['decay'], total])
-        self.badges.award('More is Better',
-                          'Purchased your first items from the store')
 
     def remove_item(self, key, quantity):
         """
