@@ -293,7 +293,6 @@ class LemonadeMain:
                 while len(events[key].get(self.version, [])) > 0:
                     index = randint(0, len(events[key][self.version]) - 1)
                     event = events[key][self.version][index]
-                    print event['item']
                     if self.constants.items[self.version].get(
                             event['item'], None) is None:
                         events[key][self.version].remove(event)
@@ -617,7 +616,24 @@ class LemonadeMain:
         if self.day == 270:
             self.badges.award('270 Days', 'Completed three seasons')
         if self.day == 360:
-            self.badges.award('360 Days', 'Completed all four seasons')
+            self.badges.award('Here to Stay', 'Completed all four seasons')
+
+        if self.difficulty == 0 and self.profit >= 2000:
+            self.badges.award('Novice',
+                              'Made more than $20.00 of profit ' +
+                              'in a single day on Easy')
+        if self.difficulty == 1 and self.profit >= 5000:
+            self.badges.award('Entreprenuer',
+                              'Made more than $50.00 of profit ' +
+                              'in a single day on Normal')
+        if self.difficulty == 2 and self.profit >= 20000:
+            self.badges.award('Businessman',
+                              'Made more than $200.00 of profit ' +
+                              'in a single day on Hard')
+        if self.difficulty == 3 and self.profit >= 50000:
+            self.badges.award('CEO',
+                              'Made more than $500.00 of profit ' +
+                              'in a single day on Impossible')
 
         self.add_msg(_("Time to get some rest."))
         self.add_msg(
