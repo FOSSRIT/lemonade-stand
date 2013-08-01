@@ -326,7 +326,7 @@ class LemonadeMain:
         if event_num <= self.constants.bad_odds[self.difficulty]:
 
             # Generate a bad event
-            event = self.event_select(self.constants.bad_events_dict)
+            event = self.event_select(self.constants.bad_event_dict)
             # Checks if an event was found
             if event is None:
                 return

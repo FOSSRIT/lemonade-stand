@@ -552,8 +552,8 @@ class constants:
                     },
                     {
                         'text': self._(
-                            "Some customers didn't notice \
-                            you forgot the sugar!"),
+                            "Some customers didn't notice"
+                            "you forgot the sugar!"),
                         'item': 'sugar',
                         'change': 5
                     }
