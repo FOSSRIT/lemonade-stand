@@ -309,10 +309,10 @@ class constants:
         self.good_odds = [45, 38, 12, 5]
 
         # Need to be in ascending order
-        self.event_keys = ['20', '50', '80', '100']
+        self.event_keys = ['10', '30', '60', '100']
 
         self.bad_event_dict = {
-            '20': {
+            '10': {
                 'lemonade': [
                     {
                         'text': self._("A small animal takes some lemons!"),
@@ -344,7 +344,7 @@ class constants:
                     #    'change': -2
                     #}
                 ]},
-            '50': {
+            '30': {
                 'lemonade': [
                     {
                         'text': self._(
@@ -376,7 +376,7 @@ class constants:
                     #    'change': 10
                     #}
                 ]},
-            '80': {
+            '60': {
                 'lemonade': [
                     {
                         'text': self._("You sat on some of your lemons!"),
@@ -443,7 +443,7 @@ class constants:
         }
 
         self.good_event_dict = {
-            '20': {
+            '10': {
                 'lemonade': [
                     {
                         'text': self._("You find a baby Lemonzilla!"),
@@ -475,7 +475,7 @@ class constants:
                     #    'change': -5
                     #}
                 ]},
-            '50': {
+            '30': {
                 'lemonade': [
                     {
                         'text': self._(
@@ -505,7 +505,7 @@ class constants:
                     #    'change': 100
                     #}
                 ]},
-            '80': {
+            '60': {
                 'lemonade': [
                     {
                         'text': self._("Your parents give you some lemons!"),
