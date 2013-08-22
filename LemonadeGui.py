@@ -52,6 +52,7 @@ class LemonadeGui(GameEngineElement):
         self.fail_key = 0
         self.screen_number = 0
         self.version = self.main.version
+        self.cursor = None
 
         self.__input_keys = [self.constants.items[self.version].keys(),
                              self.constants.items[self.version].keys(),
@@ -85,10 +86,15 @@ class LemonadeGui(GameEngineElement):
         Loads and changes the background image to the menu screen
         """
 
-        menu = image.load("images/{}/ui/menu.gif".format(
-            self.version)).convert()
+        menu = image.load("images/background.gif")
         self.__background = transform.scale(menu, (self.game_engine.width,
                                                    self.game_engine.height))
+
+        icon = image.load("images/{0}/cursor/{0}_menu.gif".format(
+            self.version)).convert()
+        icon_width = self.game_engine.width / 18
+        icon_height = self.game_engine.height / 14
+        self.cursor = transform.scale(icon, (icon_width, icon_height))
 
     def language_screen(self):
         """
@@ -106,11 +112,16 @@ class LemonadeGui(GameEngineElement):
         Loads and changes the background image to the difficulty screen
         """
 
-        difficulty = image.load("images/{}/ui/difficulty.gif".format(
-            self.version)).convert()
+        difficulty = image.load("images/background.gif")
         self.__background = transform.scale(difficulty,
                                             (self.game_engine.width,
                                              self.game_engine.height))
+        icon = image.load(
+            "images/{0}/cursor/{0}_difficulty.gif".format(
+            self.version)).convert()
+        icon_width = self.game_engine.width / 20
+        icon_height = self.game_engine.height / 17
+        self.cursor = transform.scale(icon, (icon_width, icon_height))
 
     def change_background(self, weather):
         """
@@ -337,28 +348,28 @@ class LemonadeGui(GameEngineElement):
 
         # Spacer is the space in between the different difficulty texts
         # Interval is the interval that is added to the spacer after each word
-        interval = .1725
-        spacer = .3075
+        interval = .1
+        spacer = .38
+
+        title = self.__menuFont.render(_("Difficulty"), True, (0, 0, 0))
+        fw, fh = title.get_size()
+        render_left = (self.game_engine.width * .62) - (fw / 2)
+        render_top = (self.game_engine.height * .2) - (fh / 2)
+        screen.blit(title, (render_left, render_top))
 
         # Loop through and display all the difficulty settings
         for i in range(len(self.constants.difficulty)):
 
-            play_difficulty = self.__menuFont.render(
+            play_difficulty = self.__shopFont.render(
                 _("{}").format(self.constants.difficulty[i]), True, (0, 0, 0))
             fw, fh = play_difficulty.get_size()
-            render_left = (self.game_engine.width / 2) - (fw / 2)
+            render_left = (self.game_engine.width * .58)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
-            screen.blit(play_difficulty, (render_left, render_top))
+            screen.blit(play_difficulty, (render_left, render_top + 10))
 
             if key == i:
-                icon = image.load(
-                    "images/{0}/cursor/{0}_difficulty.gif".format(
-                    self.version)).convert()
-                icon_width = self.game_engine.width / 12
-                icon_height = self.game_engine.height / 10
-                icon = transform.scale(icon, (icon_width, icon_height))
-                screen.blit(icon, (self.game_engine.width / 17,
-                                   render_top - 10))
+                screen.blit(
+                    self.cursor, (self.game_engine.width * .5, render_top))
 
             spacer += interval
 
@@ -381,8 +392,8 @@ class LemonadeGui(GameEngineElement):
 
         # Spacer is the space in between the different difficulty texts
         # Interval is the interval that is added to the spacer after each word
-        interval = .17
-        spacer = .4
+        interval = .125
+        spacer = .38
 
         # Loop through and display all of the menu items
         for i in range(len(self.constants.menu)):
@@ -390,19 +401,14 @@ class LemonadeGui(GameEngineElement):
             play_menu_item = self.__menuFont.render(
                 _("{}").format(self.constants.menu[i]), True, (0, 0, 0))
             fw, fh = play_menu_item.get_size()
-            render_left = (self.game_engine.width / 2) - (fw / 2)
+            render_left = (self.game_engine.width * .57)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
             screen.blit(play_menu_item, (render_left, render_top))
 
             # Check if this item is currently selected
             if key == i:
-                icon = image.load("images/{0}/cursor/{0}_menu.gif".format(
-                    self.version)).convert()
-                icon_width = self.game_engine.width / 12
-                icon_height = self.game_engine.height / 10
-                icon = transform.scale(icon, (icon_width, icon_height))
-                screen.blit(icon, (self.game_engine.width / 17,
-                                   render_top - 10))
+                screen.blit(
+                    self.cursor, (self.game_engine.width * .49, render_top))
 
             spacer += interval
 
