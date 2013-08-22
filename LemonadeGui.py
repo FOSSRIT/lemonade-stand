@@ -30,8 +30,7 @@ import gettext
 from pygame import Surface, transform, image
 from pygame.locals import KEYDOWN, K_RETURN, K_BACKSPACE, K_TAB, \
     K_DOWN, K_UP, K_LEFT, K_RIGHT, K_ESCAPE, \
-    K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP8, \
-    K_KP9, K_SPACE
+    K_KP1, K_KP2, K_KP3, K_KP4, K_KP6, K_KP8, K_KP9
 
 
 class LemonadeGui(GameEngineElement):
@@ -92,8 +91,8 @@ class LemonadeGui(GameEngineElement):
 
         icon = image.load("images/{0}/cursor/{0}_menu.gif".format(
             self.version)).convert()
-        icon_width = self.game_engine.width / 18
-        icon_height = self.game_engine.height / 14
+        icon_width = self.game_engine.width / 22
+        icon_height = self.game_engine.height / 18
         self.cursor = transform.scale(icon, (icon_width, icon_height))
 
     def language_screen(self):
@@ -101,11 +100,16 @@ class LemonadeGui(GameEngineElement):
         Loads and changes the background image to the language screen
         """
 
-        language = image.load("images/{}/ui/language.gif".format(
+        language = image.load("images/background.gif".format(
             self.version)).convert()
         self.__background = transform.scale(language,
                                             (self.game_engine.width,
                                              self.game_engine.height))
+        icon = image.load("images/{0}/cursor/{0}_menu.gif".format(
+            self.version)).convert()
+        icon_width = self.game_engine.width / 22
+        icon_height = self.game_engine.height / 18
+        self.cursor = transform.scale(icon, (icon_width, icon_height))
 
     def difficulty_screen(self):
         """
@@ -293,41 +297,48 @@ class LemonadeGui(GameEngineElement):
         :param screen: The surface to display language settings on
         """
 
-        tab = image.load("images/tab.gif").convert()
-        tab_width = int(self.game_engine.width * .68)
-        tab_height = int(self.game_engine.height * .14)
-        tab = transform.scale(tab, (tab_width, tab_height))
-        tab_render_left = (self.game_engine.width / 2) - (tab_width / 2)
+        title = self.__menuFont.render("Language", True, (0, 0, 0))
+        fw, fh = title.get_size()
+        render_left = (self.game_engine.width * .62) - (fw / 2)
+        render_top = (self.game_engine.height * .2) - (fh / 2)
+        screen.blit(title, (render_left, render_top))
 
-        space_between = self.game_engine.height / 10
-        space_between += tab_height / 2
-        start_top = (self.game_engine.height / 2) - \
-            (len(self.constants.language)) * \
-            (tab_height / 2)
-        spacer = start_top
+        #tab = image.load("images/tab.gif").convert()
+        #tab_width = int(self.game_engine.width * .3)
+        #tab_height = int(self.game_engine.height * .075)
+        #tab = transform.scale(tab, (tab_width, tab_height))
+        #tab_render_left = (self.game_engine.width * .75) - (tab_width / 2)
+
+        #space_between = self.game_engine.height / 10
+        #space_between += tab_height / 2
+        #start_top = (self.game_engine.height / 2) - \
+            #(len(self.constants.language)) * \
+            #(tab_height / 2)
+        #spacer = start_top
+
+        # Spacer is the space in between the different difficulty texts
+        # Interval is the interval that is added to the spacer after each word
+        interval = .1
+        spacer = .38
 
         # Loop through and display all of the languages available
         for i in range(len(self.constants.language)):
 
-            screen.blit(tab, (tab_render_left, spacer))
+            #screen.blit(tab, (tab_render_left, spacer))
 
-            language = self.__menuFont.render("{}".format(
+            language = self.__shopFont.render("{}".format(
                 self.constants.language[i]), True, (0, 0, 0))
             fw, fh = language.get_size()
-            render_left = (self.game_engine.width / 2) - (fw / 2)
-            render_top = spacer + (fh / 2.5)
+            render_left = (self.game_engine.width * .57)
+            render_top = (self.game_engine.height * spacer) + (fh / 2)
             screen.blit(language, (render_left, render_top))
 
             if key == i:
-                icon = image.load("images/{0}/cursor/{0}_menu.gif".format(
-                    self.version)).convert()
-                icon_width = self.game_engine.width / 12
-                icon_height = self.game_engine.height / 10
-                icon = transform.scale(icon, (icon_width, icon_height))
-                screen.blit(icon, (tab_render_left - icon_width,
-                                   spacer + (tab_height / 8)))
+                screen.blit(
+                    self.cursor, (self.game_engine.width * .5, render_top - 5))
 
-            spacer += space_between
+            #spacer += space_between
+            spacer += interval
 
     def draw_difficulty(self, key, screen):
         """
@@ -392,23 +403,29 @@ class LemonadeGui(GameEngineElement):
 
         # Spacer is the space in between the different difficulty texts
         # Interval is the interval that is added to the spacer after each word
-        interval = .125
+        interval = .1
         spacer = .38
+
+        title = self.__menuFont.render(_("Menu"), True, (0, 0, 0))
+        fw, fh = title.get_size()
+        render_left = (self.game_engine.width * .62) - (fw / 2)
+        render_top = (self.game_engine.height * .2) - (fh / 2)
+        screen.blit(title, (render_left, render_top))
 
         # Loop through and display all of the menu items
         for i in range(len(self.constants.menu)):
 
-            play_menu_item = self.__menuFont.render(
+            play_menu_item = self.__shopFont.render(
                 _("{}").format(self.constants.menu[i]), True, (0, 0, 0))
             fw, fh = play_menu_item.get_size()
             render_left = (self.game_engine.width * .57)
             render_top = (self.game_engine.height * spacer) - (fh / 2)
-            screen.blit(play_menu_item, (render_left, render_top))
+            screen.blit(play_menu_item, (render_left, render_top + 5))
 
             # Check if this item is currently selected
             if key == i:
                 screen.blit(
-                    self.cursor, (self.game_engine.width * .49, render_top))
+                    self.cursor, (self.game_engine.width * .5, render_top))
 
             spacer += interval
 
@@ -611,10 +628,10 @@ end of the day until you are correct."""),
                 screen.blit(info, (render_left, render_top))
 
         # Check if the player is in the upgrade shop
-        elif self.game_mode == 7:
-            self.upgrade_screen()
-            screen.blit(self.__background, (0, 0))
-            self.draw_upgrade(self.__input_mode[self.game_mode], screen)
+        #elif self.game_mode == 7:
+        #    self.upgrade_screen()
+        #    screen.blit(self.__background, (0, 0))
+        #    self.draw_upgrade(self.__input_mode[self.game_mode], screen)
 
         # Check if the player is in the language selection screen
         elif self.game_mode == 8:
@@ -1151,16 +1168,16 @@ end of the day until you are correct."""),
                     return
 
                 # Check if the player is in the upgrade shop
-                if self.game_mode == 7:
-                    upgrade_info = []
-                    for i in range(0, len(self.__input_keys[self.game_mode])):
-                        if i == self.__input_mode[self.game_mode]:
-                            upgrade_info.append(self.constants.upgrades
-                                                [self.version][i]['name'])
-                            upgrade_info.append(self.constants.upgrades
-                                                [self.version][i]['cost'])
-                            upgrade_info.append(self.constants.upgrades
-                                                [self.version][i]['capacity'])
+                #if self.game_mode == 7:
+                #    upgrade_info = []
+                #    for i in range(0, len(self.__input_keys[self.game_mode])):
+                #        if i == self.__input_mode[self.game_mode]:
+                #            upgrade_info.append(self.constants.upgrades
+                #                                [self.version][i]['name'])
+                #            upgrade_info.append(self.constants.upgrades
+                #                                [self.version][i]['cost'])
+                #            upgrade_info.append(self.constants.upgrades
+                #                                [self.version][i]['capacity'])
                 elif self.game_mode != 9:
                     item_list = {}
                     for i in range(0, len(self.__input_keys[self.game_mode])):
@@ -1237,9 +1254,9 @@ end of the day until you are correct."""),
                         main.day += 1
 
                 # Checks if the player is in the upgrade shop
-                elif self.game_mode == 7:
-                    if main.process_buy_upgrade(upgrade_info):
-                        return
+                #elif self.game_mode == 7:
+                #    if main.process_buy_upgrade(upgrade_info):
+                #        return
 
                 # Checks if the player is in language selection
                 elif self.game_mode == 8:
@@ -1254,8 +1271,8 @@ end of the day until you are correct."""),
                     self.game_mode = 4
 
             # Checks if the player hit space to enter the upgrade shop
-            elif event.key == K_SPACE and self.game_mode == 0:
-                self.game_mode = 7
+            #elif event.key == K_SPACE and self.game_mode == 0:
+            #    self.game_mode = 7
 
             # Checks if the player hit the escape key to quit
             elif event.key == K_ESCAPE:
@@ -1282,8 +1299,8 @@ end of the day until you are correct."""),
                     self.game_mode = 4
 
                 # Returns the player back to the shop from the upgrades shop
-                if self.game_mode == 7:
-                    self.game_mode = 0
+                #if self.game_mode == 7:
+                #    self.game_mode = 0
 
             # Go to the next field
             elif event.key in [K_TAB, K_DOWN, K_RIGHT, K_KP2, K_KP6]:
